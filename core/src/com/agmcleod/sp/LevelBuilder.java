@@ -20,6 +20,7 @@ public class LevelBuilder {
     }
 
     public void build() {
+        // left side
         PolygonShape shape = new PolygonShape();
         float width = 32;
         float height = 256;
@@ -37,6 +38,23 @@ public class LevelBuilder {
         f.setRestitution(0f);
 
         bodies.add(body);
+        shape.dispose();
+
+        // top left angle
+        shape = new PolygonShape();
+        float startY = (Gdx.graphics.getHeight() / 2 + height / 2);
+        shape.set(new float[] {
+            0f, startY * game.WORLD_TO_BOX,
+                width * game.WORLD_TO_BOX, startY * game.WORLD_TO_BOX,
+                200f * game.WORLD_TO_BOX, (startY + 200f) * game.WORLD_TO_BOX,
+                (200f - width) * game.WORLD_TO_BOX, (startY + 200f) * game.WORLD_TO_BOX
+        });
+        bd = new BodyDef();
+        bd.type = BodyDef.BodyType.StaticBody;
+        body = world.createBody(bd);
+        f = body.createFixture(shape, 1);
+        f.setUserData(new GameObject("mapCollision"));
+        f.setRestitution(0f);
         shape.dispose();
     }
 
