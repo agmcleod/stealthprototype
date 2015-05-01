@@ -32,6 +32,7 @@ public class GameScreen implements Screen {
     private Game game;
     private Array<TiledMap> maps;
     private OrthogonalTiledMapRenderer mapRenderer;
+    private Player player;
 
     public GameScreen(Game game, World world) {
         this.world = world;
@@ -46,6 +47,7 @@ public class GameScreen implements Screen {
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cameraCpy = camera.combined.cpy();
         maps = new Array<TiledMap>();
+        player = new Player(game);
 
         loadLevel("startroom.tmx");
     }
@@ -97,7 +99,7 @@ public class GameScreen implements Screen {
 
     public void update() {
         cameraCpy.set(camera.combined);
-
+        player.update();
         this.world.step(1f / 60f, 6, 2);
     }
 
