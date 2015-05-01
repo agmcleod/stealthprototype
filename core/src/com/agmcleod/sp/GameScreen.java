@@ -16,7 +16,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * Created by aaronmcleod on 15-04-27.
@@ -30,6 +29,7 @@ public class GameScreen implements Screen {
     private Box2DDebugRenderer debugRenderer;
     private FollowCamera followCamera;
     private Game game;
+    private Rectangle mapBounds;
     private Array<TiledMap> maps;
     private OrthogonalTiledMapRenderer mapRenderer;
     private Player player;
@@ -48,14 +48,23 @@ public class GameScreen implements Screen {
         cameraCpy = camera.combined.cpy();
         maps = new Array<TiledMap>();
         player = new Player(game);
+        mapBounds = new Rectangle();
+        followCamera = new FollowCamera(camera, player.getPosition(), mapBounds);
 
         loadLevel("startroom.tmx");
+        loadLevel("lhall.tmx");
     }
 
     public void loadLevel(String name) {
+        loadLevel(name, 0, 0);
+    }
+
+    public void loadLevel(String name, float x, float y) {
         TiledMap map = new TmxMapLoader().load(name);
-        mapRenderer = new OrthogonalTiledMapRenderer(map);
-        bodyBuilder.buildShapes(map, world);
+        if (mapRenderer != null) {
+            mapRenderer = new OrthogonalTiledMapRenderer(map);
+        }
+        bodyBuilder.buildShapes(map, world, x, y);
 
         MapProperties properties = map.getProperties();
         int width = properties.get("width", Integer.class);
@@ -63,9 +72,7 @@ public class GameScreen implements Screen {
 
         int tileWidth = properties.get("tilewidth", Integer.class);
         int tileHeight = properties.get("tileheight", Integer.class);
-
-        // Rectangle mapBounds = new Rectangle(0, 0, width * tileWidth, height * tileHeight);
-        // followCamera = new FollowCamera(camera, player.getPosition(), mapBounds);
+        mapBounds.merge(new Rectangle(0, 0, width * tileWidth, height * tileHeight));
         maps.add(map);
     }
 
@@ -126,5 +133,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         debugRenderer.dispose();
+        bodyBuilder.disposeBodies();
     }
 }

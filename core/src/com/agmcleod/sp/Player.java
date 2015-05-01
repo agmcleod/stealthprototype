@@ -11,13 +11,13 @@ import com.badlogic.gdx.physics.box2d.*;
 public class Player extends GameObject {
     private Body body;
     private Game game;
-    private Vector2 pos;
+    private Vector2 position;
     private final float WIDTH = 32;
     private final float HEIGHT = 32;
     private final float VEL = 3;
     public Player(Game game) {
         super("player");
-        pos = new Vector2(WIDTH, Gdx.graphics.getHeight() / 2);
+        position = new Vector2(WIDTH, Gdx.graphics.getHeight() / 2);
         this.game = game;
         World world = game.getWorld();
 
@@ -26,7 +26,7 @@ public class Player extends GameObject {
 
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set((pos.x + WIDTH / 2) * game.WORLD_TO_BOX, (pos.y + HEIGHT / 2) * game.WORLD_TO_BOX);
+        def.position.set((position.x + WIDTH / 2) * game.WORLD_TO_BOX, (position.y + HEIGHT / 2) * game.WORLD_TO_BOX);
 
         body = world.createBody(def);
         body.setFixedRotation(true);
@@ -41,6 +41,10 @@ public class Player extends GameObject {
         fixture.setUserData(this);
 
         playerShape.dispose();
+    }
+
+    public Vector2 getPosition() {
+        return position;
     }
 
     public void update() {
@@ -64,6 +68,6 @@ public class Player extends GameObject {
             body.setLinearVelocity(body.getLinearVelocity().x, 0);
         }
 
-        pos.set(body.getPosition().x * game.BOX_TO_WORLD + 16, body.getPosition().y * game.BOX_TO_WORLD - 16);
+        position.set(body.getPosition().x * game.BOX_TO_WORLD + 16, body.getPosition().y * game.BOX_TO_WORLD - 16);
     }
 }

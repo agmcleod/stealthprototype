@@ -26,7 +26,7 @@ public class MapBodyBuilder {
         bodies = new Array<Body>();
     }
 
-    public Array<Body> buildShapes(Map map, World world) {
+    public Array<Body> buildShapes(Map map, World world, float x, float y) {
         MapObjects objects = map.getLayers().get("collision").getObjects();
 
         for (MapObject object : objects) {
