@@ -18,7 +18,6 @@ public class FollowCamera {
         this.target = target;
         this.camera = camera;
         this.totalViewBounds = totalViewBounds;
-        setDeadzone(this.camera.viewportWidth / 6, this.camera.viewportHeight / 6);
     }
 
     public void followH(Vector2 target) {
@@ -45,16 +44,6 @@ public class FollowCamera {
         else {
             cam.position.y = target.y;
         }
-    }
-
-    public void setDeadzone(float w, float h) {
-        this.deadzone.setPosition(
-                (float) Math.floor((this.camera.viewportWidth - w) / 2),
-                (float) Math.floor((this.camera.viewportHeight - h) / 2 - h * 0.25)
-        );
-        this.deadzone.setSize(w, h);
-
-        updateTarget();
     }
 
     public void update() {
