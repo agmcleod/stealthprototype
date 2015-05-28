@@ -23,21 +23,27 @@ public class FollowCamera {
 
     public void followH(Vector2 target) {
         Camera cam = this.camera;
-        if ((target.x - cam.position.x - camera.viewportWidth / 2) > (deadzone.x + deadzone.width)) {
-            cam.position.x = (float) Math.floor(Math.min(target.x - (deadzone.x + deadzone.width), totalViewBounds.width - camera.viewportWidth));
+        if (target.x - camera.viewportWidth / 2 < totalViewBounds.x) {
+            cam.position.x = totalViewBounds.x + camera.viewportWidth / 2;
         }
-        else if ((target.x - cam.position.x - camera.viewportWidth / 2) < (deadzone.x)) {
-            cam.position.x = (float) Math.floor(Math.max(target.x - deadzone.x, totalViewBounds.x + camera.viewportWidth / 2));
+        else if (target.x + camera.viewportWidth / 2 > totalViewBounds.getWidth() + totalViewBounds.x) {
+            cam.position.x = (totalViewBounds.getWidth() + totalViewBounds.x) - camera.viewportWidth / 2;
+        }
+        else {
+            cam.position.x = target.x;
         }
     }
 
     public void followV(Vector2 target) {
         Camera cam = this.camera;
-        if ((target.y - cam.position.y - cam.viewportHeight / 2) > (deadzone.y + deadzone.height)) {
-            cam.position.y = (float) Math.floor(Math.min(target.y - (deadzone.y + deadzone.height), totalViewBounds.height - camera.viewportHeight));
+        if (target.y - camera.viewportHeight / 2 < totalViewBounds.y) {
+            cam.position.y = totalViewBounds.y + camera.viewportHeight / 2;
         }
-        else if ((target.y - cam.position.y - cam.viewportHeight / 2) < (deadzone.y)) {
-            cam.position.y = (float) Math.floor(Math.max(target.y - this.deadzone.y, totalViewBounds.y + camera.viewportHeight / 2));
+        else if (target.y + camera.viewportHeight / 2 > totalViewBounds.getHeight() + totalViewBounds.y) {
+            cam.position.y = (totalViewBounds.getHeight() + totalViewBounds.y) - camera.viewportHeight / 2;
+        }
+        else {
+            cam.position.y = target.y;
         }
     }
 

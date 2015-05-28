@@ -30,8 +30,7 @@ public class GameScreen implements Screen {
     private FollowCamera followCamera;
     private Game game;
     private Rectangle mapBounds;
-    private Array<TiledMap> maps;
-    private OrthogonalTiledMapRenderer mapRenderer;
+    private Array<CustomMapRenderer> mapRenderers;
     private Player player;
 
     public GameScreen(Game game, World world) {
@@ -46,25 +45,20 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cameraCpy = camera.combined.cpy();
-        maps = new Array<TiledMap>();
+        mapRenderers = new Array<CustomMapRenderer>();
         player = new Player(game);
         mapBounds = new Rectangle();
         followCamera = new FollowCamera(camera, player.getPosition(), mapBounds);
 
-        loadLevel("startroom.tmx");
-        loadLevel("lhall.tmx");
-    }
-
-    public void loadLevel(String name) {
-        loadLevel(name, 0, 0);
+        loadLevel("startroom.tmx", 0, 0);
+        loadLevel("lhall.tmx", 800, 300);
     }
 
     public void loadLevel(String name, float x, float y) {
         TiledMap map = new TmxMapLoader().load(name);
-        if (mapRenderer != null) {
-            mapRenderer = new OrthogonalTiledMapRenderer(map);
-        }
-        bodyBuilder.buildShapes(map, world, x, y);
+        CustomMapRenderer mapRenderer = new CustomMapRenderer(map);
+        mapRenderers.add(mapRenderer);
+        bodyBuilder.buildShapes(mapRenderer, world, x, y);
 
         MapProperties properties = map.getProperties();
         int width = properties.get("width", Integer.class);
@@ -72,8 +66,7 @@ public class GameScreen implements Screen {
 
         int tileWidth = properties.get("tilewidth", Integer.class);
         int tileHeight = properties.get("tileheight", Integer.class);
-        mapBounds.merge(new Rectangle(0, 0, width * tileWidth, height * tileHeight));
-        maps.add(map);
+        mapBounds.merge(new Rectangle(x, y, width * tileWidth, height * tileHeight));
     }
 
     @Override
@@ -88,25 +81,26 @@ public class GameScreen implements Screen {
     }
 
     public void renderMap() {
-        mapRenderer.getBatch().begin();
-        for (TiledMap map : maps) {
-            mapRenderer.setMap(map);
+        for (CustomMapRenderer renderer : mapRenderers) {
+            renderer.getBatch().begin();
+            TiledMap map = renderer.getMap();
+            renderer.setMap(map);
             for (MapLayer layer : map.getLayers()) {
                 if (layer.isVisible() && !layer.getName().equals("collision")) {
                     if (layer instanceof TiledMapTileLayer) {
-                        mapRenderer.renderTileLayer((TiledMapTileLayer) layer);
-                    } else {
-                        mapRenderer.renderObjects(layer);
+                        renderer.renderTileLayer((TiledMapTileLayer) layer);
                     }
                 }
             }
+            renderer.getBatch().end();
         }
-        mapRenderer.getBatch().end();
     }
 
     public void update() {
         cameraCpy.set(camera.combined);
         player.update();
+        followCamera.update();
+        camera.update();
         this.world.step(1f / 60f, 6, 2);
     }
 
