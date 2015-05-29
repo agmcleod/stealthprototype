@@ -68,11 +68,11 @@ public class CustomMapRenderer extends BatchTiledMapRenderer {
         final float layerTileWidth = layer.getTileWidth() * unitScale;
         final float layerTileHeight = layer.getTileHeight() * unitScale;
 
-        final int col1 = Math.max(0, (int)(viewBounds.x / layerTileWidth));
-        final int col2 = Math.min(layerWidth, (int)((viewBounds.x + viewBounds.width + layerTileWidth) / layerTileWidth));
+        final int col1 = Math.max(0, (int)((viewBounds.x - this.x) / layerTileWidth));
+        final int col2 = Math.min(layerWidth, (int)(((viewBounds.x - this.x) + viewBounds.width + layerTileWidth) / layerTileWidth));
 
-        final int row1 = Math.max(0, (int)(viewBounds.y / layerTileHeight));
-        final int row2 = Math.min(layerHeight, (int)((viewBounds.y + viewBounds.height + layerTileHeight) / layerTileHeight));
+        final int row1 = Math.max(0, (int)((viewBounds.y - this.y) / layerTileHeight));
+        final int row2 = Math.min(layerHeight, (int)(((viewBounds.y - this.y) + viewBounds.height + layerTileHeight) / layerTileHeight));
 
         float y = row2 * layerTileHeight + this.y;
         float xStart = col1 * layerTileWidth + this.x;

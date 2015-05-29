@@ -97,10 +97,10 @@ public class GameScreen implements Screen {
     }
 
     public void update() {
-        cameraCpy.set(camera.combined);
         player.update();
         followCamera.update();
         camera.update();
+        cameraCpy.set(camera.combined);
 
         for (CustomMapRenderer renderer : mapRenderers) {
             renderer.setView(camera);
