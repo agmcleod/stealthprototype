@@ -51,12 +51,12 @@ public class GameScreen implements Screen {
         followCamera = new FollowCamera(camera, player.getPosition(), mapBounds);
 
         loadLevel("startroom.tmx", 0, 0);
-        loadLevel("lhall.tmx", 800, 300);
+        loadLevel("lhall.tmx", 832, 257);
     }
 
     public void loadLevel(String name, float x, float y) {
         TiledMap map = new TmxMapLoader().load(name);
-        CustomMapRenderer mapRenderer = new CustomMapRenderer(map);
+        CustomMapRenderer mapRenderer = new CustomMapRenderer(map, x, y);
         mapRenderers.add(mapRenderer);
         bodyBuilder.buildShapes(mapRenderer, world, x, y);
 
@@ -101,6 +101,10 @@ public class GameScreen implements Screen {
         player.update();
         followCamera.update();
         camera.update();
+
+        for (CustomMapRenderer renderer : mapRenderers) {
+            renderer.setView(camera);
+        }
         this.world.step(1f / 60f, 6, 2);
     }
 
