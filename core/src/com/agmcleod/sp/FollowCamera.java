@@ -22,27 +22,29 @@ public class FollowCamera {
 
     public void followH(Vector2 target) {
         Camera cam = this.camera;
-        if (target.x - camera.viewportWidth / 2 < totalViewBounds.x) {
-            cam.position.x = totalViewBounds.x + camera.viewportWidth / 2;
-        }
-        else if (target.x + camera.viewportWidth / 2 > totalViewBounds.getWidth() + totalViewBounds.x) {
-            cam.position.x = (totalViewBounds.getWidth() + totalViewBounds.x) - camera.viewportWidth / 2;
-        }
-        else {
-            cam.position.x = target.x;
+        if (totalViewBounds.getWidth() > camera.viewportWidth) {
+            if (target.x - camera.viewportWidth / 2 < totalViewBounds.x) {
+                cam.position.x = totalViewBounds.x + camera.viewportWidth / 2;
+            }
+            else if (target.x + camera.viewportWidth / 2 > totalViewBounds.getWidth() + totalViewBounds.x) {
+                cam.position.x = (totalViewBounds.getWidth() + totalViewBounds.x) - camera.viewportWidth / 2;
+            }
+            else {
+                cam.position.x = target.x;
+            }
         }
     }
 
     public void followV(Vector2 target) {
         Camera cam = this.camera;
-        if (target.y - camera.viewportHeight / 2 < totalViewBounds.y) {
-            cam.position.y = totalViewBounds.y + camera.viewportHeight / 2;
-        }
-        else if (target.y + camera.viewportHeight / 2 > totalViewBounds.getHeight() + totalViewBounds.y) {
-            cam.position.y = (totalViewBounds.getHeight() + totalViewBounds.y) - camera.viewportHeight / 2;
-        }
-        else {
-            cam.position.y = target.y;
+        if (totalViewBounds.getHeight() > camera.viewportHeight) {
+            if (target.y - camera.viewportHeight / 2 < totalViewBounds.y) {
+                cam.position.y = totalViewBounds.y + camera.viewportHeight / 2;
+            } else if (target.y + camera.viewportHeight / 2 > totalViewBounds.getHeight() + totalViewBounds.y) {
+                cam.position.y = (totalViewBounds.getHeight() + totalViewBounds.y) - camera.viewportHeight / 2;
+            } else {
+                cam.position.y = target.y;
+            }
         }
     }
 

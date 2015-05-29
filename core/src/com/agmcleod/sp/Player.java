@@ -14,7 +14,7 @@ public class Player extends GameObject {
     private Vector2 position;
     private final float WIDTH = 32;
     private final float HEIGHT = 32;
-    private final float VEL = 3;
+    private final int VEL = 3;
     public Player(Game game) {
         super("player");
         position = new Vector2(WIDTH, Gdx.graphics.getHeight() / 2);
@@ -68,6 +68,6 @@ public class Player extends GameObject {
             body.setLinearVelocity(body.getLinearVelocity().x, 0);
         }
 
-        position.set(body.getPosition().x * game.BOX_TO_WORLD + 16, body.getPosition().y * game.BOX_TO_WORLD - 16);
+        position.set((int) (body.getPosition().x * game.BOX_TO_WORLD) + 16, (int) (body.getPosition().y * game.BOX_TO_WORLD) - 16);
     }
 }
