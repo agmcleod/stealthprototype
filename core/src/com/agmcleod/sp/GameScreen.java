@@ -49,7 +49,8 @@ public class GameScreen implements Screen {
         followCamera = new FollowCamera(camera, player.getPosition(), mapBounds);
 
         loadLevel("startroom.tmx", 0, 0);
-        loadLevel("lhall.tmx", 832, 257);
+        loadLevel("lhall.tmx", 832, 96);
+        loadLevel("adjacent.tmx", 1344, -925);
     }
 
     public void loadLevel(String name, float x, float y) {
