@@ -18,9 +18,11 @@ public class Player extends GameObject {
     private final float HEIGHT = 32;
     private final int VEL = 3;
     private TextureRegion region;
+    private float rotation;
     public Player(Game game, TextureRegion region) {
         super("player");
         position = new Vector2(WIDTH, Gdx.graphics.getHeight() / 2);
+        rotation = 0;
         this.game = game;
         World world = game.getWorld();
 
@@ -52,15 +54,31 @@ public class Player extends GameObject {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(region, position.x, position.y);
+        float x = position.x;
+        float y = position.y;
+
+        if (rotation == 90) {
+            x += 32;
+        }
+        else if (rotation == 180) {
+            x += 32;
+            y += 32;
+        }
+        else if (rotation == 270) {
+            y += 32;
+        }
+
+        batch.draw(region, x, y, 0, 0, 32, 32, 1.0f, 1.0f, rotation);
     }
 
     public void update() {
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             body.setLinearVelocity(-VEL, body.getLinearVelocity().y);
+            rotation = 180;
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             body.setLinearVelocity(VEL, body.getLinearVelocity().y);
+            rotation = 0;
         }
         else {
             body.setLinearVelocity(0, body.getLinearVelocity().y);
@@ -68,14 +86,16 @@ public class Player extends GameObject {
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             body.setLinearVelocity(body.getLinearVelocity().x, VEL);
+            rotation = 90;
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             body.setLinearVelocity(body.getLinearVelocity().x, -VEL);
+            rotation = 270;
         }
         else {
             body.setLinearVelocity(body.getLinearVelocity().x, 0);
         }
 
-        position.set((int) (body.getPosition().x * game.BOX_TO_WORLD), (int) (body.getPosition().y * game.BOX_TO_WORLD) - 16);
+        position.set((int) (body.getPosition().x * game.BOX_TO_WORLD) - 16, (int) (body.getPosition().y * game.BOX_TO_WORLD) - 16);
     }
 }
