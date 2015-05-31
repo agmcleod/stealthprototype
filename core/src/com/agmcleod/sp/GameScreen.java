@@ -49,9 +49,7 @@ public class GameScreen implements Screen {
         cameraCpy = camera.combined.cpy();
         mapRenderers = new Array<CustomMapRenderer>();
 
-        TextureAtlas atlas = game.getAtlas();
-        TextureRegion region = atlas.findRegion("player");
-        player = new Player(game, region);
+        player = new Player(game);
         batch = new SpriteBatch();
 
         mapBounds = new Rectangle();

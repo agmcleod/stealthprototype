@@ -19,11 +19,12 @@ public class Player extends GameObject {
     private final int VEL = 3;
     private TextureRegion region;
     private float rotation;
-    public Player(Game game, TextureRegion region) {
+    public Player(Game game) {
         super("player");
         position = new Vector2(WIDTH, Gdx.graphics.getHeight() / 2);
         rotation = 0;
         this.game = game;
+        this.region = game.getAtlas().findRegion("player");
         World world = game.getWorld();
 
         PolygonShape playerShape = new PolygonShape();
