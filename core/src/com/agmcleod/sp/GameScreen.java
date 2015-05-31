@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -30,6 +33,7 @@ public class GameScreen implements Screen {
     private Rectangle mapBounds;
     private Array<CustomMapRenderer> mapRenderers;
     private Player player;
+    private SpriteBatch batch;
 
     public GameScreen(Game game, World world) {
         this.world = world;
@@ -44,7 +48,12 @@ public class GameScreen implements Screen {
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cameraCpy = camera.combined.cpy();
         mapRenderers = new Array<CustomMapRenderer>();
-        player = new Player(game);
+
+        TextureAtlas atlas = game.getAtlas();
+        TextureRegion region = atlas.findRegion("player");
+        player = new Player(game, region);
+        batch = new SpriteBatch();
+
         mapBounds = new Rectangle();
         followCamera = new FollowCamera(camera, player.getPosition(), mapBounds);
 
@@ -76,6 +85,10 @@ public class GameScreen implements Screen {
 
         renderMap();
 
+        batch.begin();
+        player.render(batch);
+        batch.end();
+
         debugRenderer.render(world, cameraCpy.scl(game.BOX_TO_WORLD));
     }
 
@@ -97,14 +110,18 @@ public class GameScreen implements Screen {
 
     public void update() {
         player.update();
+
+        this.world.step(1f / 60f, 6, 2);
+
         followCamera.update();
         camera.update();
         cameraCpy.set(camera.combined);
+        batch.setProjectionMatrix(camera.combined);
 
         for (CustomMapRenderer renderer : mapRenderers) {
             renderer.setView(camera);
         }
-        this.world.step(1f / 60f, 6, 2);
+
     }
 
     @Override
@@ -131,5 +148,6 @@ public class GameScreen implements Screen {
     public void dispose() {
         debugRenderer.dispose();
         bodyBuilder.disposeBodies();
+        batch.dispose();
     }
 }

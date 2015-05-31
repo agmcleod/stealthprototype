@@ -2,6 +2,8 @@ package com.agmcleod.sp;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -15,7 +17,8 @@ public class Player extends GameObject {
     private final float WIDTH = 32;
     private final float HEIGHT = 32;
     private final int VEL = 3;
-    public Player(Game game) {
+    private TextureRegion region;
+    public Player(Game game, TextureRegion region) {
         super("player");
         position = new Vector2(WIDTH, Gdx.graphics.getHeight() / 2);
         this.game = game;
@@ -41,10 +44,15 @@ public class Player extends GameObject {
         fixture.setUserData(this);
 
         playerShape.dispose();
+        this.region = region;
     }
 
     public Vector2 getPosition() {
         return position;
+    }
+
+    public void render(SpriteBatch batch) {
+        batch.draw(region, position.x, position.y);
     }
 
     public void update() {
@@ -68,6 +76,6 @@ public class Player extends GameObject {
             body.setLinearVelocity(body.getLinearVelocity().x, 0);
         }
 
-        position.set((int) (body.getPosition().x * game.BOX_TO_WORLD) + 16, (int) (body.getPosition().y * game.BOX_TO_WORLD) - 16);
+        position.set((int) (body.getPosition().x * game.BOX_TO_WORLD), (int) (body.getPosition().y * game.BOX_TO_WORLD) - 16);
     }
 }
