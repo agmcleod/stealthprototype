@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -17,6 +19,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * Created by aaronmcleod on 15-04-27.
@@ -28,6 +31,8 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera;
     private Matrix4 cameraCpy;
     private Box2DDebugRenderer debugRenderer;
+    private ObjectMap<String, String> classByName;
+    private Array<GameObject> gameObjects;
     private FollowCamera followCamera;
     private Game game;
     private Rectangle mapBounds;
@@ -39,6 +44,9 @@ public class GameScreen implements Screen {
         this.world = world;
         this.game = game;
         bodyBuilder = new MapBodyBuilder(game, world);
+        classByName = new ObjectMap<String, String>();
+        classByName.put("enemy", "com.agmcleod.sp.Enemy");
+        gameObjects = new Array<GameObject>();
     }
 
     @Override
@@ -73,6 +81,29 @@ public class GameScreen implements Screen {
         int tileWidth = properties.get("tilewidth", Integer.class);
         int tileHeight = properties.get("tileheight", Integer.class);
         mapBounds.merge(new Rectangle(x, y, width * tileWidth, height * tileHeight));
+
+        MapLayer layer = map.getLayers().get("entities");
+        if (layer != null) {
+            MapObjects objects = layer.getObjects();
+
+            for (MapObject object : objects) {
+                String className = object.getName();
+                MapProperties objectProperties = object.getProperties();
+
+                if (className.equals("enemy")) {
+                    Enemy enemy = (Enemy) ObjectMapToClass.getInstanceOfObject(classByName, className, this.game);
+                    enemy.setBounds(objectProperties.get("x", Float.class) + x, objectProperties.get("y", Float.class) + y, objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
+                    float targetY = Float.parseFloat(objectProperties.get("target_y", String.class)) + y;
+                    float targetX = Float.parseFloat(objectProperties.get("target_x", String.class)) + x;
+                    enemy.setTarget(targetX + x, targetY + y);
+                    gameObjects.add(enemy);
+                } else {
+                    MapEntity entity = (MapEntity) ObjectMapToClass.getInstanceOfObject(classByName, className, this.game);
+                    entity.setBounds(objectProperties.get("x", Float.class) + x, objectProperties.get("y", Float.class) + y, objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
+                    gameObjects.add(entity);
+                }
+            }
+        }
     }
 
     @Override
@@ -85,6 +116,10 @@ public class GameScreen implements Screen {
 
         batch.begin();
         player.render(batch);
+
+        for (GameObject gameObject : gameObjects) {
+            gameObject.render(batch);
+        }
         batch.end();
 
         debugRenderer.render(world, cameraCpy.scl(game.BOX_TO_WORLD));
@@ -120,6 +155,9 @@ public class GameScreen implements Screen {
             renderer.setView(camera);
         }
 
+        for (GameObject gameObject : gameObjects) {
+            gameObject.update();
+        }
     }
 
     @Override

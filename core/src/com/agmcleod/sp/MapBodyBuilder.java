@@ -1,6 +1,7 @@
 package com.agmcleod.sp;
 
 import com.badlogic.gdx.maps.Map;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.*;
@@ -61,7 +62,7 @@ public class MapBodyBuilder {
             bd.type = BodyDef.BodyType.StaticBody;
             Body body = world.createBody(bd);
             Fixture f = body.createFixture(shape, 1);
-            f.setUserData(new GameObject("mapCollision"));
+            f.setUserData(new MapCollision());
             f.setRestitution(0f);
 
             bodies.add(body);
