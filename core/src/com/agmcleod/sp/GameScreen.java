@@ -75,12 +75,12 @@ public class GameScreen implements Screen {
         bodyBuilder.buildShapes(mapRenderer, world, x, y);
 
         MapProperties properties = map.getProperties();
-        int width = properties.get("width", Integer.class);
-        int height = properties.get("height", Integer.class);
+        int mapwidth = properties.get("width", Integer.class);
+        int mapheight = properties.get("height", Integer.class);
 
         int tileWidth = properties.get("tilewidth", Integer.class);
         int tileHeight = properties.get("tileheight", Integer.class);
-        mapBounds.merge(new Rectangle(x, y, width * tileWidth, height * tileHeight));
+        mapBounds.merge(new Rectangle(x, y, mapwidth * tileWidth, mapheight * tileHeight));
 
         MapLayer layer = map.getLayers().get("entities");
         if (layer != null) {
@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
                 if (className.equals("enemy")) {
                     Enemy enemy = (Enemy) ObjectMapToClass.getInstanceOfObject(classByName, className, this.game);
                     enemy.setInitialBounds(objectProperties.get("x", Float.class) + x, objectProperties.get("y", Float.class) + y, objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
-                    float targetY = Float.parseFloat(objectProperties.get("target_y", String.class)) + y;
+                    float targetY = (mapheight * tileHeight + tileHeight - (Float.parseFloat(objectProperties.get("target_y", String.class))) + y);
                     float targetX = Float.parseFloat(objectProperties.get("target_x", String.class)) + x;
                     enemy.setTarget(targetX, targetY);
                     gameObjects.add(enemy);
