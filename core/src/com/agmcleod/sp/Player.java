@@ -47,7 +47,6 @@ public class Player extends GameObject {
         fixture.setUserData(this);
 
         playerShape.dispose();
-        this.region = region;
     }
 
     public Vector2 getPosition() {
@@ -69,7 +68,7 @@ public class Player extends GameObject {
             y += 32;
         }
 
-        batch.draw(region, x, y, 0, 0, 32, 32, 1.0f, 1.0f, rotation);
+        batch.draw(region, x, y, 0, 0, WIDTH, HEIGHT, 1.0f, 1.0f, rotation);
     }
 
     public void update() {
@@ -97,6 +96,6 @@ public class Player extends GameObject {
             body.setLinearVelocity(body.getLinearVelocity().x, 0);
         }
 
-        position.set((int) (body.getPosition().x * game.BOX_TO_WORLD) - 16, (int) (body.getPosition().y * game.BOX_TO_WORLD) - 16);
+        position.set((int) (body.getPosition().x * game.BOX_TO_WORLD) - WIDTH / 2, (int) (body.getPosition().y * game.BOX_TO_WORLD) - HEIGHT / 2);
     }
 }

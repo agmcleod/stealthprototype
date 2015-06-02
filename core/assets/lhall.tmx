@@ -12,7 +12,7 @@
   <object name="enemy" x="606" y="160" width="32" height="32">
    <properties>
     <property name="target_x" value="606"/>
-    <property name="target_y" value="780"/>
+    <property name="target_y" value="760"/>
    </properties>
   </object>
  </objectgroup>
