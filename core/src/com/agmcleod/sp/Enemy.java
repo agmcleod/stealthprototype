@@ -108,12 +108,12 @@ public class Enemy extends MapEntity {
         if (target.x != original.x) {
             if (velx > 0) {
                 rotation = 0;
-                if (target.x > original.x && body.getPosition().x >= target.x) {
+                if ((target.x > original.x && bounds.x >= target.x) || (original.x > target.x && bounds.x >= original.x)) {
                     velx *= -1;
                 }
             } else if (velx < 0) {
                 rotation = 180;
-                if (target.x < original.x && body.getPosition().x <= target.x) {
+                if ((target.x < original.x && bounds.x <= target.x) || (original.x < target.x && bounds.x <= original.x)) {
                     velx *= -1;
                 }
             }

@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
                 if (className.equals("enemy")) {
                     Enemy enemy = (Enemy) ObjectMapToClass.getInstanceOfObject(classByName, className, this.game);
                     enemy.setInitialBounds(objectProperties.get("x", Float.class) + x, objectProperties.get("y", Float.class) + y, objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
-                    float targetY = (mapheight * tileHeight + tileHeight - (Float.parseFloat(objectProperties.get("target_y", String.class))) + y);
+                    float targetY = (mapheight * tileHeight - tileHeight - (Float.parseFloat(objectProperties.get("target_y", String.class))) + y);
                     float targetX = Float.parseFloat(objectProperties.get("target_x", String.class)) + x;
                     enemy.setTarget(targetX, targetY);
                     gameObjects.add(enemy);
