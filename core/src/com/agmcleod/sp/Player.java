@@ -96,6 +96,6 @@ public class Player extends GameObject {
             body.setLinearVelocity(body.getLinearVelocity().x, 0);
         }
 
-        position.set((int) (body.getPosition().x * game.BOX_TO_WORLD) - WIDTH / 2, (int) (body.getPosition().y * game.BOX_TO_WORLD) - HEIGHT / 2);
+        position.set((int) ((body.getPosition().x * game.BOX_TO_WORLD) - WIDTH / 2), (int) ((body.getPosition().y * game.BOX_TO_WORLD) - HEIGHT / 2));
     }
 }

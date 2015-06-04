@@ -44,3 +44,9 @@ task afterEclipseImport(description: "Post processing after project generation",
     printer.print(classpath)
   }
 }
+
+task texturePacker(type: JavaExec) {
+    main = "com.badlogic.gdx.tools.texturepacker.TexturePacker"
+    classpath configurations
+    args = ["../core/assets/pack/", "../core/assets/", "temptiles.atlas"]
+}
