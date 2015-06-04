@@ -79,8 +79,8 @@ public class GameScreen implements Screen {
         int mapwidth = properties.get("width", Integer.class);
         int mapheight = properties.get("height", Integer.class);
 
-        int tileWidth = properties.get("tilewidth", Integer.class) + 2;
-        int tileHeight = properties.get("tileheight", Integer.class) + 2;
+        int tileWidth = properties.get("tilewidth", Integer.class);
+        int tileHeight = properties.get("tileheight", Integer.class);
         mapBounds.merge(new Rectangle(x, y, mapwidth * tileWidth, mapheight * tileHeight));
 
         MapLayer layer = map.getLayers().get("entities");
