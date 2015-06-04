@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="64" height="32" tilewidth="32" tileheight="32">
- <tileset firstgid="1" name="temptiles" tilewidth="32" tileheight="32">
-  <image source="temptiles.png" width="160" height="160"/>
+ <tileset firstgid="1" name="temptiles" tilewidth="32" tileheight="32" margin="1" spacing="2">
+   <image source="temptiles.png" width="170" height="170"/>
  </tileset>
  <layer name="tiles" width="64" height="32">
   <data encoding="base64">
