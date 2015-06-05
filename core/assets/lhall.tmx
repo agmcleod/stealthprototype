@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="24" height="17" tilewidth="32" tileheight="32">
- <tileset firstgid="1" name="temptiles" tilewidth="32" tileheight="32" margin="1" spacing="2">
-   <image source="temptiles.png" width="170" height="170"/>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="24" height="17" tilewidth="32" tileheight="32" nextobjectid="9">
+ <tileset firstgid="1" name="temptiles" tilewidth="32" tileheight="32" spacing="2" margin="1">
+  <image source="temptiles.png" width="170" height="170"/>
  </tileset>
  <layer name="tiles" width="24" height="17">
   <data encoding="base64">
@@ -9,23 +9,24 @@
   </data>
  </layer>
  <objectgroup name="entities">
-  <object name="enemy" x="606" y="160" width="32" height="32">
+  <object id="1" name="enemy" x="606" y="160" width="32" height="32">
    <properties>
+    <property name="aitype" value="chase"/>
     <property name="target_x" value="606"/>
     <property name="target_y" value="760"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="collision">
-  <object x="-0.140787" y="351.957" width="479" height="31"/>
-  <object x="736" y="1" width="32" height="541.623"/>
-  <object x="1" y="64.7558" width="478.589" height="31.7705"/>
-  <object x="544" y="2" width="198.015" height="29.3621"/>
-  <object x="483" y="351">
+  <object id="2" x="-0.140787" y="351.957" width="479" height="31"/>
+  <object id="3" x="736" y="1" width="32" height="541.623"/>
+  <object id="4" x="1" y="64.7558" width="478.589" height="31.7705"/>
+  <object id="5" x="544" y="2" width="198.015" height="29.3621"/>
+  <object id="6" x="483" y="351">
    <polygon points="-4.51399,1.00311 59.902,64.1937 30.9716,66.4088 -5.0311,31.4705"/>
   </object>
-  <object x="510.471" y="415.904" width="32" height="127.836"/>
-  <object x="479.916" y="64.8793">
+  <object id="7" x="510.471" y="415.904" width="32" height="127.836"/>
+  <object id="8" x="479.916" y="64.8793">
    <polygon points="0,0 67.5089,-67.5787 65.1819,-35.9535 -0.302552,31.5553"/>
   </object>
  </objectgroup>
