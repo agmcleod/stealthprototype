@@ -2,6 +2,8 @@ package com.agmcleod.sp;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -17,6 +19,7 @@ public class Enemy extends MapEntity {
     private Vector2 original;
     TextureRegion region;
     private float rotation = 0;
+    private Polygon sight;
     private Vector2 target;
     private float velx = 1.5f;
     private float vely = 1.5f;
@@ -24,6 +27,8 @@ public class Enemy extends MapEntity {
         super("enemy");
         this.game = game;
         region = game.getAtlas().findRegion("enemy");
+
+        sight = new Polygon();
     }
 
     @Override
@@ -45,8 +50,22 @@ public class Enemy extends MapEntity {
         batch.draw(region, x, y, 0, 0, WIDTH, HEIGHT, 1.0f, 1.0f, rotation);
     }
 
+    public void renderSight(ShapeRenderer renderer) {
+        renderer.setColor(1.0f, 1.0f, 0.0f, 1.0f);
+        renderer.polygon(sight.getTransformedVertices());
+    }
+
     public void setInitialBounds(float x, float y, float width, float height) {
         super.setBounds(x, y, width, height);
+        float centerX = x + width / 2;
+        float centerY = y + height / 2;
+        sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        sight.setVertices(new float[] {
+                0, 0,
+                150, -70,
+                150, 70
+        });
+
         original = new Vector2(x, y);
 
         World world = game.getWorld();
@@ -90,6 +109,8 @@ public class Enemy extends MapEntity {
         bounds.x = (int) (body.getPosition().x * game.BOX_TO_WORLD) - WIDTH / 2;
         bounds.y = (int) (body.getPosition().y * game.BOX_TO_WORLD) - HEIGHT / 2;
 
+        sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+
         if (target.y != original.y) {
             if (vely > 0) {
                 rotation = 90;
@@ -118,5 +139,7 @@ public class Enemy extends MapEntity {
                 }
             }
         }
+
+        sight.setRotation(rotation);
     }
 }

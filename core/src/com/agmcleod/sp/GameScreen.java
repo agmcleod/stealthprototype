@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
@@ -39,6 +40,7 @@ public class GameScreen implements Screen {
     private Rectangle mapBounds;
     private Array<CustomMapRenderer> mapRenderers;
     private Player player;
+    private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
 
     public GameScreen(Game game, World world) {
@@ -57,6 +59,7 @@ public class GameScreen implements Screen {
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cameraCpy = camera.combined.cpy();
         mapRenderers = new Array<CustomMapRenderer>();
+        shapeRenderer = new ShapeRenderer();
 
         player = new Player(game);
         batch = new SpriteBatch();
@@ -123,6 +126,14 @@ public class GameScreen implements Screen {
         }
         batch.end();
 
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        for (GameObject gameObject : gameObjects) {
+            if (gameObject instanceof Enemy) {
+                ((Enemy) gameObject).renderSight(shapeRenderer);
+            }
+        }
+        shapeRenderer.end();
+
         debugRenderer.render(world, cameraCpy.scl(game.BOX_TO_WORLD));
     }
 
@@ -151,6 +162,7 @@ public class GameScreen implements Screen {
         camera.update();
         cameraCpy.set(camera.combined);
         batch.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
 
         for (CustomMapRenderer renderer : mapRenderers) {
             renderer.setView(camera);
@@ -186,5 +198,6 @@ public class GameScreen implements Screen {
         debugRenderer.dispose();
         bodyBuilder.disposeBodies();
         batch.dispose();
+        shapeRenderer.dispose();
     }
 }
