@@ -65,7 +65,7 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
 
         mapBounds = new Rectangle();
-        followCamera = new FollowCamera(camera, player.getPosition(), mapBounds);
+        followCamera = new FollowCamera(camera, player.getBounds(), mapBounds);
 
         loadLevel("startroom.tmx", 0, 0);
         loadLevel("lhall.tmx", 832, 96);
@@ -170,6 +170,9 @@ public class GameScreen implements Screen {
 
         for (GameObject gameObject : gameObjects) {
             gameObject.update();
+            if (gameObject instanceof Enemy) {
+                ((Enemy) gameObject).checkSightline(player);
+            }
         }
     }
 

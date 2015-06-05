@@ -1,8 +1,10 @@
 package com.agmcleod.sp;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -17,18 +19,31 @@ public class Enemy extends MapEntity {
     private Body body;
     private Game game;
     private Vector2 original;
+    private boolean playerInSight;
     TextureRegion region;
     private float rotation = 0;
     private Polygon sight;
     private Vector2 target;
     private float velx = 1.5f;
     private float vely = 1.5f;
+
     public Enemy(Game game) {
         super("enemy");
         this.game = game;
         region = game.getAtlas().findRegion("enemy");
 
         sight = new Polygon();
+        playerInSight = false;
+    }
+
+    public void checkSightline(Player player) {
+        float[] playerBoundsVertices = player.getBoundsVertices();
+        if(Intersector.overlapConvexPolygons(sight.getTransformedVertices(), playerBoundsVertices, null)) {
+            playerInSight = true;
+        }
+        else {
+            playerInSight = false;
+        }
     }
 
     @Override
@@ -51,14 +66,18 @@ public class Enemy extends MapEntity {
     }
 
     public void renderSight(ShapeRenderer renderer) {
-        renderer.setColor(1.0f, 1.0f, 0.0f, 1.0f);
+        if (playerInSight) {
+            renderer.setColor(1.0f, 0.0f, 0.0f, 1.0f);
+        }
+        else {
+            renderer.setColor(1.0f, 1.0f, 0.0f, 1.0f);
+        }
+
         renderer.polygon(sight.getTransformedVertices());
     }
 
     public void setInitialBounds(float x, float y, float width, float height) {
         super.setBounds(x, y, width, height);
-        float centerX = x + width / 2;
-        float centerY = y + height / 2;
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         sight.setVertices(new float[] {
                 0, 0,

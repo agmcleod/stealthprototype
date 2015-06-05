@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -12,27 +13,30 @@ import com.badlogic.gdx.physics.box2d.*;
  */
 public class Player extends GameObject {
     private Body body;
+    private Rectangle bounds;
+    private float[] boundsVertices;
+    private boolean dirtyVertices;
     private Game game;
-    private Vector2 position;
-    private final float WIDTH = 32;
-    private final float HEIGHT = 32;
+    final float WIDTH = 32;
+    final float HEIGHT = 32;
     private final int VEL = 3;
     private TextureRegion region;
     private float rotation;
     public Player(Game game) {
         super("player");
-        position = new Vector2(WIDTH, Gdx.graphics.getHeight() / 2);
         rotation = 0;
         this.game = game;
         this.region = game.getAtlas().findRegion("player");
         World world = game.getWorld();
+
+        bounds = new Rectangle(WIDTH, Gdx.graphics.getHeight() / 2, WIDTH, HEIGHT);
 
         PolygonShape playerShape = new PolygonShape();
         playerShape.setAsBox(WIDTH / 2 * game.WORLD_TO_BOX, HEIGHT / 2 * game.WORLD_TO_BOX);
 
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set((position.x + WIDTH / 2) * game.WORLD_TO_BOX, (position.y + HEIGHT / 2) * game.WORLD_TO_BOX);
+        def.position.set((bounds.x + WIDTH / 2) * game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * game.WORLD_TO_BOX);
 
         body = world.createBody(def);
         body.setFixedRotation(true);
@@ -47,15 +51,37 @@ public class Player extends GameObject {
         fixture.setUserData(this);
 
         playerShape.dispose();
+
+        dirtyVertices = true;
+        boundsVertices = new float[8];
     }
 
-    public Vector2 getPosition() {
-        return position;
+    public Rectangle getBounds() {
+        return bounds;
+    }
+
+    public float[] getBoundsVertices() {
+        if (!dirtyVertices) {
+            return boundsVertices;
+        }
+
+        boundsVertices[0] = bounds.x;
+        boundsVertices[1] = bounds.y;
+        boundsVertices[2] = bounds.x;
+        boundsVertices[3] = bounds.y + bounds.height;
+        boundsVertices[4] = bounds.x + bounds.width;
+        boundsVertices[5] = bounds.y + bounds.height;
+        boundsVertices[6] = bounds.x + bounds.width;
+        boundsVertices[7] = bounds.y;
+
+        dirtyVertices = false;
+
+        return boundsVertices;
     }
 
     public void render(SpriteBatch batch) {
-        float x = position.x;
-        float y = position.y;
+        float x = bounds.x;
+        float y = bounds.y;
 
         if (rotation == 90) {
             x += 32;
@@ -75,10 +101,12 @@ public class Player extends GameObject {
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             body.setLinearVelocity(-VEL, body.getLinearVelocity().y);
             rotation = 180;
+            dirtyVertices = true;
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             body.setLinearVelocity(VEL, body.getLinearVelocity().y);
             rotation = 0;
+            dirtyVertices = true;
         }
         else {
             body.setLinearVelocity(0, body.getLinearVelocity().y);
@@ -87,15 +115,18 @@ public class Player extends GameObject {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             body.setLinearVelocity(body.getLinearVelocity().x, VEL);
             rotation = 90;
+            dirtyVertices = true;
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             body.setLinearVelocity(body.getLinearVelocity().x, -VEL);
             rotation = 270;
+            dirtyVertices = true;
         }
         else {
             body.setLinearVelocity(body.getLinearVelocity().x, 0);
         }
 
-        position.set((int) ((body.getPosition().x * game.BOX_TO_WORLD) - WIDTH / 2), (int) ((body.getPosition().y * game.BOX_TO_WORLD) - HEIGHT / 2));
+        bounds.x = (int) ((body.getPosition().x * game.BOX_TO_WORLD) - WIDTH / 2);
+        bounds.y = (int) ((body.getPosition().y * game.BOX_TO_WORLD) - HEIGHT / 2);
     }
 }

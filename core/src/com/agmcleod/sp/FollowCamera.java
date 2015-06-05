@@ -9,18 +9,18 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class FollowCamera {
     private Camera camera;
-    private Vector2 target;
+    private Rectangle target;
     private Rectangle deadzone;
     private Rectangle totalViewBounds;
 
-    public FollowCamera(Camera camera, Vector2 target, Rectangle totalViewBounds) {
+    public FollowCamera(Camera camera, Rectangle bounds, Rectangle totalViewBounds) {
         deadzone = new Rectangle(0, 0, 0, 0);
-        this.target = target;
+        this.target = bounds;
         this.camera = camera;
         this.totalViewBounds = totalViewBounds;
     }
 
-    public void followH(Vector2 target) {
+    public void followH() {
         Camera cam = this.camera;
         if (totalViewBounds.getWidth() > camera.viewportWidth) {
             if (target.x - camera.viewportWidth / 2 < totalViewBounds.x) {
@@ -35,7 +35,7 @@ public class FollowCamera {
         }
     }
 
-    public void followV(Vector2 target) {
+    public void followV() {
         Camera cam = this.camera;
         if (totalViewBounds.getHeight() > camera.viewportHeight) {
             if (target.y - camera.viewportHeight / 2 < totalViewBounds.y) {
@@ -53,7 +53,7 @@ public class FollowCamera {
     }
 
     public void updateTarget() {
-        followH(this.target);
-        followV(this.target);
+        followH();
+        followV();
     }
 }
