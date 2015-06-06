@@ -1,11 +1,12 @@
 package com.agmcleod.sp;
 
-import com.badlogic.gdx.graphics.Color;
+import com.agmcleod.sp.aibehaviours.Behaviour;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -16,7 +17,9 @@ public class Enemy extends MapEntity {
     private final float WIDTH = 32;
     private final float HEIGHT = 32;
 
+    private Behaviour behaviour;
     private Body body;
+    private float chaseVelocity = 2.0f;
     private Game game;
     private Vector2 original;
     private boolean playerInSight;
@@ -27,6 +30,7 @@ public class Enemy extends MapEntity {
     private float velx = 1.5f;
     private float vely = 1.5f;
 
+
     public Enemy(Game game) {
         super("enemy");
         this.game = game;
@@ -34,6 +38,7 @@ public class Enemy extends MapEntity {
 
         sight = new Polygon();
         playerInSight = false;
+        behaviour = null;
     }
 
     public void checkSightline(Player player) {
@@ -43,6 +48,28 @@ public class Enemy extends MapEntity {
         }
         else {
             playerInSight = false;
+        }
+    }
+
+    public Rectangle getBounds() {
+        return this.bounds;
+    }
+
+    public float getChaseVelocity() {
+        return chaseVelocity;
+    }
+
+    public void moveWithVelocity(float x, float y) {
+        body.setLinearVelocity(x, y);
+    }
+
+    public void patrolMovement() {
+        if (target.y != original.y) {
+            body.setLinearVelocity(body.getLinearVelocity().x, vely);
+        }
+
+        if (target.x != original.x) {
+            body.setLinearVelocity(velx, body.getLinearVelocity().y);
         }
     }
 
@@ -74,6 +101,10 @@ public class Enemy extends MapEntity {
         }
 
         renderer.polygon(sight.getTransformedVertices());
+    }
+
+    public void setBehaviour(Behaviour behaviour) {
+        this.behaviour = behaviour;
     }
 
     public void setInitialBounds(float x, float y, float width, float height) {
@@ -117,47 +148,52 @@ public class Enemy extends MapEntity {
 
     @Override
     public void update() {
-        if (target.y != original.y) {
-            body.setLinearVelocity(body.getLinearVelocity().x, vely);
+        if (playerInSight) {
+            if (behaviour != null) {
+                behaviour.update();
+            }
+        }
+        else {
+            patrolMovement();
         }
 
-        if (target.x != original.x) {
-            body.setLinearVelocity(velx, body.getLinearVelocity().y);
-        }
 
         bounds.x = (int) (body.getPosition().x * game.BOX_TO_WORLD) - WIDTH / 2;
         bounds.y = (int) (body.getPosition().y * game.BOX_TO_WORLD) - HEIGHT / 2;
 
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 
-        if (target.y != original.y) {
-            if (vely > 0) {
-                rotation = 90;
-                if ((target.y > original.y && bounds.y >= target.y) || (original.y > target.y && bounds.y >= original.y)) {
-                    vely *= -1;
+        if (!playerInSight) {
+            if (target.y != original.y) {
+                if (vely > 0) {
+                    rotation = 90;
+                    if ((target.y > original.y && bounds.y >= target.y) || (original.y > target.y && bounds.y >= original.y)) {
+                        vely *= -1;
+                    }
+                }
+                else if(vely < 0) {
+                    rotation = 270;
+                    if ((target.y < original.y && bounds.y <= target.y) || (original.y < target.y && bounds.y <= original.y)) {
+                        vely *= -1;
+                    }
                 }
             }
-            else if(vely < 0) {
-                rotation = 270;
-                if ((target.y < original.y && bounds.y <= target.y) || (original.y < target.y && bounds.y <= original.y)) {
-                    vely *= -1;
+
+            if (target.x != original.x) {
+                if (velx > 0) {
+                    rotation = 0;
+                    if ((target.x > original.x && bounds.x >= target.x) || (original.x > target.x && bounds.x >= original.x)) {
+                        velx *= -1;
+                    }
+                } else if (velx < 0) {
+                    rotation = 180;
+                    if ((target.x < original.x && bounds.x <= target.x) || (original.x < target.x && bounds.x <= original.x)) {
+                        velx *= -1;
+                    }
                 }
             }
         }
 
-        if (target.x != original.x) {
-            if (velx > 0) {
-                rotation = 0;
-                if ((target.x > original.x && bounds.x >= target.x) || (original.x > target.x && bounds.x >= original.x)) {
-                    velx *= -1;
-                }
-            } else if (velx < 0) {
-                rotation = 180;
-                if ((target.x < original.x && bounds.x <= target.x) || (original.x < target.x && bounds.x <= original.x)) {
-                    velx *= -1;
-                }
-            }
-        }
 
         sight.setRotation(rotation);
     }

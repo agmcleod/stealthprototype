@@ -1,5 +1,6 @@
 package com.agmcleod.sp;
 
+import com.agmcleod.sp.aibehaviours.ChaseBehaviour;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -100,6 +101,13 @@ public class GameScreen implements Screen {
                     float targetY = (mapheight * tileHeight - tileHeight - (Float.parseFloat(objectProperties.get("target_y", String.class))) + y);
                     float targetX = Float.parseFloat(objectProperties.get("target_x", String.class)) + x;
                     enemy.setTarget(targetX, targetY);
+
+                    if (objectProperties.get("aitype", String.class).equals("chase")) {
+                        ChaseBehaviour behaviour = new ChaseBehaviour(enemy);
+                        behaviour.setTarget(player.getBounds());
+                        enemy.setBehaviour(behaviour);
+                    }
+
                     gameObjects.add(enemy);
                 } else {
                     MapEntity entity = (MapEntity) ObjectMapToClass.getInstanceOfObject(classByName, className, this.game);
