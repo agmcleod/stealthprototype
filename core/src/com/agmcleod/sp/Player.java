@@ -32,11 +32,11 @@ public class Player extends GameObject {
         bounds = new Rectangle(WIDTH, Gdx.graphics.getHeight() / 2, WIDTH, HEIGHT);
 
         PolygonShape playerShape = new PolygonShape();
-        playerShape.setAsBox(WIDTH / 2 * game.WORLD_TO_BOX, HEIGHT / 2 * game.WORLD_TO_BOX);
+        playerShape.setAsBox(WIDTH / 2 * Game.WORLD_TO_BOX, HEIGHT / 2 * Game.WORLD_TO_BOX);
 
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set((bounds.x + WIDTH / 2) * game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * game.WORLD_TO_BOX);
+        def.position.set((bounds.x + WIDTH / 2) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX);
 
         body = world.createBody(def);
         body.setFixedRotation(true);
@@ -126,7 +126,7 @@ public class Player extends GameObject {
             body.setLinearVelocity(body.getLinearVelocity().x, 0);
         }
 
-        bounds.x = (int) ((body.getPosition().x * game.BOX_TO_WORLD) - WIDTH / 2);
-        bounds.y = (int) ((body.getPosition().y * game.BOX_TO_WORLD) - HEIGHT / 2);
+        bounds.x = (int) ((body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2);
+        bounds.y = (int) ((body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2);
     }
 }

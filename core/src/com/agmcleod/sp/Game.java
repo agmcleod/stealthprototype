@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Game extends com.badlogic.gdx.Game {
-    final float WORLD_TO_BOX = 0.01f;
-    final float BOX_TO_WORLD = 100f;
+    public static final float WORLD_TO_BOX = 0.01f;
+    public static final float BOX_TO_WORLD = 100f;
 
     private World world;
 

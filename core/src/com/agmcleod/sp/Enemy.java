@@ -26,15 +26,15 @@ public class Enemy extends MapEntity {
     private Body body;
     private float chaseVelocity = 3.0f;
     private Game game;
-    private Vector2 lastPatrolPoint;
     private Vector2 original;
     private boolean playerInSight;
     TextureRegion region;
     private float rotation = 0;
     private Polygon sight;
     private Vector2 target;
-    private float velx = 1.5f;
-    private float vely = 1.5f;
+    public final float MOVE_SPEED = 1.5f;
+    private float velx = MOVE_SPEED;
+    private float vely = MOVE_SPEED;
 
 
     public Enemy(Game game) {
@@ -45,7 +45,6 @@ public class Enemy extends MapEntity {
         sight = new Polygon();
         playerInSight = false;
         behaviours = new Array<Behaviour>();
-        lastPatrolPoint = new Vector2();
     }
 
     public void addBehaviour(Behaviour b) {
@@ -56,11 +55,14 @@ public class Enemy extends MapEntity {
         float[] playerBoundsVertices = player.getBoundsVertices();
         if(Intersector.overlapConvexPolygons(sight.getTransformedVertices(), playerBoundsVertices, null)) {
             if (!playerInSight) {
-                lastPatrolPoint.set(bounds.x, bounds.y);
+                getPatrolBehaviour().setLastPatrolPoint(bounds.x, bounds.y);
             }
             playerInSight = true;
         }
         else {
+            if (playerInSight) {
+                getPatrolBehaviour().setReturnToPatrol(true);
+            }
             playerInSight = false;
         }
     }
@@ -210,12 +212,7 @@ public class Enemy extends MapEntity {
             getChaseBehaviour().update();
         }
         else {
-            if (bounds.x != target.x && bounds.y != target.y) {
-
-            }
-            else {
-                getPatrolBehaviour().update();
-            }
+            getPatrolBehaviour().update();
         }
 
 
