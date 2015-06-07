@@ -1,6 +1,7 @@
 package com.agmcleod.sp;
 
 import com.agmcleod.sp.aibehaviours.Behaviour;
+import com.agmcleod.sp.aibehaviours.ChaseBehaviour;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -9,6 +10,9 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
+
+import java.util.Iterator;
 
 /**
  * Created by aaronmcleod on 15-05-31.
@@ -17,7 +21,7 @@ public class Enemy extends MapEntity {
     private final float WIDTH = 32;
     private final float HEIGHT = 32;
 
-    private Behaviour behaviour;
+    private Array<Behaviour> behaviours;
     private Body body;
     private float chaseVelocity = 3.0f;
     private Game game;
@@ -38,7 +42,11 @@ public class Enemy extends MapEntity {
 
         sight = new Polygon();
         playerInSight = false;
-        behaviour = null;
+        behaviours = new Array<Behaviour>();
+    }
+
+    public void addBehaviour(Behaviour b) {
+        behaviours.add(b);
     }
 
     public void checkSightline(Player player) {
@@ -53,6 +61,19 @@ public class Enemy extends MapEntity {
 
     public Rectangle getBounds() {
         return this.bounds;
+    }
+
+    private ChaseBehaviour getChaseBehaviour() {
+        ChaseBehaviour b = null;
+        Iterator<Behaviour> it = behaviours.iterator();
+        while (it.hasNext()) {
+            Behaviour temp = it.next();
+            if (temp instanceof ChaseBehaviour) {
+                b = (ChaseBehaviour) temp;
+            }
+        }
+
+        return b;
     }
 
     public float getChaseVelocity() {
@@ -103,10 +124,6 @@ public class Enemy extends MapEntity {
         renderer.polygon(sight.getTransformedVertices());
     }
 
-    public void setBehaviour(Behaviour behaviour) {
-        this.behaviour = behaviour;
-    }
-
     public void setInitialBounds(float x, float y, float width, float height) {
         super.setBounds(x, y, width, height);
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
@@ -149,9 +166,7 @@ public class Enemy extends MapEntity {
     @Override
     public void update() {
         if (playerInSight) {
-            if (behaviour != null) {
-                behaviour.update();
-            }
+            getChaseBehaviour().update();
         }
         else {
             patrolMovement();
