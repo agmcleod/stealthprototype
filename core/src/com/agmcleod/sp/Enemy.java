@@ -2,6 +2,7 @@ package com.agmcleod.sp;
 
 import com.agmcleod.sp.aibehaviours.Behaviour;
 import com.agmcleod.sp.aibehaviours.ChaseBehaviour;
+import com.agmcleod.sp.aibehaviours.PatrolBehaviour;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -25,6 +26,7 @@ public class Enemy extends MapEntity {
     private Body body;
     private float chaseVelocity = 3.0f;
     private Game game;
+    private Vector2 lastPatrolPoint;
     private Vector2 original;
     private boolean playerInSight;
     TextureRegion region;
@@ -43,6 +45,7 @@ public class Enemy extends MapEntity {
         sight = new Polygon();
         playerInSight = false;
         behaviours = new Array<Behaviour>();
+        lastPatrolPoint = new Vector2();
     }
 
     public void addBehaviour(Behaviour b) {
@@ -52,6 +55,9 @@ public class Enemy extends MapEntity {
     public void checkSightline(Player player) {
         float[] playerBoundsVertices = player.getBoundsVertices();
         if(Intersector.overlapConvexPolygons(sight.getTransformedVertices(), playerBoundsVertices, null)) {
+            if (!playerInSight) {
+                lastPatrolPoint.set(bounds.x, bounds.y);
+            }
             playerInSight = true;
         }
         else {
@@ -76,22 +82,45 @@ public class Enemy extends MapEntity {
         return b;
     }
 
+    public Body getBody() {
+        return body;
+    }
+
     public float getChaseVelocity() {
         return chaseVelocity;
     }
 
-    public void moveWithVelocity(float x, float y) {
-        body.setLinearVelocity(x, y);
+    public final Vector2 getOriginal() {
+        return original;
     }
 
-    public void patrolMovement() {
-        if (target.y != original.y) {
-            body.setLinearVelocity(body.getLinearVelocity().x, vely);
+    private PatrolBehaviour getPatrolBehaviour() {
+        PatrolBehaviour b = null;
+        Iterator<Behaviour> it = behaviours.iterator();
+        while (it.hasNext()) {
+            Behaviour temp = it.next();
+            if (temp instanceof PatrolBehaviour) {
+                b = (PatrolBehaviour) temp;
+            }
         }
 
-        if (target.x != original.x) {
-            body.setLinearVelocity(velx, body.getLinearVelocity().y);
-        }
+        return b;
+    }
+
+    public final Vector2 getTarget() {
+        return target;
+    }
+
+    public float getVelX() {
+        return velx;
+    }
+
+    public float getVelY() {
+        return vely;
+    }
+
+    public void moveWithVelocity(float x, float y) {
+        body.setLinearVelocity(x, y);
     }
 
     @Override
@@ -159,8 +188,20 @@ public class Enemy extends MapEntity {
         shape.dispose();
     }
 
+    public void setRotation(float a) {
+        rotation = a;
+    }
+
     public void setTarget(float x, float y) {
         target = new Vector2(x, y);
+    }
+
+    public void setVelX(float x) {
+        velx = x;
+    }
+
+    public void setVelY(float y) {
+        vely = y;
     }
 
     @Override
@@ -169,7 +210,12 @@ public class Enemy extends MapEntity {
             getChaseBehaviour().update();
         }
         else {
-            patrolMovement();
+            if (bounds.x != target.x && bounds.y != target.y) {
+
+            }
+            else {
+                getPatrolBehaviour().update();
+            }
         }
 
 
@@ -179,34 +225,7 @@ public class Enemy extends MapEntity {
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 
         if (!playerInSight) {
-            if (target.y != original.y) {
-                if (vely > 0) {
-                    rotation = 90;
-                    if ((target.y > original.y && bounds.y >= target.y) || (original.y > target.y && bounds.y >= original.y)) {
-                        vely *= -1;
-                    }
-                }
-                else if(vely < 0) {
-                    rotation = 270;
-                    if ((target.y < original.y && bounds.y <= target.y) || (original.y < target.y && bounds.y <= original.y)) {
-                        vely *= -1;
-                    }
-                }
-            }
-
-            if (target.x != original.x) {
-                if (velx > 0) {
-                    rotation = 0;
-                    if ((target.x > original.x && bounds.x >= target.x) || (original.x > target.x && bounds.x >= original.x)) {
-                        velx *= -1;
-                    }
-                } else if (velx < 0) {
-                    rotation = 180;
-                    if ((target.x < original.x && bounds.x <= target.x) || (original.x < target.x && bounds.x <= original.x)) {
-                        velx *= -1;
-                    }
-                }
-            }
+            getPatrolBehaviour().updateEnemyVelocity();
         }
 
 

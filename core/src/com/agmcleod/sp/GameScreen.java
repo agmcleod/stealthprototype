@@ -1,6 +1,7 @@
 package com.agmcleod.sp;
 
 import com.agmcleod.sp.aibehaviours.ChaseBehaviour;
+import com.agmcleod.sp.aibehaviours.PatrolBehaviour;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -104,6 +105,8 @@ public class GameScreen implements Screen {
                         behaviour.setTarget(player.getBounds());
                         enemy.addBehaviour(behaviour);
                     }
+
+                    enemy.addBehaviour(new PatrolBehaviour(enemy));
 
                     gameObjects.add(enemy);
                 } else {
