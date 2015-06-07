@@ -19,7 +19,7 @@ public class Enemy extends MapEntity {
 
     private Behaviour behaviour;
     private Body body;
-    private float chaseVelocity = 2.0f;
+    private float chaseVelocity = 3.0f;
     private Game game;
     private Vector2 original;
     private boolean playerInSight;
