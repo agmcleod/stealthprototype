@@ -37,41 +37,48 @@ public class PatrolBehaviour extends Behaviour {
             direction.set(lastPatrolPoint.x, lastPatrolPoint.y).sub(enemy.getBounds().x, enemy.getBounds().y).nor();
             float xvel = 0;
             float yvel = 0;
-            if (Math.abs(direction.x) > Math.abs(direction.y)) {
+            if (direction.x != 0) {
                 xvel = enemy.MOVE_SPEED;
-                if (direction.x < 0) {
-                    xvel *= -1;
-                }
             }
-            else if (Math.abs(direction.y) > Math.abs(direction.x)) {
+            if (direction.y != 0) {
                 yvel = enemy.MOVE_SPEED;
-                if (direction.y < 0) {
-                    yvel *= -1;
+            }
+
+            if (direction.x < 0) {
+                xvel *= -1;
+            }
+            if (direction.y < 0) {
+                yvel *= -1;
+            }
+
+            if (Math.abs(direction.x) > Math.abs(direction.y)) {
+                if (direction.x > 0) {
+                    enemy.setRotation(0);
+                }
+                else {
+                    enemy.setRotation(180);
                 }
             }
             else {
-                xvel = enemy.MOVE_SPEED;
-                yvel = enemy.MOVE_SPEED;
-
-                if (direction.x < 0) {
-                    xvel *= -1;
+                if (direction.y > 0) {
+                    enemy.setRotation(90);
                 }
-                if (direction.y < 0) {
-                    yvel *= -1;
+                else {
+                    enemy.setRotation(270);
                 }
             }
 
-            if (xvel != 0 && Math.abs(xvel) > Math.abs(direction.x)) {
+            if (xvel != 0 && Math.abs(lastPatrolPoint.x - enemy.getBounds().x) <= enemy.MOVE_SPEED * 13) {
                 body.setTransform(lastPatrolPoint.x * Game.WORLD_TO_BOX, body.getTransform().getPosition().y, 0);
                 xvel = 0;
             }
 
-            if (yvel != 0 && Math.abs(yvel) > Math.abs(direction.y)) {
+            if (yvel != 0 && Math.abs(lastPatrolPoint.y - enemy.getBounds().y) <= enemy.MOVE_SPEED * 13) {
                 body.setTransform(body.getTransform().getPosition().x, lastPatrolPoint.y * Game.WORLD_TO_BOX, 0);
                 yvel = 0;
             }
 
-            if (direction.x == 0 && direction.y == 0) {
+            if (xvel == 0 && yvel == 0) {
                 returnToPatrol = false;
             }
             else {
