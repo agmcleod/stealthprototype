@@ -33,8 +33,8 @@ public class Enemy extends MapEntity {
     private Polygon sight;
     private Vector2 target;
     public final float MOVE_SPEED = 1.5f;
-    private float velx = MOVE_SPEED;
-    private float vely = MOVE_SPEED;
+    private float patrolVelX = MOVE_SPEED;
+    private float patrolVelY = MOVE_SPEED;
 
 
     public Enemy(Game game) {
@@ -114,11 +114,11 @@ public class Enemy extends MapEntity {
     }
 
     public float getVelX() {
-        return velx;
+        return patrolVelX;
     }
 
     public float getVelY() {
-        return vely;
+        return patrolVelY;
     }
 
     public void moveWithVelocity(float x, float y) {
@@ -199,11 +199,11 @@ public class Enemy extends MapEntity {
     }
 
     public void setVelX(float x) {
-        velx = x;
+        patrolVelX = x;
     }
 
     public void setVelY(float y) {
-        vely = y;
+        patrolVelY = y;
     }
 
     @Override
@@ -221,10 +221,9 @@ public class Enemy extends MapEntity {
 
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 
-        if (!playerInSight) {
-            getPatrolBehaviour().updateEnemyVelocity();
+        if (!playerInSight && !getPatrolBehaviour().isReturnToPatrol()) {
+            getPatrolBehaviour().changePatrolDirectionIfAtEnd();
         }
-
 
         sight.setRotation(rotation);
     }
