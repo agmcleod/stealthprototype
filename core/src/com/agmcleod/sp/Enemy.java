@@ -206,7 +206,10 @@ public class Enemy extends MapEntity {
     @Override
     public void update() {
         if (playerInSight) {
-            getChaseBehaviour().update();
+            ChaseBehaviour behaviour = getChaseBehaviour();
+            if (behaviour != null) {
+                behaviour.update();
+            }
         }
         else {
             getPatrolBehaviour().update();
