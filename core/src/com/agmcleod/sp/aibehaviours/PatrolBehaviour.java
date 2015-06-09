@@ -2,6 +2,8 @@ package com.agmcleod.sp.aibehaviours;
 
 import com.agmcleod.sp.Enemy;
 import com.agmcleod.sp.Game;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -12,15 +14,16 @@ import com.badlogic.gdx.physics.box2d.Body;
 public class PatrolBehaviour extends Behaviour {
     private final float CORRECTIVE_FACTOR = 13;
     private Vector2 direction;
-    private Vector2 lastPatrolPoint;
+    private Vector2 enemyPosition;
+    private Vector2 closestPatrolPoint;
     private boolean returnToPatrol;
-
 
     public PatrolBehaviour(Enemy enemy) {
         super(enemy);
         returnToPatrol = false;
-        lastPatrolPoint = new Vector2();
+        closestPatrolPoint = new Vector2();
         direction = new Vector2();
+        enemyPosition = new Vector2();
     }
 
     public void changePatrolDirectionIfAtEnd() {
@@ -66,11 +69,10 @@ public class PatrolBehaviour extends Behaviour {
         return returnToPatrol;
     }
 
-    public void setLastPatrolPoint(float x, float y) {
-        this.lastPatrolPoint.set(x, y);
-    }
-
     public void setReturnToPatrol(boolean returnToPatrol) {
+        if (!this.returnToPatrol && returnToPatrol) {
+            setClosestPatrolPoint();
+        }
         this.returnToPatrol = returnToPatrol;
     }
 
@@ -94,7 +96,7 @@ public class PatrolBehaviour extends Behaviour {
     }
 
     public void updateEnemyToReturnToPatrol(Vector2 target, Vector2 original, Body body) {
-        direction.set(lastPatrolPoint.x, lastPatrolPoint.y).sub(enemy.getBounds().x, enemy.getBounds().y).nor();
+        direction.set(closestPatrolPoint.x, closestPatrolPoint.y).sub(enemy.getBounds().x, enemy.getBounds().y).nor();
         float xvel = 0;
         float yvel = 0;
         if (direction.x != 0) {
@@ -127,8 +129,8 @@ public class PatrolBehaviour extends Behaviour {
             }
         }
 
-        if (xvel != 0 && Math.abs(lastPatrolPoint.x - enemy.getBounds().x) <= enemy.MOVE_SPEED * CORRECTIVE_FACTOR) {
-            body.setTransform(lastPatrolPoint.x * Game.WORLD_TO_BOX, body.getTransform().getPosition().y, 0);
+        if (xvel != 0 && Math.abs(closestPatrolPoint.x - enemy.getBounds().x) <= enemy.MOVE_SPEED * CORRECTIVE_FACTOR) {
+            body.setTransform(closestPatrolPoint.x * Game.WORLD_TO_BOX, body.getTransform().getPosition().y, 0);
             if (xvel > 0) {
                 enemy.setVelX(enemy.MOVE_SPEED);
             }
@@ -138,8 +140,8 @@ public class PatrolBehaviour extends Behaviour {
             xvel = 0;
         }
 
-        if (yvel != 0 && Math.abs(lastPatrolPoint.y - enemy.getBounds().y) <= enemy.MOVE_SPEED * CORRECTIVE_FACTOR) {
-            body.setTransform(body.getTransform().getPosition().x, lastPatrolPoint.y * Game.WORLD_TO_BOX, 0);
+        if (yvel != 0 && Math.abs(closestPatrolPoint.y - enemy.getBounds().y) <= enemy.MOVE_SPEED * CORRECTIVE_FACTOR) {
+            body.setTransform(body.getTransform().getPosition().x, closestPatrolPoint.y * Game.WORLD_TO_BOX, 0);
             if (yvel > 0) {
                 enemy.setVelY(enemy.MOVE_SPEED);
             }
@@ -154,5 +156,12 @@ public class PatrolBehaviour extends Behaviour {
         } else {
             body.setLinearVelocity(xvel, yvel);
         }
+    }
+
+    // Private methods
+
+    private void setClosestPatrolPoint() {
+        enemy.getBounds().getPosition(enemyPosition);
+        Intersector.nearestSegmentPoint(enemy.getOriginal(), enemy.getTarget(), enemyPosition, closestPatrolPoint);
     }
 }

@@ -54,9 +54,6 @@ public class Enemy extends MapEntity {
     public void checkSightline(Player player) {
         float[] playerBoundsVertices = player.getBoundsVertices();
         if(Intersector.overlapConvexPolygons(sight.getTransformedVertices(), playerBoundsVertices, null)) {
-            if (!playerInSight) {
-                getPatrolBehaviour().setLastPatrolPoint(bounds.x, bounds.y);
-            }
             playerInSight = true;
         }
         else {
