@@ -152,6 +152,7 @@ public class PatrolBehaviour extends Behaviour {
         }
 
         if (xvel == 0 && yvel == 0) {
+            body.setLinearVelocity(0, 0);
             returnToPatrol = false;
         } else {
             body.setLinearVelocity(xvel, yvel);
@@ -163,5 +164,6 @@ public class PatrolBehaviour extends Behaviour {
     private void setClosestPatrolPoint() {
         enemy.getBounds().getPosition(enemyPosition);
         Intersector.nearestSegmentPoint(enemy.getOriginal(), enemy.getTarget(), enemyPosition, closestPatrolPoint);
+        closestPatrolPoint.add(enemy.WIDTH / 2, enemy.HEIGHT / 2);
     }
 }

@@ -19,8 +19,8 @@ import java.util.Iterator;
  * Created by aaronmcleod on 15-05-31.
  */
 public class Enemy extends MapEntity {
-    private final float WIDTH = 32;
-    private final float HEIGHT = 32;
+    public final float WIDTH = 32;
+    public final float HEIGHT = 32;
 
     private Array<Behaviour> behaviours;
     private Body body;
@@ -211,7 +211,6 @@ public class Enemy extends MapEntity {
         else {
             getPatrolBehaviour().update();
         }
-
 
         bounds.x = (int) (body.getPosition().x * game.BOX_TO_WORLD) - WIDTH / 2;
         bounds.y = (int) (body.getPosition().y * game.BOX_TO_WORLD) - HEIGHT / 2;
