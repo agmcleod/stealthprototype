@@ -36,6 +36,10 @@ public class Enemy extends MapEntity {
     private float patrolVelX = MOVE_SPEED;
     private float patrolVelY = MOVE_SPEED;
 
+    private Vector2 raycastPoint;
+    private Vector2 raycastOrigin;
+    private Vector2 raycastTarget;
+
 
     public Enemy(Game game) {
         super("enemy");
@@ -45,6 +49,9 @@ public class Enemy extends MapEntity {
         sight = new Polygon();
         playerInSight = false;
         behaviours = new Array<Behaviour>();
+        raycastTarget = new Vector2();
+        raycastOrigin = new Vector2();
+        raycastPoint = new Vector2();
     }
 
     public void addBehaviour(Behaviour b) {
@@ -54,7 +61,19 @@ public class Enemy extends MapEntity {
     public void checkSightline(Player player) {
         float[] playerBoundsVertices = player.getBoundsVertices();
         if(Intersector.overlapConvexPolygons(sight.getTransformedVertices(), playerBoundsVertices, null)) {
-            playerInSight = true;
+            World world = game.getWorld();
+            final Rectangle playerBounds = player.getBounds();
+            world.rayCast(new RayCastCallback() {
+                @Override
+                public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+                    raycastPoint.set(point.x * game.BOX_TO_WORLD, point.y * game.BOX_TO_WORLD);
+                    if (playerBounds.contains(raycastPoint)) {
+                        playerInSight = true;
+                    }
+                    return 0;
+                }
+            }, raycastOrigin.set((bounds.x + bounds.width / 2) * game.WORLD_TO_BOX, (bounds.y + bounds.height / 2) * game.WORLD_TO_BOX),
+                    raycastTarget.set((playerBounds.x + playerBounds.width / 2) + game.WORLD_TO_BOX, (playerBounds.y + playerBounds.height / 2) * game.WORLD_TO_BOX));
         }
         else {
             if (playerInSight) {
