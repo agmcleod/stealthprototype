@@ -36,7 +36,6 @@ public class Enemy extends MapEntity {
     private float patrolVelX = MOVE_SPEED;
     private float patrolVelY = MOVE_SPEED;
 
-    private Vector2 raycastPoint;
     private Vector2 raycastOrigin;
     private Vector2 raycastTarget;
 
@@ -51,7 +50,6 @@ public class Enemy extends MapEntity {
         behaviours = new Array<Behaviour>();
         raycastTarget = new Vector2();
         raycastOrigin = new Vector2();
-        raycastPoint = new Vector2();
     }
 
     public void addBehaviour(Behaviour b) {
@@ -68,11 +66,13 @@ public class Enemy extends MapEntity {
             world.rayCast(new RayCastCallback() {
                 @Override
                 public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                    raycastPoint.set(point.x * game.BOX_TO_WORLD, point.y * game.BOX_TO_WORLD);
-                    if (playerBounds.contains(raycastPoint)) {
+                    if (((GameObject) fixture.getUserData()).name.equals("player")) {
                         playerInSight = true;
                     }
-                    return 0;
+                    else {
+                        playerInSight = false;
+                    }
+                    return fraction;
                 }
             }, raycastOrigin, raycastTarget);
         }

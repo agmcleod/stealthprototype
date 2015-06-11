@@ -62,7 +62,16 @@ public class MapBodyBuilder {
             bd.type = BodyDef.BodyType.StaticBody;
             Body body = world.createBody(bd);
             Fixture f = body.createFixture(shape, 1);
-            f.setUserData(new MapCollision());
+
+            String name = object.getName();
+            if (name != null && !name.equals("")) {
+                f.setUserData(new MapCollision(name));
+            }
+            else {
+                f.setUserData(new MapCollision());
+            }
+
+
             f.setRestitution(0f);
 
             bodies.add(body);

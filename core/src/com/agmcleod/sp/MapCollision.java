@@ -10,6 +10,10 @@ public class MapCollision extends GameObject {
         super("mapCollision");
     }
 
+    public MapCollision(String name) {
+        super(name);
+    }
+
     @Override
     public void render(SpriteBatch batch) {
 
