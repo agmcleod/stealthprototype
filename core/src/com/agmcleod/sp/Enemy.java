@@ -63,6 +63,8 @@ public class Enemy extends MapEntity {
         if(Intersector.overlapConvexPolygons(sight.getTransformedVertices(), playerBoundsVertices, null)) {
             World world = game.getWorld();
             final Rectangle playerBounds = player.getBounds();
+            raycastTarget.set((playerBounds.x + playerBounds.width / 2) * game.WORLD_TO_BOX, (playerBounds.y + playerBounds.height / 2) * game.WORLD_TO_BOX);
+            raycastOrigin.set((bounds.x + bounds.width / 2) * game.WORLD_TO_BOX, (bounds.y + bounds.height / 2) * game.WORLD_TO_BOX);
             world.rayCast(new RayCastCallback() {
                 @Override
                 public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
@@ -72,8 +74,7 @@ public class Enemy extends MapEntity {
                     }
                     return 0;
                 }
-            }, raycastOrigin.set((bounds.x + bounds.width / 2) * game.WORLD_TO_BOX, (bounds.y + bounds.height / 2) * game.WORLD_TO_BOX),
-                    raycastTarget.set((playerBounds.x + playerBounds.width / 2) + game.WORLD_TO_BOX, (playerBounds.y + playerBounds.height / 2) * game.WORLD_TO_BOX));
+            }, raycastOrigin, raycastTarget);
         }
         else {
             if (playerInSight) {
