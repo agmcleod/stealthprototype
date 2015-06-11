@@ -16,7 +16,7 @@
  <objectgroup name="entities">
   <object name="enemy" x="156" y="672" width="32" height="32">
    <properties>
-    <property name="aitype" value="shoot"/>
+    <property name="aitype" value="chase"/>
     <property name="target_x" value="156"/>
     <property name="target_y" value="552"/>
    </properties>
@@ -26,6 +26,13 @@
     <property name="aitype" value="shoot"/>
     <property name="target_x" value="1566"/>
     <property name="target_y" value="750"/>
+   </properties>
+  </object>
+  <object name="enemy" x="544" y="672" width="32" height="32">
+   <properties>
+    <property name="aitype" value="shoot"/>
+    <property name="target_x" value="1120"/>
+    <property name="target_y" value="672"/>
    </properties>
   </object>
  </objectgroup>

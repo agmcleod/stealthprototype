@@ -177,8 +177,8 @@ public class Enemy extends MapEntity {
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         sight.setVertices(new float[] {
                 0, 0,
-                150, -70,
-                150, 70
+                180, -100,
+                180, 100
         });
 
         original = new Vector2(x, y);
