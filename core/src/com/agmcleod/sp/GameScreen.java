@@ -28,20 +28,23 @@ import com.badlogic.gdx.utils.ObjectMap;
 public class GameScreen implements Screen {
     private World world;
 
+    private SpriteBatch batch;
     private MapBodyBuilder bodyBuilder;
     private OrthographicCamera camera;
     private Matrix4 cameraCpy;
-    private Box2DDebugRenderer debugRenderer;
     private ObjectMap<String, String> classByName;
-    private Array<GameObject> gameObjects;
+    private Box2DDebugRenderer debugRenderer;
+    private float fadeTimer;
     private FollowCamera followCamera;
     private Game game;
+    private Array<GameObject> gameObjects;
     private Rectangle mapBounds;
     private Array<CustomMapRenderer> mapRenderers;
     private Player player;
     private boolean restartNextFrame;
     private ShapeRenderer shapeRenderer;
-    private SpriteBatch batch;
+    private TransitionCallback resetTransitionCallback;
+    private boolean transitioning;
 
     public GameScreen(Game game, World world) {
         this.world = world;
@@ -52,6 +55,14 @@ public class GameScreen implements Screen {
         classByName.put("enemy", "com.agmcleod.sp.Enemy");
         gameObjects = new Array<GameObject>();
         restartNextFrame = false;
+        transitioning = false;
+        resetTransitionCallback = new TransitionCallback() {
+            @Override
+            public void callback() {
+                transitioning = false;
+                restartNextFrame = true;
+            }
+        };
     }
 
     @Override
@@ -123,7 +134,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        update();
+        if (!transitioning) {
+            update();
+        }
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(0, 0, 0, 1f);
 
@@ -146,6 +160,11 @@ public class GameScreen implements Screen {
         shapeRenderer.end();
 
         debugRenderer.render(world, cameraCpy.scl(game.BOX_TO_WORLD));
+
+        if (transitioning) {
+            game.drawBlackTransparentSquare(camera, shapeRenderer, fadeTimer / 0.5f, resetTransitionCallback);
+            fadeTimer += Gdx.graphics.getDeltaTime();
+        }
     }
 
     public void renderMap() {
@@ -165,7 +184,8 @@ public class GameScreen implements Screen {
     }
 
     public void restart() {
-        restartNextFrame = true;
+        fadeTimer = 0;
+        transitioning = true;
     }
 
     public void update() {
