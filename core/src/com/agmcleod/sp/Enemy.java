@@ -177,7 +177,7 @@ public class Enemy extends MapEntity {
         rotation = 0;
         bounds.setPosition(original.x, original.y);
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-        body.getTransform().setPosition(new Vector2((bounds.x + WIDTH / 2) * game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * game.WORLD_TO_BOX));
+        body.setTransform((bounds.x + WIDTH / 2) * game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * game.WORLD_TO_BOX, 0);
     }
 
     public void setInitialBounds(float x, float y, float width, float height) {

@@ -39,6 +39,7 @@ public class GameScreen implements Screen {
     private Rectangle mapBounds;
     private Array<CustomMapRenderer> mapRenderers;
     private Player player;
+    private boolean restartNextFrame;
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
 
@@ -50,6 +51,7 @@ public class GameScreen implements Screen {
         classByName = new ObjectMap<String, String>();
         classByName.put("enemy", "com.agmcleod.sp.Enemy");
         gameObjects = new Array<GameObject>();
+        restartNextFrame = false;
     }
 
     @Override
@@ -163,15 +165,20 @@ public class GameScreen implements Screen {
     }
 
     public void restart() {
-        for (GameObject gameObject : gameObjects) {
-            if (gameObject instanceof Enemy) {
-                ((Enemy) gameObject).reset();
-            }
-        }
-        player.reset();
+        restartNextFrame = true;
     }
 
     public void update() {
+        if (restartNextFrame) {
+            for (GameObject gameObject : gameObjects) {
+                if (gameObject instanceof Enemy) {
+                    ((Enemy) gameObject).reset();
+                }
+            }
+            player.reset();
+            restartNextFrame = false;
+        }
+
         player.update();
 
         this.world.step(1f / 60f, 6, 2);

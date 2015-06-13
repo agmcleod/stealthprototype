@@ -101,8 +101,8 @@ public class Player extends GameObject {
 
     public void reset() {
         resetBoundsToOriginal();
-        // todo replace new vector with pooling or cached property
-        body.getTransform().setPosition(new Vector2(bounds.x * Game.WORLD_TO_BOX, bounds.y * Game.WORLD_TO_BOX));
+        rotation = 0;
+        body.setTransform(bounds.x * Game.WORLD_TO_BOX, bounds.y * Game.WORLD_TO_BOX, 0);
     }
 
     public void resetBoundsToOriginal() {
