@@ -29,7 +29,9 @@ public class Player extends GameObject {
         this.region = game.getAtlas().findRegion("player");
         World world = game.getWorld();
 
-        bounds = new Rectangle(WIDTH, Gdx.graphics.getHeight() / 2, WIDTH, HEIGHT);
+        bounds = new Rectangle();
+
+        resetBoundsToOriginal();
 
         PolygonShape playerShape = new PolygonShape();
         playerShape.setAsBox(WIDTH / 2 * Game.WORLD_TO_BOX, HEIGHT / 2 * Game.WORLD_TO_BOX);
@@ -95,6 +97,16 @@ public class Player extends GameObject {
         }
 
         batch.draw(region, x, y, 0, 0, WIDTH, HEIGHT, 1.0f, 1.0f, rotation);
+    }
+
+    public void reset() {
+        resetBoundsToOriginal();
+        // todo replace new vector with pooling or cached property
+        body.getTransform().setPosition(new Vector2(bounds.x * Game.WORLD_TO_BOX, bounds.y * Game.WORLD_TO_BOX));
+    }
+
+    public void resetBoundsToOriginal() {
+        bounds.set(WIDTH, Gdx.graphics.getHeight() / 2, WIDTH, HEIGHT);
     }
 
     public void update() {

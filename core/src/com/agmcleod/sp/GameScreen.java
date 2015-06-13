@@ -17,7 +17,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -43,8 +42,8 @@ public class GameScreen implements Screen {
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
 
-    public GameScreen(Game game) {
-        this.world = new World(new Vector2(0, 0), true);;
+    public GameScreen(Game game, World world) {
+        this.world = world;
         this.world.setContactListener(new CollisionListener(this));
         this.game = game;
         bodyBuilder = new MapBodyBuilder(game, world);
@@ -164,7 +163,12 @@ public class GameScreen implements Screen {
     }
 
     public void restart() {
-
+        for (GameObject gameObject : gameObjects) {
+            if (gameObject instanceof Enemy) {
+                ((Enemy) gameObject).reset();
+            }
+        }
+        player.reset();
     }
 
     public void update() {

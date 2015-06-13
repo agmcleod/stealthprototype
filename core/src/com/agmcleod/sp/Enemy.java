@@ -172,6 +172,14 @@ public class Enemy extends MapEntity {
         renderer.polygon(sight.getTransformedVertices());
     }
 
+    public void reset() {
+        playerInSight = false;
+        rotation = 0;
+        bounds.setPosition(original.x, original.y);
+        sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        body.getTransform().setPosition(new Vector2((bounds.x + WIDTH / 2) * game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * game.WORLD_TO_BOX));
+    }
+
     public void setInitialBounds(float x, float y, float width, float height) {
         super.setBounds(x, y, width, height);
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
