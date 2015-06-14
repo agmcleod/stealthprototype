@@ -3,6 +3,7 @@ package com.agmcleod.sp;
 import com.agmcleod.sp.aibehaviours.Behaviour;
 import com.agmcleod.sp.aibehaviours.ChaseBehaviour;
 import com.agmcleod.sp.aibehaviours.PatrolBehaviour;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -26,6 +27,9 @@ public class Enemy extends MapEntity {
     private Game game;
     private Vector2 original;
     private boolean playerInSight;
+    private boolean playerInSightLastFrame;
+    private boolean radiusDetectionOn;
+    private float radiusDetectionTimeout;
     TextureRegion region;
     private float rotation = 0;
     private Polygon sight;
@@ -49,6 +53,7 @@ public class Enemy extends MapEntity {
         raycastTarget = new Vector2();
         raycastOrigin = new Vector2();
         detectArea = new Circle();
+        playerInSightLastFrame = false;
     }
 
     public void addBehaviour(Behaviour b) {
@@ -169,8 +174,10 @@ public class Enemy extends MapEntity {
         }
 
         renderer.polygon(sight.getTransformedVertices());
-        renderer.setColor(0.0f, 1.0f, 0.0f, 1.0f);
-        renderer.circle(detectArea.x, detectArea.y, detectArea.radius);
+        if (radiusDetectionOn) {
+            renderer.setColor(0.0f, 1.0f, 0.0f, 1.0f);
+            renderer.circle(detectArea.x, detectArea.y, detectArea.radius);
+        }
     }
 
     public void reset() {
@@ -219,6 +226,10 @@ public class Enemy extends MapEntity {
         shape.dispose();
     }
 
+    public void setRadiusDetectionTimeout() {
+        radiusDetectionTimeout = 1.2f;
+    }
+
     public void setRotation(float a) {
         rotation = a;
     }
@@ -238,12 +249,18 @@ public class Enemy extends MapEntity {
     @Override
     public void update() {
         if (playerInSight) {
+            playerInSightLastFrame = true;
             ChaseBehaviour behaviour = getChaseBehaviour();
             if (behaviour != null) {
                 behaviour.update();
             }
         }
         else {
+            if (playerInSightLastFrame) {
+                playerInSightLastFrame = false;
+                radiusDetectionOn = true;
+                setRadiusDetectionTimeout();
+            }
             getPatrolBehaviour().update();
         }
 
@@ -255,6 +272,13 @@ public class Enemy extends MapEntity {
 
         if (!playerInSight && !getPatrolBehaviour().isReturnToPatrol()) {
             getPatrolBehaviour().changePatrolDirectionIfAtEnd();
+        }
+
+        if (radiusDetectionOn) {
+            if (radiusDetectionTimeout <= 0) {
+                radiusDetectionOn = false;
+            }
+            radiusDetectionTimeout -= Gdx.graphics.getDeltaTime();
         }
 
         sight.setRotation(rotation);
