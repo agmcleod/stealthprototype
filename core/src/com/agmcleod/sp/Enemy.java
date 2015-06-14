@@ -6,10 +6,7 @@ import com.agmcleod.sp.aibehaviours.PatrolBehaviour;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 
@@ -25,6 +22,7 @@ public class Enemy extends MapEntity {
     private Array<Behaviour> behaviours;
     private Body body;
     private float chaseVelocity = 3.0f;
+    private Circle detectArea;
     private Game game;
     private Vector2 original;
     private boolean playerInSight;
@@ -50,6 +48,7 @@ public class Enemy extends MapEntity {
         behaviours = new Array<Behaviour>();
         raycastTarget = new Vector2();
         raycastOrigin = new Vector2();
+        detectArea = new Circle();
     }
 
     public void addBehaviour(Behaviour b) {
@@ -170,6 +169,8 @@ public class Enemy extends MapEntity {
         }
 
         renderer.polygon(sight.getTransformedVertices());
+        renderer.setColor(0.0f, 1.0f, 0.0f, 1.0f);
+        renderer.circle(detectArea.x, detectArea.y, detectArea.radius);
     }
 
     public void reset() {
@@ -183,11 +184,14 @@ public class Enemy extends MapEntity {
     public void setInitialBounds(float x, float y, float width, float height) {
         super.setBounds(x, y, width, height);
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-        sight.setVertices(new float[] {
+        sight.setVertices(new float[]{
                 0, 0,
                 180, -100,
                 180, 100
         });
+
+        detectArea.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        detectArea.setRadius(150);
 
         original = new Vector2(x, y);
 
@@ -247,6 +251,7 @@ public class Enemy extends MapEntity {
         bounds.y = (int) (body.getPosition().y * game.BOX_TO_WORLD) - HEIGHT / 2;
 
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        detectArea.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 
         if (!playerInSight && !getPatrolBehaviour().isReturnToPatrol()) {
             getPatrolBehaviour().changePatrolDirectionIfAtEnd();
