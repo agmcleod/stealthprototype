@@ -2,6 +2,7 @@ package com.agmcleod.sp;
 
 import com.agmcleod.sp.aibehaviours.ChaseBehaviour;
 import com.agmcleod.sp.aibehaviours.PatrolBehaviour;
+import com.agmcleod.sp.aibehaviours.SearchBehaviour;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -65,24 +66,8 @@ public class GameScreen implements Screen {
         };
     }
 
-    @Override
-    public void show() {
-        debugRenderer = new Box2DDebugRenderer();
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        cameraCpy = camera.combined.cpy();
-        mapRenderers = new Array<CustomMapRenderer>();
-        shapeRenderer = new ShapeRenderer();
-
-        player = new Player(game);
-        batch = new SpriteBatch();
-
-        mapBounds = new Rectangle();
-        followCamera = new FollowCamera(camera, player.getBounds(), mapBounds);
-
-        loadLevel("startroom.tmx", 0, 0);
-        loadLevel("lhall.tmx", 832, 96);
-        loadLevel("adjacent.tmx", 1344, -925);
+    public Player getPlayer() {
+        return player;
     }
 
     public void loadLevel(String name, float x, float y) {
@@ -118,6 +103,8 @@ public class GameScreen implements Screen {
                         ChaseBehaviour behaviour = new ChaseBehaviour(enemy);
                         behaviour.setTarget(player.getBounds());
                         enemy.addBehaviour(behaviour);
+                        SearchBehaviour sb = new SearchBehaviour(enemy);
+                        enemy.addBehaviour(sb);
                     }
 
                     enemy.addBehaviour(new PatrolBehaviour(enemy));
@@ -186,6 +173,26 @@ public class GameScreen implements Screen {
     public void restart() {
         fadeTimer = 0;
         transitioning = true;
+    }
+
+    @Override
+    public void show() {
+        debugRenderer = new Box2DDebugRenderer();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        cameraCpy = camera.combined.cpy();
+        mapRenderers = new Array<CustomMapRenderer>();
+        shapeRenderer = new ShapeRenderer();
+
+        player = new Player(game);
+        batch = new SpriteBatch();
+
+        mapBounds = new Rectangle();
+        followCamera = new FollowCamera(camera, player.getBounds(), mapBounds);
+
+        loadLevel("startroom.tmx", 0, 0);
+        loadLevel("lhall.tmx", 832, 96);
+        loadLevel("adjacent.tmx", 1344, -925);
     }
 
     public void update() {

@@ -14,6 +14,7 @@ public class Game extends com.badlogic.gdx.Game {
     public static final float WORLD_TO_BOX = 0.01f;
     public static final float BOX_TO_WORLD = 100f;
 
+    private GameScreen gameScreen;
     private World world;
 
     private TextureAtlas atlas;
@@ -22,7 +23,8 @@ public class Game extends com.badlogic.gdx.Game {
     public void create () {
         atlas = new TextureAtlas("atlas.txt");
         world = new World(new Vector2(0, 0), true);
-        setScreen(new GameScreen(this, world));
+        gameScreen = new GameScreen(this, world);
+        setScreen(gameScreen);
     }
 
     public void drawBlackTransparentSquare(Camera camera, ShapeRenderer shapeRenderer, float percent, TransitionCallback callback) {
@@ -51,6 +53,10 @@ public class Game extends com.badlogic.gdx.Game {
 
     public TextureAtlas getAtlas() {
         return atlas;
+    }
+
+    public Player getPlayer() {
+        return gameScreen.getPlayer();
     }
 
     public World getWorld() {

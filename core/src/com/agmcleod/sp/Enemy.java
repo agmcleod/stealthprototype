@@ -3,6 +3,7 @@ package com.agmcleod.sp;
 import com.agmcleod.sp.aibehaviours.Behaviour;
 import com.agmcleod.sp.aibehaviours.ChaseBehaviour;
 import com.agmcleod.sp.aibehaviours.PatrolBehaviour;
+import com.agmcleod.sp.aibehaviours.SearchBehaviour;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -25,11 +26,12 @@ public class Enemy extends MapEntity {
     private float chaseVelocity = 3.0f;
     private Circle detectArea;
     private Game game;
+    private Vector2 lastKnownPlayerPosition;
     private Vector2 original;
     private boolean playerInSight;
     private boolean playerInSightLastFrame;
+
     private boolean radiusDetectionOn;
-    private float radiusDetectionTimeout;
     TextureRegion region;
     private float rotation = 0;
     private Polygon sight;
@@ -54,6 +56,7 @@ public class Enemy extends MapEntity {
         raycastOrigin = new Vector2();
         detectArea = new Circle();
         playerInSightLastFrame = false;
+        lastKnownPlayerPosition = new Vector2();
     }
 
     public void addBehaviour(Behaviour b) {
@@ -94,9 +97,7 @@ public class Enemy extends MapEntity {
 
     private ChaseBehaviour getChaseBehaviour() {
         ChaseBehaviour b = null;
-        Iterator<Behaviour> it = behaviours.iterator();
-        while (it.hasNext()) {
-            Behaviour temp = it.next();
+        for (Behaviour temp : behaviours) {
             if (temp instanceof ChaseBehaviour) {
                 b = (ChaseBehaviour) temp;
             }
@@ -105,12 +106,27 @@ public class Enemy extends MapEntity {
         return b;
     }
 
+    private SearchBehaviour getSearchBehaviour() {
+        SearchBehaviour sb = null;
+        for (Behaviour temp : behaviours) {
+            if (temp instanceof SearchBehaviour) {
+                sb = (SearchBehaviour) temp;
+            }
+        }
+        return sb;
+    }
+
+
     public Body getBody() {
         return body;
     }
 
     public float getChaseVelocity() {
         return chaseVelocity;
+    }
+
+    public final Vector2 getLastKnownPlayerPosition() {
+        return lastKnownPlayerPosition;
     }
 
     public final Vector2 getOriginal() {
@@ -144,6 +160,16 @@ public class Enemy extends MapEntity {
 
     public void moveWithVelocity(float x, float y) {
         body.setLinearVelocity(x, y);
+    }
+
+    public void playerIsInSight() {
+        playerInSightLastFrame = true;
+        Rectangle playerBounds = game.getPlayer().getBounds();
+        lastKnownPlayerPosition.set(playerBounds.x, playerBounds.y);
+        ChaseBehaviour behaviour = getChaseBehaviour();
+        if (behaviour != null) {
+            behaviour.update();
+        }
     }
 
     @Override
@@ -226,8 +252,8 @@ public class Enemy extends MapEntity {
         shape.dispose();
     }
 
-    public void setRadiusDetectionTimeout() {
-        radiusDetectionTimeout = 1.2f;
+    public void setRadiusDetectionOn(boolean radiusDetectionOn) {
+        this.radiusDetectionOn = radiusDetectionOn;
     }
 
     public void setRotation(float a) {
@@ -249,19 +275,26 @@ public class Enemy extends MapEntity {
     @Override
     public void update() {
         if (playerInSight) {
-            playerInSightLastFrame = true;
-            ChaseBehaviour behaviour = getChaseBehaviour();
-            if (behaviour != null) {
-                behaviour.update();
-            }
+            playerIsInSight();
         }
         else {
             if (playerInSightLastFrame) {
                 playerInSightLastFrame = false;
                 radiusDetectionOn = true;
-                setRadiusDetectionTimeout();
+                SearchBehaviour sb = getSearchBehaviour();
+                if (sb != null) {
+                    sb.start();
+                }
             }
-            getPatrolBehaviour().update();
+            if (radiusDetectionOn) {
+                SearchBehaviour sb = getSearchBehaviour();
+                if (sb != null) {
+                    sb.update();
+                }
+            }
+            else {
+                getPatrolBehaviour().update();
+            }
         }
 
         bounds.x = (int) (body.getPosition().x * game.BOX_TO_WORLD) - WIDTH / 2;
@@ -272,13 +305,6 @@ public class Enemy extends MapEntity {
 
         if (!playerInSight && !getPatrolBehaviour().isReturnToPatrol()) {
             getPatrolBehaviour().changePatrolDirectionIfAtEnd();
-        }
-
-        if (radiusDetectionOn) {
-            if (radiusDetectionTimeout <= 0) {
-                radiusDetectionOn = false;
-            }
-            radiusDetectionTimeout -= Gdx.graphics.getDeltaTime();
         }
 
         sight.setRotation(rotation);
