@@ -4,7 +4,6 @@ import com.agmcleod.sp.aibehaviours.Behaviour;
 import com.agmcleod.sp.aibehaviours.ChaseBehaviour;
 import com.agmcleod.sp.aibehaviours.PatrolBehaviour;
 import com.agmcleod.sp.aibehaviours.SearchBehaviour;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;

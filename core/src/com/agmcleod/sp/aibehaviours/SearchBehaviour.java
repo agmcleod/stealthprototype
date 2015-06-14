@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Body;
  */
 public class SearchBehaviour extends Behaviour {
     private boolean waitToReturn;
+    private final float TIME_OUT = 0.5f;
     private float time;
     private final float CORRECTIVE_FACTOR = 13;
     private Vector2 direction;
@@ -69,7 +70,7 @@ public class SearchBehaviour extends Behaviour {
 
         if (xvel == 0 && yvel == 0) {
             body.setLinearVelocity(0, 0);
-            resetTime();
+            time = TIME_OUT * 3;
             waitToReturn = true;
         } else {
             body.setLinearVelocity(xvel, yvel);
@@ -77,7 +78,7 @@ public class SearchBehaviour extends Behaviour {
     }
 
     public void resetTime() {
-        time = 0.5f;
+        time = TIME_OUT;
     }
 
     public void start() {
