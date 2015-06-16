@@ -56,6 +56,7 @@ public class Enemy extends MapEntity {
         detectArea = new Circle();
         playerInSightLastFrame = false;
         lastKnownPlayerPosition = new Vector2();
+        radiusDetectionOn = false;
     }
 
     public void addBehaviour(Behaviour b) {
@@ -105,16 +106,6 @@ public class Enemy extends MapEntity {
         return b;
     }
 
-    private SearchBehaviour getSearchBehaviour() {
-        SearchBehaviour sb = null;
-        for (Behaviour temp : behaviours) {
-            if (temp instanceof SearchBehaviour) {
-                sb = (SearchBehaviour) temp;
-            }
-        }
-        return sb;
-    }
-
 
     public Body getBody() {
         return body;
@@ -130,6 +121,20 @@ public class Enemy extends MapEntity {
 
     public final Vector2 getOriginal() {
         return original;
+    }
+
+    public float getRotation() {
+        return rotation;
+    }
+
+    private SearchBehaviour getSearchBehaviour() {
+        SearchBehaviour sb = null;
+        for (Behaviour temp : behaviours) {
+            if (temp instanceof SearchBehaviour) {
+                sb = (SearchBehaviour) temp;
+            }
+        }
+        return sb;
     }
 
     private PatrolBehaviour getPatrolBehaviour() {
@@ -202,6 +207,8 @@ public class Enemy extends MapEntity {
         if (radiusDetectionOn) {
             renderer.setColor(0.0f, 1.0f, 0.0f, 1.0f);
             renderer.circle(detectArea.x, detectArea.y, detectArea.radius);
+            renderer.setColor(1.0f, 0.0f, 0.0f, 1.0f);
+            renderer.circle(lastKnownPlayerPosition.x, lastKnownPlayerPosition.y, 30);
         }
     }
 
@@ -211,6 +218,8 @@ public class Enemy extends MapEntity {
         bounds.setPosition(original.x, original.y);
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         body.setTransform((bounds.x + WIDTH / 2) * game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * game.WORLD_TO_BOX, 0);
+        playerInSightLastFrame = false;
+        radiusDetectionOn = false;
     }
 
     public void setInitialBounds(float x, float y, float width, float height) {
@@ -257,6 +266,9 @@ public class Enemy extends MapEntity {
 
     public void setRotation(float a) {
         rotation = a;
+        if (rotation >= 360) {
+            rotation = 0;
+        }
     }
 
     public void setTarget(float x, float y) {

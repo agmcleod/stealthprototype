@@ -10,15 +10,19 @@ import com.badlogic.gdx.physics.box2d.Body;
  * Created by aaronmcleod on 15-06-14.
  */
 public class SearchBehaviour extends Behaviour {
-    private boolean waitToReturn;
     private final float TIME_OUT = 0.5f;
     private float time;
     private final float CORRECTIVE_FACTOR = 13;
     private Vector2 direction;
+    private int lookCount;
+    private boolean lookAround;
+    private boolean waitToReturn;
     public SearchBehaviour(Enemy enemy) {
         super(enemy);
         direction = new Vector2();
         waitToReturn = false;
+        lookAround = false;
+        lookCount = 0;
     }
 
     public void moveTowardsLastPosition() {
@@ -70,8 +74,8 @@ public class SearchBehaviour extends Behaviour {
 
         if (xvel == 0 && yvel == 0) {
             body.setLinearVelocity(0, 0);
-            time = TIME_OUT * 3;
-            waitToReturn = true;
+            time = TIME_OUT * 2;
+            lookAround = true;
         } else {
             body.setLinearVelocity(xvel, yvel);
         }
@@ -84,6 +88,8 @@ public class SearchBehaviour extends Behaviour {
     public void start() {
         resetTime();
         waitToReturn = false;
+        lookAround = false;
+        lookCount = 0;
     }
 
     @Override
@@ -91,6 +97,21 @@ public class SearchBehaviour extends Behaviour {
         if (time <= 0) {
             if (waitToReturn) {
                 enemy.setRadiusDetectionOn(false);
+            }
+            else if (lookAround) {
+                time = TIME_OUT * 2;
+                if (enemy.getRotation() >= 180) {
+                    enemy.setRotation(enemy.getRotation() - 180);
+                }
+                else {
+                    enemy.setRotation(enemy.getRotation() + 180);
+                }
+                lookCount++;
+                if (lookCount >= 3) {
+                    time = TIME_OUT * 3;
+                    waitToReturn = true;
+                    lookAround = false;
+                }
             }
             else {
                 moveTowardsLastPosition();
