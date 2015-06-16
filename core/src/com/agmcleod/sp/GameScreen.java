@@ -197,12 +197,12 @@ public class GameScreen implements Screen {
 
     public void update() {
         if (restartNextFrame) {
+            player.reset();
             for (GameObject gameObject : gameObjects) {
                 if (gameObject instanceof Enemy) {
                     ((Enemy) gameObject).reset();
                 }
             }
-            player.reset();
             restartNextFrame = false;
         }
 
