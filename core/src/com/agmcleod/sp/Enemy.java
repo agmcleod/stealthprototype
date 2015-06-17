@@ -1,9 +1,6 @@
 package com.agmcleod.sp;
 
-import com.agmcleod.sp.aibehaviours.Behaviour;
-import com.agmcleod.sp.aibehaviours.ChaseBehaviour;
-import com.agmcleod.sp.aibehaviours.PatrolBehaviour;
-import com.agmcleod.sp.aibehaviours.SearchBehaviour;
+import com.agmcleod.sp.aibehaviours.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -137,6 +134,16 @@ public class Enemy extends MapEntity {
         return sb;
     }
 
+    private ShootBehaviour getShootBehaviour() {
+        ShootBehaviour sb = null;
+        for (Behaviour temp : behaviours) {
+            if (temp instanceof ShootBehaviour) {
+                sb = (ShootBehaviour) temp;
+            }
+        }
+        return sb;
+    }
+
     private PatrolBehaviour getPatrolBehaviour() {
         PatrolBehaviour b = null;
         Iterator<Behaviour> it = behaviours.iterator();
@@ -170,6 +177,11 @@ public class Enemy extends MapEntity {
         playerInSightLastFrame = true;
         Rectangle playerBounds = game.getPlayer().getBounds();
         lastKnownPlayerPosition.set(playerBounds.x, playerBounds.y);
+        // TODO: actually setup a string or enum type to decide
+        ShootBehaviour sb = getShootBehaviour();
+        if (sb != null) {
+            sb.update();
+        }
         ChaseBehaviour behaviour = getChaseBehaviour();
         if (behaviour != null) {
             behaviour.update();
@@ -193,6 +205,13 @@ public class Enemy extends MapEntity {
         }
 
         batch.draw(region, x, y, 0, 0, WIDTH, HEIGHT, 1.0f, 1.0f, rotation);
+    }
+
+    public void renderBullet(ShapeRenderer renderer) {
+        ShootBehaviour sb = getShootBehaviour();
+        if (sb != null) {
+            sb.getBullet().render(renderer);
+        }
     }
 
     public void renderSight(ShapeRenderer renderer) {

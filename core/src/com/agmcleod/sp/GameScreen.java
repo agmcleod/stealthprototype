@@ -3,6 +3,7 @@ package com.agmcleod.sp;
 import com.agmcleod.sp.aibehaviours.ChaseBehaviour;
 import com.agmcleod.sp.aibehaviours.PatrolBehaviour;
 import com.agmcleod.sp.aibehaviours.SearchBehaviour;
+import com.agmcleod.sp.aibehaviours.ShootBehaviour;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -106,6 +107,10 @@ public class GameScreen implements Screen {
                         SearchBehaviour sb = new SearchBehaviour(enemy);
                         enemy.addBehaviour(sb);
                     }
+                    else if (objectProperties.get("aitype", String.class).equals("shoot")) {
+                        ShootBehaviour sb = new ShootBehaviour(game, enemy);
+                        enemy.addBehaviour(sb);
+                    }
 
                     enemy.addBehaviour(new PatrolBehaviour(enemy));
 
@@ -142,6 +147,14 @@ public class GameScreen implements Screen {
         for (GameObject gameObject : gameObjects) {
             if (gameObject instanceof Enemy) {
                 ((Enemy) gameObject).renderSight(shapeRenderer);
+            }
+        }
+        shapeRenderer.end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for (GameObject gameObject : gameObjects) {
+            if (gameObject instanceof Enemy) {
+                ((Enemy) gameObject).renderBullet(shapeRenderer);
             }
         }
         shapeRenderer.end();
