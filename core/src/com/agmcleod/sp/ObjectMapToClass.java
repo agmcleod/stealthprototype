@@ -8,10 +8,10 @@ import java.lang.reflect.Constructor;
  * Created by aaronmcleod on 15-05-31.
  */
 public class ObjectMapToClass {
-    public static Object getInstanceOfObject(ObjectMap<String, String> entities, String name, Game game) {
+    public static Object getInstanceOfObject(ObjectMap<String, String> entities, String name, GameScreen game) {
         try {
             Class<?> objectClass = Class.forName(entities.get(name));
-            Constructor<?> constructor = objectClass.getConstructor(Game.class);
+            Constructor<?> constructor = objectClass.getConstructor(GameScreen.class);
             return constructor.newInstance(game);
         }
         catch (java.lang.ClassNotFoundException e) {

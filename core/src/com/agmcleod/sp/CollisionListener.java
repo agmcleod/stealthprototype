@@ -15,9 +15,30 @@ public class CollisionListener implements ContactListener {
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
 
+        handlePlayerEnemyCollision(fixtureA, fixtureB);
+        handlePlayerBulletCollision(fixtureA, fixtureB);
+    }
+
+    public void handlePlayerBulletCollision(Fixture fixtureA, Fixture fixtureB) {
+        Player player = null;
+        Bullet bullet = null;
+        if (((GameObject) fixtureA.getUserData()).name.equals("player") && ((GameObject) fixtureB.getUserData()).name.equals("bullet")) {
+            player = (Player) fixtureA.getUserData();
+            bullet = (Bullet) fixtureB.getUserData();
+        }
+        else if (((GameObject) fixtureA.getUserData()).name.equals("bullet") && ((GameObject) fixtureB.getUserData()).name.equals("player")) {
+            player = (Player) fixtureB.getUserData();
+            bullet = (Bullet) fixtureA.getUserData();
+        }
+
+        if (player != null && bullet != null) {
+            gs.restart();
+        }
+    }
+
+    public void handlePlayerEnemyCollision(Fixture fixtureA, Fixture fixtureB) {
         Player player = null;
         Enemy enemy = null;
-
         if (((GameObject) fixtureA.getUserData()).name.equals("player") && ((GameObject) fixtureB.getUserData()).name.equals("enemy")) {
             player = (Player) fixtureA.getUserData();
             enemy = (Enemy) fixtureB.getUserData();

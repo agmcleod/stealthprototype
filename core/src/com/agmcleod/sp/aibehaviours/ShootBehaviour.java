@@ -30,7 +30,7 @@ public class ShootBehaviour extends Behaviour {
     }
 
     public void start() {
-        shootTimeout = 0.3f;
+        shootTimeout = 0.15f;
         Rectangle enemyBounds = enemy.getBounds();
         bullet.setPosition(enemyBounds.x + enemyBounds.width / 2, enemyBounds.y + enemyBounds.height / 2);
     }

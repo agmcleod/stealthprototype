@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.*;
 /**
  * Created by Aaron on 6/16/2015.
  */
-public class Bullet {
+public class Bullet extends GameObject {
     private float WIDTH = 16;
     private float HEIGHT = 4;
 
@@ -22,8 +22,8 @@ public class Bullet {
     public String name;
     private final float VELOCITY = 10f;
     public Bullet(Game game, float x, float y) {
+        super("bullet");
         rotation = 0;
-        name = "bullet";
         bounds = new Rectangle(x, y, WIDTH, HEIGHT);
 
         World world = game.getWorld();
@@ -52,7 +52,7 @@ public class Bullet {
         direction = new Vector2();
     }
 
-    public void render(ShapeRenderer renderer) {
+    public void renderShape(ShapeRenderer renderer) {
         renderer.setColor(Color.RED);
         renderer.rect(bounds.x, bounds.y, bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, bounds.width, bounds.height, 1, 1, rotation);
     }
@@ -70,6 +70,11 @@ public class Bullet {
 
     public void setTarget(float x, float y) {
         target.setPosition(x, y);
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+
     }
 
     public void update() {

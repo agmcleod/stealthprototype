@@ -21,7 +21,7 @@ public class Enemy extends MapEntity {
     private Body body;
     private float chaseVelocity = 3.0f;
     private Circle detectArea;
-    private Game game;
+    private GameScreen gs;
     private Vector2 lastKnownPlayerPosition;
     private Vector2 original;
     private boolean playerInSight;
@@ -40,10 +40,10 @@ public class Enemy extends MapEntity {
     private Vector2 raycastTarget;
 
 
-    public Enemy(Game game) {
+    public Enemy(GameScreen gs) {
         super("enemy");
-        this.game = game;
-        region = game.getAtlas().findRegion("enemy");
+        this.gs = gs;
+        region = gs.getGame().getAtlas().findRegion("enemy");
 
         sight = new Polygon();
         playerInSight = false;
@@ -63,10 +63,10 @@ public class Enemy extends MapEntity {
     public void checkSightline(Player player) {
         float[] playerBoundsVertices = player.getBoundsVertices();
         if(Intersector.overlapConvexPolygons(sight.getTransformedVertices(), playerBoundsVertices, null)) {
-            World world = game.getWorld();
+            World world = gs.getGame().getWorld();
             final Rectangle playerBounds = player.getBounds();
-            raycastTarget.set((playerBounds.x + playerBounds.width / 2) * game.WORLD_TO_BOX, (playerBounds.y + playerBounds.height / 2) * game.WORLD_TO_BOX);
-            raycastOrigin.set((bounds.x + bounds.width / 2) * game.WORLD_TO_BOX, (bounds.y + bounds.height / 2) * game.WORLD_TO_BOX);
+            raycastTarget.set((playerBounds.x + playerBounds.width / 2) * Game.WORLD_TO_BOX, (playerBounds.y + playerBounds.height / 2) * Game.WORLD_TO_BOX);
+            raycastOrigin.set((bounds.x + bounds.width / 2) * Game.WORLD_TO_BOX, (bounds.y + bounds.height / 2) * Game.WORLD_TO_BOX);
             world.rayCast(new RayCastCallback() {
                 @Override
                 public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
@@ -175,7 +175,7 @@ public class Enemy extends MapEntity {
 
     public void playerIsInSight() {
         playerInSightLastFrame = true;
-        Rectangle playerBounds = game.getPlayer().getBounds();
+        Rectangle playerBounds = gs.getPlayer().getBounds();
         lastKnownPlayerPosition.set(playerBounds.x, playerBounds.y);
         // TODO: actually setup a string or enum type to decide
         ShootBehaviour sb = getShootBehaviour();
@@ -210,7 +210,7 @@ public class Enemy extends MapEntity {
     public void renderBullet(ShapeRenderer renderer) {
         ShootBehaviour sb = getShootBehaviour();
         if (sb != null) {
-            sb.getBullet().render(renderer);
+            sb.getBullet().renderShape(renderer);
         }
     }
 
@@ -236,7 +236,7 @@ public class Enemy extends MapEntity {
         rotation = 0;
         bounds.setPosition(original.x, original.y);
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-        body.setTransform((bounds.x + WIDTH / 2) * game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * game.WORLD_TO_BOX, 0);
+        body.setTransform((bounds.x + WIDTH / 2) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX, 0);
         playerInSightLastFrame = false;
         radiusDetectionOn = false;
     }
@@ -255,14 +255,14 @@ public class Enemy extends MapEntity {
 
         original = new Vector2(x, y);
 
-        World world = game.getWorld();
+        World world = gs.getGame().getWorld();
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(WIDTH / 2 * game.WORLD_TO_BOX, HEIGHT / 2 * game.WORLD_TO_BOX);
+        shape.setAsBox(WIDTH / 2 * Game.WORLD_TO_BOX, HEIGHT / 2 * Game.WORLD_TO_BOX);
 
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set((bounds.x + WIDTH / 2) * game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * game.WORLD_TO_BOX);
+        def.position.set((bounds.x + WIDTH / 2) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX);
 
         body = world.createBody(def);
         body.setFixedRotation(true);
@@ -314,6 +314,7 @@ public class Enemy extends MapEntity {
                 if (sb != null) {
                     radiusDetectionOn = true;
                     sb.start();
+                    gs.allowPlayerMovement(false);
                 }
 
                 ShootBehaviour shootBehaviour = getShootBehaviour();
@@ -334,8 +335,8 @@ public class Enemy extends MapEntity {
             }
         }
 
-        bounds.x = (int) (body.getPosition().x * game.BOX_TO_WORLD) - WIDTH / 2;
-        bounds.y = (int) (body.getPosition().y * game.BOX_TO_WORLD) - HEIGHT / 2;
+        bounds.x = (int) (body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2;
+        bounds.y = (int) (body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2;
 
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         detectArea.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);

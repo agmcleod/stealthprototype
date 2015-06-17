@@ -55,10 +55,6 @@ public class Game extends com.badlogic.gdx.Game {
         return atlas;
     }
 
-    public Player getPlayer() {
-        return gameScreen.getPlayer();
-    }
-
     public World getWorld() {
         return world;
     }

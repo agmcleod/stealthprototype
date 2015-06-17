@@ -30,6 +30,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 public class GameScreen implements Screen {
     private World world;
 
+    private boolean allowPlayerMovement;
     private SpriteBatch batch;
     private MapBodyBuilder bodyBuilder;
     private OrthographicCamera camera;
@@ -65,6 +66,15 @@ public class GameScreen implements Screen {
                 restartNextFrame = true;
             }
         };
+        allowPlayerMovement = true;
+    }
+
+    public void allowPlayerMovement(boolean allow) {
+        allowPlayerMovement = allow;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     public Player getPlayer() {
@@ -94,7 +104,7 @@ public class GameScreen implements Screen {
                 MapProperties objectProperties = object.getProperties();
 
                 if (className.equals("enemy")) {
-                    Enemy enemy = (Enemy) ObjectMapToClass.getInstanceOfObject(classByName, className, this.game);
+                    Enemy enemy = (Enemy) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
                     enemy.setInitialBounds(objectProperties.get("x", Float.class) + x, objectProperties.get("y", Float.class) + y, objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
                     float targetY = (mapheight * tileHeight - tileHeight - (Float.parseFloat(objectProperties.get("target_y", String.class))) + y);
                     float targetX = Float.parseFloat(objectProperties.get("target_x", String.class)) + x;
@@ -116,7 +126,7 @@ public class GameScreen implements Screen {
 
                     gameObjects.add(enemy);
                 } else {
-                    MapEntity entity = (MapEntity) ObjectMapToClass.getInstanceOfObject(classByName, className, this.game);
+                    MapEntity entity = (MapEntity) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
                     entity.setBounds(objectProperties.get("x", Float.class) + x, objectProperties.get("y", Float.class) + y, objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
                     gameObjects.add(entity);
                 }
@@ -197,7 +207,7 @@ public class GameScreen implements Screen {
         mapRenderers = new Array<CustomMapRenderer>();
         shapeRenderer = new ShapeRenderer();
 
-        player = new Player(game);
+        player = new Player(this);
         batch = new SpriteBatch();
 
         mapBounds = new Rectangle();
@@ -210,6 +220,7 @@ public class GameScreen implements Screen {
 
     public void update() {
         if (restartNextFrame) {
+            allowPlayerMovement = true;
             player.reset();
             for (GameObject gameObject : gameObjects) {
                 if (gameObject instanceof Enemy) {
@@ -219,7 +230,9 @@ public class GameScreen implements Screen {
             restartNextFrame = false;
         }
 
-        player.update();
+        if (allowPlayerMovement) {
+            player.update();
+        }
 
         this.world.step(1f / 60f, 6, 2);
 

@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 /**
@@ -16,18 +15,18 @@ public class Player extends GameObject {
     private Rectangle bounds;
     private float[] boundsVertices;
     private boolean dirtyVertices;
-    private Game game;
+    private GameScreen gs;
     final float WIDTH = 32;
     final float HEIGHT = 32;
     private final int VEL = 3;
     private TextureRegion region;
     private float rotation;
-    public Player(Game game) {
+    public Player(GameScreen gs) {
         super("player");
         rotation = 0;
-        this.game = game;
-        this.region = game.getAtlas().findRegion("player");
-        World world = game.getWorld();
+        this.gs = gs;
+        this.region = gs.getGame().getAtlas().findRegion("player");
+        World world = gs.getGame().getWorld();
 
         bounds = new Rectangle();
 
