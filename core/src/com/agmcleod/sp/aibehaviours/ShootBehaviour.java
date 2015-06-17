@@ -21,6 +21,14 @@ public class ShootBehaviour extends Behaviour {
         return bullet;
     }
 
+    public void setTargetAngle(float a) {
+        bullet.setRotation(a);
+    }
+
+    public void setTarget(float x, float y) {
+        bullet.setTarget(x, y);
+    }
+
     public void start() {
         shootTimeout = 0.3f;
         Rectangle enemyBounds = enemy.getBounds();

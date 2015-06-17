@@ -68,6 +68,10 @@ public class Bullet {
         body.setTransform(body.getTransform().getPosition().x, body.getTransform().getPosition().y, rotation);
     }
 
+    public void setTarget(float x, float y) {
+        target.setPosition(x, y);
+    }
+
     public void update() {
         direction.set(target.x, target.y).sub(bounds.x, bounds.y).nor();
         body.setLinearVelocity(VELOCITY * target.x, VELOCITY * target.y);

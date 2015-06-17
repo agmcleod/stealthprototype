@@ -310,10 +310,17 @@ public class Enemy extends MapEntity {
         else {
             if (playerInSightLastFrame) {
                 playerInSightLastFrame = false;
-                radiusDetectionOn = true;
                 SearchBehaviour sb = getSearchBehaviour();
                 if (sb != null) {
+                    radiusDetectionOn = true;
                     sb.start();
+                }
+
+                ShootBehaviour shootBehaviour = getShootBehaviour();
+                if (shootBehaviour != null) {
+                    shootBehaviour.start();
+                    shootBehaviour.setTarget(lastKnownPlayerPosition.x, lastKnownPlayerPosition.y);
+                    shootBehaviour.setTargetAngle(MathUtils.atan2(lastKnownPlayerPosition.y - bounds.y, lastKnownPlayerPosition.x - bounds.x));
                 }
             }
             if (radiusDetectionOn) {
