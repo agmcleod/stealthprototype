@@ -79,7 +79,7 @@ public class Bullet extends GameObject {
 
     public void update() {
         direction.set(target.x, target.y).sub(bounds.x, bounds.y).nor();
-        body.setLinearVelocity(VELOCITY * target.x, VELOCITY * target.y);
+        body.setLinearVelocity(VELOCITY * direction.x, VELOCITY * direction.y);
         bounds.x = (int) (body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2;
         bounds.y = (int) (body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2;
     }

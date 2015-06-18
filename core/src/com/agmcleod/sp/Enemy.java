@@ -174,18 +174,21 @@ public class Enemy extends MapEntity {
     }
 
     public void playerIsInSight() {
+        Rectangle playerBounds = gs.getPlayer().getBounds();
+        lastKnownPlayerPosition.set(playerBounds.x, playerBounds.y);
         if (!playerInSightLastFrame) {
+            body.setLinearVelocity(0, 0);
             ShootBehaviour shootBehaviour = getShootBehaviour();
             if (shootBehaviour != null) {
                 shootBehaviour.start();
                 shootBehaviour.setTarget(lastKnownPlayerPosition.x, lastKnownPlayerPosition.y);
                 shootBehaviour.setTargetAngle(MathUtils.atan2(lastKnownPlayerPosition.y - bounds.y, lastKnownPlayerPosition.x - bounds.x));
+                gs.allowPlayerMovement(false);
             }
         }
 
         playerInSightLastFrame = true;
-        Rectangle playerBounds = gs.getPlayer().getBounds();
-        lastKnownPlayerPosition.set(playerBounds.x, playerBounds.y);
+
         // TODO: actually setup a string or enum type to decide
         ShootBehaviour sb = getShootBehaviour();
         if (sb != null) {
@@ -218,7 +221,7 @@ public class Enemy extends MapEntity {
 
     public void renderBullet(ShapeRenderer renderer) {
         ShootBehaviour sb = getShootBehaviour();
-        if (sb != null) {
+        if (sb != null && sb.getHasShot()) {
             sb.getBullet().renderShape(renderer);
         }
     }
@@ -323,7 +326,6 @@ public class Enemy extends MapEntity {
                 if (sb != null) {
                     radiusDetectionOn = true;
                     sb.start();
-                    gs.allowPlayerMovement(false);
                 }
             }
             if (radiusDetectionOn) {
