@@ -174,6 +174,15 @@ public class Enemy extends MapEntity {
     }
 
     public void playerIsInSight() {
+        if (!playerInSightLastFrame) {
+            ShootBehaviour shootBehaviour = getShootBehaviour();
+            if (shootBehaviour != null) {
+                shootBehaviour.start();
+                shootBehaviour.setTarget(lastKnownPlayerPosition.x, lastKnownPlayerPosition.y);
+                shootBehaviour.setTargetAngle(MathUtils.atan2(lastKnownPlayerPosition.y - bounds.y, lastKnownPlayerPosition.x - bounds.x));
+            }
+        }
+
         playerInSightLastFrame = true;
         Rectangle playerBounds = gs.getPlayer().getBounds();
         lastKnownPlayerPosition.set(playerBounds.x, playerBounds.y);
@@ -315,13 +324,6 @@ public class Enemy extends MapEntity {
                     radiusDetectionOn = true;
                     sb.start();
                     gs.allowPlayerMovement(false);
-                }
-
-                ShootBehaviour shootBehaviour = getShootBehaviour();
-                if (shootBehaviour != null) {
-                    shootBehaviour.start();
-                    shootBehaviour.setTarget(lastKnownPlayerPosition.x, lastKnownPlayerPosition.y);
-                    shootBehaviour.setTargetAngle(MathUtils.atan2(lastKnownPlayerPosition.y - bounds.y, lastKnownPlayerPosition.x - bounds.x));
                 }
             }
             if (radiusDetectionOn) {
