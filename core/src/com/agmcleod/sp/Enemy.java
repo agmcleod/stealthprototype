@@ -187,8 +187,7 @@ public class Enemy extends MapEntity {
                 currentBehaviour = getChaseBehaviour();
             }
             else {
-                ChaseBehaviour cb = (ChaseBehaviour) currentBehaviour;
-                cb.update();
+                currentBehaviour.update();
             }
         }
         else if (type.equals("shoot")) {
@@ -200,16 +199,8 @@ public class Enemy extends MapEntity {
                 gs.allowPlayerMovement(false);
                 currentBehaviour = sb;
             }
-        }
-
-        if (!playerInSightLastFrame) {
-            body.setLinearVelocity(0, 0);
-            ShootBehaviour shootBehaviour = getShootBehaviour();
-            if (shootBehaviour != null) {
-                shootBehaviour.start();
-                shootBehaviour.setTarget(lastKnownPlayerPosition.x, lastKnownPlayerPosition.y);
-                shootBehaviour.setTargetAngle(MathUtils.atan2(lastKnownPlayerPosition.y - bounds.y, lastKnownPlayerPosition.x - bounds.x));
-                gs.allowPlayerMovement(false);
+            else {
+                currentBehaviour.update();
             }
         }
     }
@@ -338,15 +329,13 @@ public class Enemy extends MapEntity {
             playerIsInSight();
         }
         else {
-            if (playerInSightLastFrame) {
-                playerInSightLastFrame = false;
+            if (currentBehaviour == getChaseBehaviour() && type.equals("chase")) {
+                radiusDetectionOn = true;
                 SearchBehaviour sb = getSearchBehaviour();
-                if (currentBehaviour != sb && type.equals("chase")) {
-                    radiusDetectionOn = true;
-                    sb.start();
-                }
+                sb.start();
+                currentBehaviour = sb;
             }
-            if (radiusDetectionOn && type.equals("chase")) {
+            else if (radiusDetectionOn && type.equals("chase")) {
                 currentBehaviour.update();
             }
             else {
