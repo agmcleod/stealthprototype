@@ -14,6 +14,7 @@ public class Bullet extends GameObject {
     private float WIDTH = 16;
     private float HEIGHT = 4;
 
+    private boolean active;
     private Body body;
     private Rectangle bounds;
     private float rotation;
@@ -50,11 +51,25 @@ public class Bullet extends GameObject {
         shape.dispose();
         target = new Rectangle();
         direction = new Vector2();
+        active = false;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+
     }
 
     public void renderShape(ShapeRenderer renderer) {
         renderer.setColor(Color.RED);
         renderer.rect(bounds.x, bounds.y, bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, bounds.width, bounds.height, 1, 1, rotation);
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public void setPosition(float x, float y) {
@@ -70,11 +85,6 @@ public class Bullet extends GameObject {
 
     public void setTarget(float x, float y) {
         target.setPosition(x, y);
-    }
-
-    @Override
-    public void render(SpriteBatch batch) {
-
     }
 
     public void update() {

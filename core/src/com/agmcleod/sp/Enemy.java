@@ -20,6 +20,7 @@ public class Enemy extends MapEntity {
     private Array<Behaviour> behaviours;
     private Body body;
     private float chaseVelocity = 3.0f;
+    private Behaviour currentBehaviour;
     private Circle detectArea;
     private GameScreen gs;
     private Vector2 lastKnownPlayerPosition;
@@ -32,6 +33,7 @@ public class Enemy extends MapEntity {
     private float rotation = 0;
     private Polygon sight;
     private Vector2 target;
+    private String type;
     public final float MOVE_SPEED = 1.5f;
     private float patrolVelX = MOVE_SPEED;
     private float patrolVelY = MOVE_SPEED;
@@ -58,6 +60,9 @@ public class Enemy extends MapEntity {
 
     public void addBehaviour(Behaviour b) {
         behaviours.add(b);
+        if (behaviours.size == 1) {
+            currentBehaviour = behaviours.get(0);
+        }
     }
 
     public void checkSightline(Player player) {
@@ -176,6 +181,27 @@ public class Enemy extends MapEntity {
     public void playerIsInSight() {
         Rectangle playerBounds = gs.getPlayer().getBounds();
         lastKnownPlayerPosition.set(playerBounds.x, playerBounds.y);
+
+        if (type.equals("chase")) {
+            if (currentBehaviour != getChaseBehaviour()) {
+                currentBehaviour = getChaseBehaviour();
+            }
+            else {
+                ChaseBehaviour cb = (ChaseBehaviour) currentBehaviour;
+                cb.update();
+            }
+        }
+        else if (type.equals("shoot")) {
+            if (currentBehaviour != getShootBehaviour()) {
+                ShootBehaviour sb = getShootBehaviour();
+                sb.start();
+                sb.setTarget(lastKnownPlayerPosition.x, lastKnownPlayerPosition.y);
+                sb.setTargetAngle(MathUtils.atan2(lastKnownPlayerPosition.y - bounds.y, lastKnownPlayerPosition.x - bounds.x));
+                gs.allowPlayerMovement(false);
+                currentBehaviour = sb;
+            }
+        }
+
         if (!playerInSightLastFrame) {
             body.setLinearVelocity(0, 0);
             ShootBehaviour shootBehaviour = getShootBehaviour();
@@ -185,18 +211,6 @@ public class Enemy extends MapEntity {
                 shootBehaviour.setTargetAngle(MathUtils.atan2(lastKnownPlayerPosition.y - bounds.y, lastKnownPlayerPosition.x - bounds.x));
                 gs.allowPlayerMovement(false);
             }
-        }
-
-        playerInSightLastFrame = true;
-
-        // TODO: actually setup a string or enum type to decide
-        ShootBehaviour sb = getShootBehaviour();
-        if (sb != null) {
-            sb.update();
-        }
-        ChaseBehaviour behaviour = getChaseBehaviour();
-        if (behaviour != null) {
-            behaviour.update();
         }
     }
 
@@ -221,7 +235,7 @@ public class Enemy extends MapEntity {
 
     public void renderBullet(ShapeRenderer renderer) {
         ShootBehaviour sb = getShootBehaviour();
-        if (sb != null && sb.getHasShot()) {
+        if (sb != null && sb.hasShot()) {
             sb.getBullet().renderShape(renderer);
         }
     }
@@ -306,6 +320,10 @@ public class Enemy extends MapEntity {
         target = new Vector2(x, y);
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public void setVelX(float x) {
         patrolVelX = x;
     }
@@ -323,19 +341,17 @@ public class Enemy extends MapEntity {
             if (playerInSightLastFrame) {
                 playerInSightLastFrame = false;
                 SearchBehaviour sb = getSearchBehaviour();
-                if (sb != null) {
+                if (currentBehaviour != sb && type.equals("chase")) {
                     radiusDetectionOn = true;
                     sb.start();
                 }
             }
-            if (radiusDetectionOn) {
-                SearchBehaviour sb = getSearchBehaviour();
-                if (sb != null) {
-                    sb.update();
-                }
+            if (radiusDetectionOn && type.equals("chase")) {
+                currentBehaviour.update();
             }
             else {
-                getPatrolBehaviour().update();
+                currentBehaviour = getPatrolBehaviour();
+                currentBehaviour.update();
             }
         }
 
@@ -345,7 +361,7 @@ public class Enemy extends MapEntity {
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         detectArea.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 
-        if (!playerInSight && !getPatrolBehaviour().isReturnToPatrol()) {
+        if (currentBehaviour == getPatrolBehaviour() && !getPatrolBehaviour().isReturnToPatrol()) {
             getPatrolBehaviour().changePatrolDirectionIfAtEnd();
         }
 

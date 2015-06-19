@@ -116,10 +116,12 @@ public class GameScreen implements Screen {
                         enemy.addBehaviour(behaviour);
                         SearchBehaviour sb = new SearchBehaviour(enemy);
                         enemy.addBehaviour(sb);
+                        enemy.setType("chase");
                     }
                     else if (objectProperties.get("aitype", String.class).equals("shoot")) {
                         ShootBehaviour sb = new ShootBehaviour(game, enemy);
                         enemy.addBehaviour(sb);
+                        enemy.setType("shoot");
                     }
 
                     enemy.addBehaviour(new PatrolBehaviour(enemy));

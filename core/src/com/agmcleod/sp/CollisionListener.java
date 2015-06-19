@@ -33,6 +33,7 @@ public class CollisionListener implements ContactListener {
 
         if (player != null && bullet != null) {
             gs.restart();
+            bullet.setActive(false);
         }
     }
 

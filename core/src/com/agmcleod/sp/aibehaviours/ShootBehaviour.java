@@ -11,20 +11,18 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class ShootBehaviour extends Behaviour {
     private Bullet bullet;
-    private boolean hasShot;
     private float shootTimeout;
     public ShootBehaviour(Game game, Enemy enemy) {
         super(enemy);
         bullet = new Bullet(game, enemy.getBounds().x, enemy.getBounds().y);
-        hasShot = false;
     }
 
     public Bullet getBullet() {
         return bullet;
     }
 
-    public boolean getHasShot() {
-        return hasShot;
+    public boolean hasShot() {
+        return bullet.isActive();
     }
 
     public void setTargetAngle(float a) {
@@ -47,7 +45,7 @@ public class ShootBehaviour extends Behaviour {
             shootTimeout -= Gdx.graphics.getDeltaTime();
         }
         else {
-            hasShot = true;
+            bullet.setActive(true);
             bullet.update();
         }
     }
