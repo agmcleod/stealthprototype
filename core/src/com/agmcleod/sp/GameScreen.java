@@ -110,6 +110,8 @@ public class GameScreen implements Screen {
                     float targetX = Float.parseFloat(objectProperties.get("target_x", String.class)) + x;
                     enemy.setTarget(targetX, targetY);
 
+                    enemy.addBehaviour(new PatrolBehaviour(enemy));
+
                     if (objectProperties.get("aitype", String.class).equals("chase")) {
                         ChaseBehaviour behaviour = new ChaseBehaviour(enemy);
                         behaviour.setTarget(player.getBounds());
@@ -123,8 +125,6 @@ public class GameScreen implements Screen {
                         enemy.addBehaviour(sb);
                         enemy.setType("shoot");
                     }
-
-                    enemy.addBehaviour(new PatrolBehaviour(enemy));
 
                     gameObjects.add(enemy);
                 } else {
