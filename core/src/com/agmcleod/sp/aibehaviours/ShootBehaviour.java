@@ -5,11 +5,13 @@ import com.agmcleod.sp.Enemy;
 import com.agmcleod.sp.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Aaron on 6/16/2015.
  */
 public class ShootBehaviour extends Behaviour {
+    private float angle;
     private Bullet bullet;
     private float shootTimeout;
     public ShootBehaviour(Game game, Enemy enemy) {
@@ -31,18 +33,14 @@ public class ShootBehaviour extends Behaviour {
         bullet.dispose();
     }
 
-    public void setTargetAngle(float a) {
-        bullet.setRotation(a);
-    }
-
     public void setTarget(float x, float y) {
         bullet.setTarget(x, y);
     }
 
-    public void start() {
+    public void start(Vector2 targetPosition, float angle) {
         shootTimeout = 0.15f;
-        Rectangle enemyBounds = enemy.getBounds();
-        bullet.setup(enemyBounds.x + enemyBounds.width / 2, enemyBounds.y + enemyBounds.height / 2);
+        this.angle = angle;
+        setTarget(targetPosition.x, targetPosition.y);
     }
 
     @Override
@@ -51,6 +49,9 @@ public class ShootBehaviour extends Behaviour {
             shootTimeout -= Gdx.graphics.getDeltaTime();
             if (shootTimeout <= 0) {
                 bullet.setActive(true);
+                Rectangle enemyBounds = enemy.getBounds();
+                bullet.setup(enemyBounds.x + enemyBounds.width / 2, enemyBounds.y + enemyBounds.height / 2);
+                bullet.setRotation(angle);
             }
         }
         else if (bullet.isActive()) {

@@ -39,7 +39,9 @@ public class Bullet extends GameObject {
     }
 
     public void dispose() {
-        world.destroyBody(body);
+        if (body != null) {
+            world.destroyBody(body);
+        }
     }
 
     public Enemy getEnemy() {

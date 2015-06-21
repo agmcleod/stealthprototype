@@ -26,7 +26,6 @@ public class Enemy extends MapEntity {
     private Vector2 lastKnownPlayerPosition;
     private Vector2 original;
     private boolean playerInSight;
-    private boolean playerInSightLastFrame;
 
     private boolean radiusDetectionOn;
     TextureRegion region;
@@ -53,7 +52,6 @@ public class Enemy extends MapEntity {
         raycastTarget = new Vector2();
         raycastOrigin = new Vector2();
         detectArea = new Circle();
-        playerInSightLastFrame = false;
         lastKnownPlayerPosition = new Vector2();
         radiusDetectionOn = false;
     }
@@ -193,9 +191,7 @@ public class Enemy extends MapEntity {
         else if (type.equals("shoot")) {
             if (currentBehaviour != getShootBehaviour()) {
                 ShootBehaviour sb = getShootBehaviour();
-                sb.start();
-                sb.setTarget(lastKnownPlayerPosition.x, lastKnownPlayerPosition.y);
-                sb.setTargetAngle(MathUtils.atan2(lastKnownPlayerPosition.y - bounds.y, lastKnownPlayerPosition.x - bounds.x));
+                sb.start(lastKnownPlayerPosition, MathUtils.atan2(lastKnownPlayerPosition.y - bounds.y, lastKnownPlayerPosition.x - bounds.x));
                 gs.allowPlayerMovement(false);
                 currentBehaviour = sb;
             }
@@ -254,7 +250,6 @@ public class Enemy extends MapEntity {
         bounds.setPosition(original.x, original.y);
         sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         body.setTransform((bounds.x + WIDTH / 2) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX, 0);
-        playerInSightLastFrame = false;
         radiusDetectionOn = false;
         for(Behaviour behaviour : behaviours) {
             behaviour.reset();
