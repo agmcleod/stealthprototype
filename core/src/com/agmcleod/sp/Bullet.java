@@ -17,6 +17,7 @@ public class Bullet extends GameObject {
     private boolean active;
     private Body body;
     private Rectangle bounds;
+    private Enemy enemy;
     private float rotation;
     private Rectangle target;
     private Vector2 direction;
@@ -54,6 +55,10 @@ public class Bullet extends GameObject {
         active = false;
     }
 
+    public Enemy getEnemy() {
+        return enemy;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -76,6 +81,10 @@ public class Bullet extends GameObject {
         bounds.x = x;
         bounds.y = y;
         body.setTransform((x + WIDTH / 2) * Game.WORLD_TO_BOX, (y + HEIGHT / 2) * Game.WORLD_TO_BOX, 0);
+    }
+
+    public void setEnemy(Enemy enemy) {
+        this.enemy = enemy;
     }
 
     public void setRotation(float rotation) {

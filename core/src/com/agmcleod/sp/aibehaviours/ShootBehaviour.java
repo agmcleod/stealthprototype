@@ -15,6 +15,7 @@ public class ShootBehaviour extends Behaviour {
     public ShootBehaviour(Game game, Enemy enemy) {
         super(enemy);
         bullet = new Bullet(game, enemy.getBounds().x, enemy.getBounds().y);
+        bullet.setEnemy(enemy);
     }
 
     public Bullet getBullet() {
@@ -43,9 +44,11 @@ public class ShootBehaviour extends Behaviour {
     public void update() {
         if (shootTimeout > 0) {
             shootTimeout -= Gdx.graphics.getDeltaTime();
+            if (shootTimeout <= 0) {
+                bullet.setActive(true);
+            }
         }
-        else {
-            bullet.setActive(true);
+        else if (bullet.isActive()) {
             bullet.update();
         }
     }

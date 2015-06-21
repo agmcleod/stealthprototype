@@ -64,6 +64,7 @@ public class GameScreen implements Screen {
             public void callback() {
                 transitioning = false;
                 restartNextFrame = true;
+                allowPlayerMovement = true;
             }
         };
         allowPlayerMovement = true;

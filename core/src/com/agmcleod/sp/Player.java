@@ -37,7 +37,7 @@ public class Player extends GameObject {
 
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set((bounds.x + WIDTH / 2) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX);
+        def.position.set((bounds.x + WIDTH) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX);
 
         body = world.createBody(def);
         body.setFixedRotation(true);

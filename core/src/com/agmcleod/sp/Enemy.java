@@ -256,6 +256,7 @@ public class Enemy extends MapEntity {
         body.setTransform((bounds.x + WIDTH / 2) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX, 0);
         playerInSightLastFrame = false;
         radiusDetectionOn = false;
+        currentBehaviour = getPatrolBehaviour();
     }
 
     public void setInitialBounds(float x, float y, float width, float height) {
