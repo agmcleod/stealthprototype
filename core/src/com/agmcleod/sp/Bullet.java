@@ -11,48 +11,35 @@ import com.badlogic.gdx.physics.box2d.*;
  * Created by Aaron on 6/16/2015.
  */
 public class Bullet extends GameObject {
-    private float WIDTH = 16;
-    private float HEIGHT = 4;
+    private float WIDTH = 4;
+    private float HEIGHT = 16;
 
     private boolean active;
     private Body body;
     private Rectangle bounds;
     private Enemy enemy;
+    private World world;
     private float rotation;
     private Rectangle target;
     private Vector2 direction;
     public String name;
+
+
     private final float VELOCITY = 10f;
     public Bullet(Game game, float x, float y) {
         super("bullet");
         rotation = 0;
         bounds = new Rectangle(x, y, WIDTH, HEIGHT);
 
-        World world = game.getWorld();
+        this.world = game.getWorld();
 
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(WIDTH / 2 * game.WORLD_TO_BOX, HEIGHT / 2 * game.WORLD_TO_BOX);
-
-        BodyDef def = new BodyDef();
-        def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set((bounds.x + WIDTH / 2) * game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * game.WORLD_TO_BOX);
-
-        body = world.createBody(def);
-        body.setFixedRotation(true);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0f;
-        fixtureDef.restitution = 0f;
-
-        Fixture fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
-
-        shape.dispose();
         target = new Rectangle();
         direction = new Vector2();
         active = false;
+    }
+
+    public void dispose() {
+        world.destroyBody(body);
     }
 
     public Enemy getEnemy() {
@@ -77,10 +64,31 @@ public class Bullet extends GameObject {
         this.active = active;
     }
 
-    public void setPosition(float x, float y) {
+    public void setup(float x, float y) {
         bounds.x = x;
         bounds.y = y;
-        body.setTransform((x + WIDTH / 2) * Game.WORLD_TO_BOX, (y + HEIGHT / 2) * Game.WORLD_TO_BOX, 0);
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(WIDTH / 2 * Game.WORLD_TO_BOX, HEIGHT / 2 * Game.WORLD_TO_BOX);
+
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.DynamicBody;
+        def.position.set((bounds.x + WIDTH / 2) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX);
+
+        body = world.createBody(def);
+        body.setFixedRotation(true);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0f;
+        fixtureDef.restitution = 0f;
+        fixtureDef.filter.categoryBits = Game.ENEMY_MASK;
+        fixtureDef.filter.maskBits = Game.PLAYER_MASK;
+
+        Fixture fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(this);
+
+        shape.dispose();
     }
 
     public void setEnemy(Enemy enemy) {

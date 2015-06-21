@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 /**
@@ -21,6 +22,7 @@ public class Player extends GameObject {
     private final int VEL = 3;
     private TextureRegion region;
     private float rotation;
+    private Vector2 originalPos;
     public Player(GameScreen gs) {
         super("player");
         rotation = 0;
@@ -37,7 +39,8 @@ public class Player extends GameObject {
 
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set((bounds.x + WIDTH) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX);
+        originalPos = new Vector2((bounds.x + WIDTH) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX);
+        def.position.set(originalPos.x, originalPos.y);
 
         body = world.createBody(def);
         body.setFixedRotation(true);
@@ -47,6 +50,8 @@ public class Player extends GameObject {
         fixtureDef.density = 0.5f;
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f;
+        fixtureDef.filter.categoryBits = Game.PLAYER_MASK;
+        fixtureDef.filter.maskBits = Game.ENEMY_MASK;
 
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
@@ -101,7 +106,7 @@ public class Player extends GameObject {
     public void reset() {
         resetBoundsToOriginal();
         rotation = 0;
-        body.setTransform(bounds.x * Game.WORLD_TO_BOX, bounds.y * Game.WORLD_TO_BOX, 0);
+        body.setTransform(originalPos.x, originalPos.y, 0);
     }
 
     public void resetBoundsToOriginal() {

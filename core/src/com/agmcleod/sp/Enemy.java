@@ -256,6 +256,9 @@ public class Enemy extends MapEntity {
         body.setTransform((bounds.x + WIDTH / 2) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX, 0);
         playerInSightLastFrame = false;
         radiusDetectionOn = false;
+        for(Behaviour behaviour : behaviours) {
+            behaviour.reset();
+        }
         currentBehaviour = getPatrolBehaviour();
     }
 
@@ -290,6 +293,8 @@ public class Enemy extends MapEntity {
         fixtureDef.density = 0.5f;
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f;
+        fixtureDef.filter.categoryBits = Game.ENEMY_MASK;
+        fixtureDef.filter.maskBits = Game.PLAYER_MASK;
 
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);

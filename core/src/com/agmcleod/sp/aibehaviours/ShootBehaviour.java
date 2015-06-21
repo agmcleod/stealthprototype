@@ -26,6 +26,11 @@ public class ShootBehaviour extends Behaviour {
         return bullet.isActive();
     }
 
+    public void reset() {
+        bullet.setActive(false);
+        bullet.dispose();
+    }
+
     public void setTargetAngle(float a) {
         bullet.setRotation(a);
     }
@@ -37,7 +42,7 @@ public class ShootBehaviour extends Behaviour {
     public void start() {
         shootTimeout = 0.15f;
         Rectangle enemyBounds = enemy.getBounds();
-        bullet.setPosition(enemyBounds.x + enemyBounds.width / 2, enemyBounds.y + enemyBounds.height / 2);
+        bullet.setup(enemyBounds.x + enemyBounds.width / 2, enemyBounds.y + enemyBounds.height / 2);
     }
 
     @Override

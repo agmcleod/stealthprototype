@@ -64,7 +64,6 @@ public class GameScreen implements Screen {
             public void callback() {
                 transitioning = false;
                 restartNextFrame = true;
-                allowPlayerMovement = true;
             }
         };
         allowPlayerMovement = true;
@@ -222,37 +221,40 @@ public class GameScreen implements Screen {
     }
 
     public void update() {
-        if (restartNextFrame) {
-            allowPlayerMovement = true;
-            player.reset();
-            for (GameObject gameObject : gameObjects) {
-                if (gameObject instanceof Enemy) {
-                    ((Enemy) gameObject).reset();
+        if (!transitioning) {
+            if (restartNextFrame) {
+                player.reset();
+                for (GameObject gameObject : gameObjects) {
+                    if (gameObject instanceof Enemy) {
+                        ((Enemy) gameObject).reset();
+                    }
                 }
+                restartNextFrame = false;
+                allowPlayerMovement = true;
             }
-            restartNextFrame = false;
-        }
+            else {
+                if (allowPlayerMovement) {
+                    player.update();
+                }
 
-        if (allowPlayerMovement) {
-            player.update();
-        }
+                this.world.step(1f / 60f, 6, 2);
 
-        this.world.step(1f / 60f, 6, 2);
+                followCamera.update();
+                camera.update();
+                cameraCpy.set(camera.combined);
+                batch.setProjectionMatrix(camera.combined);
+                shapeRenderer.setProjectionMatrix(camera.combined);
 
-        followCamera.update();
-        camera.update();
-        cameraCpy.set(camera.combined);
-        batch.setProjectionMatrix(camera.combined);
-        shapeRenderer.setProjectionMatrix(camera.combined);
+                for (CustomMapRenderer renderer : mapRenderers) {
+                    renderer.setView(camera);
+                }
 
-        for (CustomMapRenderer renderer : mapRenderers) {
-            renderer.setView(camera);
-        }
-
-        for (GameObject gameObject : gameObjects) {
-            gameObject.update();
-            if (gameObject instanceof Enemy) {
-                ((Enemy) gameObject).checkSightline(player);
+                for (GameObject gameObject : gameObjects) {
+                    gameObject.update();
+                    if (gameObject instanceof Enemy) {
+                        ((Enemy) gameObject).checkSightline(player);
+                    }
+                }
             }
         }
     }

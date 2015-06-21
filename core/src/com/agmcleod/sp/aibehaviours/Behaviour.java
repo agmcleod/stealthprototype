@@ -12,5 +12,6 @@ public class Behaviour {
         this.enemy = enemy;
     }
 
+    public void reset() {}
     public void update() {}
 }
