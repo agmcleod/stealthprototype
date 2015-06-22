@@ -114,6 +114,8 @@ public class Player extends GameObject {
     }
 
     public void update() {
+        bounds.x = (int) ((body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2);
+        bounds.y = (int) ((body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2);
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             body.setLinearVelocity(-VEL, body.getLinearVelocity().y);
             rotation = 180;
@@ -141,8 +143,5 @@ public class Player extends GameObject {
         else {
             body.setLinearVelocity(body.getLinearVelocity().x, 0);
         }
-
-        bounds.x = (int) ((body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2);
-        bounds.y = (int) ((body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2);
     }
 }

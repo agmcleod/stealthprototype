@@ -3,6 +3,7 @@ package com.agmcleod.sp;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -25,7 +26,7 @@ public class Bullet extends GameObject {
     public String name;
 
 
-    private final float VELOCITY = 10f;
+    private final float VELOCITY = 1f;
     public Bullet(Game game, float x, float y) {
         super("bullet");
         rotation = 0;
@@ -59,7 +60,7 @@ public class Bullet extends GameObject {
 
     public void renderShape(ShapeRenderer renderer) {
         renderer.setColor(Color.RED);
-        renderer.rect(bounds.x, bounds.y, bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, bounds.width, bounds.height, 1, 1, rotation);
+        renderer.rect(bounds.x, bounds.y, bounds.width / 2, bounds.height / 2, bounds.width, bounds.height, 1, 1, rotation);
     }
 
     public void setActive(boolean active) {
@@ -99,7 +100,7 @@ public class Bullet extends GameObject {
 
     public void setRotation(float rotation) {
         this.rotation = rotation;
-        body.setTransform(body.getTransform().getPosition().x, body.getTransform().getPosition().y, rotation);
+        body.setTransform(body.getTransform().getPosition().x, body.getTransform().getPosition().y, MathUtils.degreesToRadians * rotation);
     }
 
     public void setTarget(float x, float y) {
@@ -107,9 +108,9 @@ public class Bullet extends GameObject {
     }
 
     public void update() {
+        bounds.x = (int) ((body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2);
+        bounds.y = (int) ((body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2);
         direction.set(target.x, target.y).sub(bounds.x, bounds.y).nor();
         body.setLinearVelocity(VELOCITY * direction.x, VELOCITY * direction.y);
-        bounds.x = (int) (body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2;
-        bounds.y = (int) (body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2;
     }
 }

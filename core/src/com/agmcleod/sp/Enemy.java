@@ -198,6 +198,7 @@ public class Enemy extends MapEntity {
                 sb.start(lastKnownPlayerPosition, MathUtils.atan2(lastKnownPlayerPosition.y - bounds.y, lastKnownPlayerPosition.x - bounds.x));
                 gs.allowPlayerMovement(false);
                 currentBehaviour = sb;
+                body.setLinearVelocity(0, 0);
             }
             else {
                 currentBehaviour.update();
