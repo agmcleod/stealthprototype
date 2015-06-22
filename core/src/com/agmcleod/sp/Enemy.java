@@ -75,11 +75,15 @@ public class Enemy extends MapEntity {
                 public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
                     if (((GameObject) fixture.getUserData()).name.equals("player")) {
                         playerInSight = true;
+                        return fraction;
+                    }
+                    else if (((GameObject) fixture.getUserData()).name.equals("bullet")) {
+                        return 1;
                     }
                     else {
                         playerInSight = false;
+                        return fraction;
                     }
-                    return fraction;
                 }
             }, raycastOrigin, raycastTarget);
         }
