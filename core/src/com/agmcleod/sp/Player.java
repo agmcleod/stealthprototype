@@ -107,10 +107,15 @@ public class Player extends GameObject {
         resetBoundsToOriginal();
         rotation = 0;
         body.setTransform(originalPos.x, originalPos.y, 0);
+        dirtyVertices = true;
     }
 
     public void resetBoundsToOriginal() {
         bounds.set(WIDTH, Gdx.graphics.getHeight() / 2, WIDTH, HEIGHT);
+    }
+
+    public void stop() {
+        body.setLinearVelocity(0, 0);
     }
 
     public void update() {

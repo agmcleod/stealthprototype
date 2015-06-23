@@ -26,7 +26,7 @@ public class Bullet extends GameObject {
     public String name;
 
 
-    private final float VELOCITY = 1f;
+    private final float VELOCITY = 10f;
     public Bullet(Game game, float x, float y) {
         super("bullet");
         rotation = 0;

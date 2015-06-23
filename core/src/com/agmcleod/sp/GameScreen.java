@@ -71,6 +71,9 @@ public class GameScreen implements Screen {
 
     public void allowPlayerMovement(boolean allow) {
         allowPlayerMovement = allow;
+        if (!allowPlayerMovement) {
+            player.stop();
+        }
     }
 
     public Game getGame() {
@@ -231,13 +234,12 @@ public class GameScreen implements Screen {
                 }
                 restartNextFrame = false;
                 allowPlayerMovement = true;
+                world.step(1f / 60f, 6, 2);
             }
             else {
                 if (allowPlayerMovement) {
                     player.update();
                 }
-
-                this.world.step(1f / 60f, 6, 2);
 
                 followCamera.update();
                 camera.update();
@@ -255,6 +257,8 @@ public class GameScreen implements Screen {
                         ((Enemy) gameObject).checkSightline(player);
                     }
                 }
+
+                world.step(1f / 60f, 6, 2);
             }
         }
     }
