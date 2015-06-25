@@ -35,6 +35,13 @@
     <property name="target_y" value="672"/>
    </properties>
   </object>
+  <object name="enemy" x="1697" y="927" width="32" height="32">
+   <properties>
+    <property name="aitype" value="shoot"/>
+    <property name="target_x" value="1697"/>
+    <property name="target_y" value="256"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="collision">
   <object x="0" y="0" width="32" height="862"/>
