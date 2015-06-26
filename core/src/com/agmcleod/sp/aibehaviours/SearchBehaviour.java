@@ -31,17 +31,10 @@ public class SearchBehaviour extends Behaviour {
         float xvel = 0;
         float yvel = 0;
         if (direction.x != 0) {
-            xvel = enemy.MOVE_SPEED;
+            xvel = enemy.MOVE_SPEED * direction.x;
         }
         if (direction.y != 0) {
-            yvel = enemy.MOVE_SPEED;
-        }
-
-        if (direction.x < 0) {
-            xvel *= -1;
-        }
-        if (direction.y < 0) {
-            yvel *= -1;
+            yvel = enemy.MOVE_SPEED * direction.y;
         }
 
         if (Math.abs(direction.x) > Math.abs(direction.y)) {
@@ -73,11 +66,11 @@ public class SearchBehaviour extends Behaviour {
         }
 
         if (xvel == 0 && yvel == 0) {
-            body.setLinearVelocity(0, 0);
+            enemy.moveWithVelocity(0, 0);
             time = TIME_OUT * 2;
             lookAround = true;
         } else {
-            body.setLinearVelocity(xvel, yvel);
+            enemy.moveWithVelocity(xvel, yvel);
         }
     }
 
