@@ -5,6 +5,7 @@ import com.agmcleod.sp.aibehaviours.PatrolBehaviour;
 import com.agmcleod.sp.aibehaviours.SearchBehaviour;
 import com.agmcleod.sp.aibehaviours.ShootBehaviour;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -41,6 +42,7 @@ public class GameScreen implements Screen {
     private FollowCamera followCamera;
     private Game game;
     private Array<GameObject> gameObjects;
+    private boolean isPaused;
     private Rectangle mapBounds;
     private Array<CustomMapRenderer> mapRenderers;
     private Player player;
@@ -67,6 +69,7 @@ public class GameScreen implements Screen {
             }
         };
         allowPlayerMovement = true;
+        isPaused = false;
     }
 
     public void allowPlayerMovement(boolean allow) {
@@ -141,7 +144,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (!transitioning) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSLASH)) {
+            isPaused = !isPaused;
+        }
+        if (!transitioning && !isPaused) {
             update();
         }
 
