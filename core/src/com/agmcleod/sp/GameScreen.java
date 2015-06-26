@@ -260,7 +260,9 @@ public class GameScreen implements Screen {
                 for (GameObject gameObject : gameObjects) {
                     gameObject.update();
                     if (gameObject instanceof Enemy) {
-                        ((Enemy) gameObject).checkSightline(player);
+                        Enemy enemy = (Enemy) gameObject;
+                        enemy.checkSightline(player);
+                        enemy.checkWithinDetectArea(player.getBounds());
                     }
                 }
 
