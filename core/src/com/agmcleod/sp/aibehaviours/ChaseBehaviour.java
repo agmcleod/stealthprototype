@@ -27,22 +27,6 @@ public class ChaseBehaviour extends Behaviour {
         direction.set(target.x, target.y).sub(enemy.getBounds().x, enemy.getBounds().y).nor();
         direction.scl(enemy.getChaseVelocity());
         enemy.moveWithVelocity(direction.x, direction.y);
-
-        if (Math.abs(direction.x) > Math.abs(direction.y)) {
-            if (direction.x > 0) {
-                enemy.setRotation(0);
-            }
-            else {
-                enemy.setRotation(180);
-            }
-        }
-        else {
-            if (direction.y > 0) {
-                enemy.setRotation(90);
-            }
-            else {
-                enemy.setRotation(270);
-            }
-        }
+        enemy.setRotationFromDirection(direction);
     }
 }

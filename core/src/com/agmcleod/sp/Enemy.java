@@ -320,6 +320,24 @@ public class Enemy extends MapEntity {
         }
     }
 
+    public void setRotationFromDirection(Vector2 direction) {
+        if (Math.abs(direction.x) > Math.abs(direction.y)) {
+            if (direction.x > 0) {
+                setRotation(0);
+            }
+            else {
+                setRotation(180);
+            }
+        } else {
+            if (direction.y > 0) {
+                setRotation(90);
+            }
+            else {
+                setRotation(270);
+            }
+        }
+    }
+
     public void setTarget(float x, float y) {
         target = new Vector2(x, y);
     }

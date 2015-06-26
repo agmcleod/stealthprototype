@@ -100,34 +100,13 @@ public class PatrolBehaviour extends Behaviour {
         float xvel = 0;
         float yvel = 0;
         if (direction.x != 0) {
-            xvel = enemy.MOVE_SPEED;
+            xvel = enemy.MOVE_SPEED * direction.x;
         }
         if (direction.y != 0) {
-            yvel = enemy.MOVE_SPEED;
+            yvel = enemy.MOVE_SPEED * direction.y;
         }
 
-        if (direction.x < 0) {
-            xvel *= -1;
-        }
-        if (direction.y < 0) {
-            yvel *= -1;
-        }
-
-        if (Math.abs(direction.x) > Math.abs(direction.y)) {
-            if (xvel > 0) {
-                enemy.setRotation(0);
-            }
-            else {
-                enemy.setRotation(180);
-            }
-        } else {
-            if (yvel > 0) {
-                enemy.setRotation(90);
-            }
-            else {
-                enemy.setRotation(270);
-            }
-        }
+        enemy.setRotationFromDirection(direction);
 
         if (xvel != 0 && Math.abs(closestPatrolPoint.x - enemy.getBounds().x) <= enemy.MOVE_SPEED * CORRECTIVE_FACTOR) {
             body.setTransform(closestPatrolPoint.x * Game.WORLD_TO_BOX, body.getTransform().getPosition().y, 0);
