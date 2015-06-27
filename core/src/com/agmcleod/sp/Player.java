@@ -16,7 +16,7 @@ public class Player extends GameObject {
     private Rectangle bounds;
     private float[] boundsVertices;
     private boolean dirtyVertices;
-    private GameScreen gs;
+    private boolean isCrouching;
     final float WIDTH = 32;
     final float HEIGHT = 32;
     private final int VEL = 3;
@@ -26,7 +26,6 @@ public class Player extends GameObject {
     public Player(GameScreen gs) {
         super("player");
         rotation = 0;
-        this.gs = gs;
         this.region = gs.getGame().getAtlas().findRegion("player");
         World world = gs.getGame().getWorld();
 
@@ -60,6 +59,7 @@ public class Player extends GameObject {
 
         dirtyVertices = true;
         boundsVertices = new float[8];
+        isCrouching = false;
     }
 
     public Rectangle getBounds() {
@@ -121,13 +121,24 @@ public class Player extends GameObject {
     public void update() {
         bounds.x = (int) ((body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2);
         bounds.y = (int) ((body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2);
+
+        float vel = VEL;
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
+            isCrouching = !isCrouching;
+        }
+
+        if (isCrouching) {
+            vel /= 2;
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            body.setLinearVelocity(-VEL, body.getLinearVelocity().y);
+            body.setLinearVelocity(-vel, body.getLinearVelocity().y);
             rotation = 180;
             dirtyVertices = true;
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            body.setLinearVelocity(VEL, body.getLinearVelocity().y);
+            body.setLinearVelocity(vel, body.getLinearVelocity().y);
             rotation = 0;
             dirtyVertices = true;
         }
@@ -136,12 +147,12 @@ public class Player extends GameObject {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            body.setLinearVelocity(body.getLinearVelocity().x, VEL);
+            body.setLinearVelocity(body.getLinearVelocity().x, vel);
             rotation = 90;
             dirtyVertices = true;
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            body.setLinearVelocity(body.getLinearVelocity().x, -VEL);
+            body.setLinearVelocity(body.getLinearVelocity().x, -vel);
             rotation = 270;
             dirtyVertices = true;
         }
