@@ -97,7 +97,7 @@ public class Enemy extends MapEntity {
 
     public void checkWithinDetectArea(Rectangle playerBounds) {
         if (currentBehaviour == getSearchBehaviour() && MyMath.rectOverlapsCircle(playerBounds, detectArea)) {
-            lastKnownPlayerPosition.set(playerBounds.x, playerBounds.y);
+            lastKnownPlayerPosition.set(playerBounds.x + playerBounds.width / 2, playerBounds.y + playerBounds.height / 2);
             getSearchBehaviour().start();
         }
     }

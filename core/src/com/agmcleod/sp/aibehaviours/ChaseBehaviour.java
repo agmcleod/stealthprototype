@@ -1,7 +1,6 @@
 package com.agmcleod.sp.aibehaviours;
 
 import com.agmcleod.sp.Enemy;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 

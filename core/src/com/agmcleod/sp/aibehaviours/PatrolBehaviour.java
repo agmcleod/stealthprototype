@@ -82,7 +82,7 @@ public class PatrolBehaviour extends Behaviour {
         Vector2 original = enemy.getOriginal();
         Body body = enemy.getBody();
         if (returnToPatrol) {
-            updateEnemyToReturnToPatrol(target, original, body);
+            updateEnemyToReturnToPatrol(body);
         }
         else {
             if (target.y != original.y) {
@@ -95,16 +95,10 @@ public class PatrolBehaviour extends Behaviour {
         }
     }
 
-    public void updateEnemyToReturnToPatrol(Vector2 target, Vector2 original, Body body) {
+    public void updateEnemyToReturnToPatrol(Body body) {
         direction.set(closestPatrolPoint.x, closestPatrolPoint.y).sub(enemy.getBounds().x, enemy.getBounds().y).nor();
-        float xvel = 0;
-        float yvel = 0;
-        if (direction.x != 0) {
-            xvel = enemy.MOVE_SPEED * direction.x;
-        }
-        if (direction.y != 0) {
-            yvel = enemy.MOVE_SPEED * direction.y;
-        }
+        float xvel = enemy.MOVE_SPEED * direction.x;
+        float yvel = enemy.MOVE_SPEED * direction.y;
 
         enemy.setRotationFromDirection(direction);
 
