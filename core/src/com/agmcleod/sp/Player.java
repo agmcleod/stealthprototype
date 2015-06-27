@@ -15,8 +15,8 @@ public class Player extends GameObject {
     private Body body;
     private Rectangle bounds;
     private float[] boundsVertices;
+    private boolean crouching;
     private boolean dirtyVertices;
-    private boolean isCrouching;
     final float WIDTH = 32;
     final float HEIGHT = 32;
     private final int VEL = 3;
@@ -59,7 +59,7 @@ public class Player extends GameObject {
 
         dirtyVertices = true;
         boundsVertices = new float[8];
-        isCrouching = false;
+        crouching = false;
     }
 
     public Rectangle getBounds() {
@@ -83,6 +83,10 @@ public class Player extends GameObject {
         dirtyVertices = false;
 
         return boundsVertices;
+    }
+
+    public boolean isCrouching() {
+        return crouching;
     }
 
     public void render(SpriteBatch batch) {
@@ -125,10 +129,10 @@ public class Player extends GameObject {
         float vel = VEL;
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
-            isCrouching = !isCrouching;
+            crouching = !crouching;
         }
 
-        if (isCrouching) {
+        if (crouching) {
             vel /= 2;
         }
 

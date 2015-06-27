@@ -262,7 +262,9 @@ public class GameScreen implements Screen {
                     if (gameObject instanceof Enemy) {
                         Enemy enemy = (Enemy) gameObject;
                         enemy.checkSightline(player);
-                        enemy.checkWithinDetectArea(player.getBounds());
+                        if (!player.isCrouching()) {
+                            enemy.checkWithinDetectArea(player.getBounds());
+                        }
                     }
                 }
 
