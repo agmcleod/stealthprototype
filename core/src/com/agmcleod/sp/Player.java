@@ -104,7 +104,13 @@ public class Player extends GameObject {
             y += 32;
         }
 
+        if (isCrouching()) {
+            batch.setColor(1f, 1f, 1f, 0.5f);
+        }
         batch.draw(region, x, y, 0, 0, WIDTH, HEIGHT, 1.0f, 1.0f, rotation);
+        if (isCrouching()) {
+            batch.setColor(1f, 1f, 1f, 1f);
+        }
     }
 
     public void reset() {
@@ -112,6 +118,7 @@ public class Player extends GameObject {
         rotation = 0;
         body.setTransform(originalPos.x, originalPos.y, 0);
         dirtyVertices = true;
+        crouching = false;
     }
 
     public void resetBoundsToOriginal() {
@@ -133,7 +140,7 @@ public class Player extends GameObject {
         }
 
         if (crouching) {
-            vel /= 2;
+            vel /= 1.4;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
