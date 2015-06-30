@@ -12,8 +12,8 @@ import com.badlogic.gdx.physics.box2d.*;
  * Created by Aaron on 6/16/2015.
  */
 public class Bullet extends GameObject {
-    private float WIDTH = 4;
-    private float HEIGHT = 16;
+    private float WIDTH = 16;
+    private float HEIGHT = 4;
 
     private boolean active;
     private Body body;
@@ -26,7 +26,7 @@ public class Bullet extends GameObject {
     public String name;
 
 
-    private final float VELOCITY = 10f;
+    private final float VELOCITY = 1f;
     public Bullet(Game game, float x, float y) {
         super("bullet");
         rotation = 0;
@@ -99,8 +99,8 @@ public class Bullet extends GameObject {
     }
 
     public void setRotation(float rotation) {
-        this.rotation = rotation;
-        body.setTransform(body.getTransform().getPosition().x, body.getTransform().getPosition().y, MathUtils.degreesToRadians * rotation);
+        this.rotation = Math.abs(rotation * MathUtils.radiansToDegrees);
+        body.setTransform(body.getTransform().getPosition().x, body.getTransform().getPosition().y, rotation);
     }
 
     public void setTarget(float x, float y) {
