@@ -86,7 +86,7 @@ public class Bullet extends GameObject {
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f;
         fixtureDef.filter.categoryBits = Game.ENEMY_MASK;
-        fixtureDef.filter.maskBits = Game.PLAYER_MASK;
+        fixtureDef.filter.maskBits = Game.PLAYER_MASK | Game.WORLD_MASK;
 
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);

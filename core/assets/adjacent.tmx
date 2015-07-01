@@ -18,7 +18,7 @@
    <properties>
     <property name="aitype" value="chase"/>
     <property name="target_x" value="1500"/>
-    <property name="target_y" value="1250"/>
+    <property name="target_y" value="1290"/>
    </properties>
   </object>
   <object name="enemy" x="2910" y="1024" width="32" height="32">

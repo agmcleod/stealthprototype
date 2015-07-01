@@ -13,8 +13,9 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Game extends com.badlogic.gdx.Game {
     public static final float WORLD_TO_BOX = 0.01f;
     public static final float BOX_TO_WORLD = 100f;
-    public static final short ENEMY_MASK = 0x1;
-    public static final short PLAYER_MASK = 0x1 << 1;
+    public static final short ENEMY_MASK = 0x0004;
+    public static final short PLAYER_MASK = 0x0002;
+    public static final short WORLD_MASK = 0x0001;
 
     private GameScreen gameScreen;
     private World world;
