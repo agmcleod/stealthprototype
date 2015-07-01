@@ -47,6 +47,28 @@
     <property name="target_y" value="1024"/>
    </properties>
   </object>
+  <object name="trigger" x="2431.61" y="1216.19">
+   <properties>
+    <property name="action" value="enablehidden"/>
+   </properties>
+   <polygon points="0,0 -44.7043,41.2655 -45.0864,63.0445 -31.7133,63.4266 33.2416,-0.764175"/>
+  </object>
+  <object name="trigger" x="2498.09" y="1216.19">
+   <properties>
+    <property name="action" value="disablehidden"/>
+   </properties>
+   <polygon points="0,0 -64.9549,63.0445 0,62.6624"/>
+  </object>
+  <object name="trigger" x="1592.92" y="1023.23" width="19.8686" height="65.337">
+   <properties>
+    <property name="action" value="enablehidden"/>
+   </properties>
+  </object>
+  <object name="trigger" x="1561.21" y="1018.65" width="8.02384" height="86.7339">
+   <properties>
+    <property name="action" value="disablehidden"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="collision">
   <object x="1343.09" y="640.426" width="30.1775" height="990.486"/>
