@@ -224,9 +224,7 @@ public class GameScreen implements Screen {
         mapBounds = new Rectangle();
         followCamera = new FollowCamera(camera, player.getBounds(), mapBounds);
 
-        loadLevel("startroom.tmx", 0, 0);
-        loadLevel("lhall.tmx", 832, 96);
-        loadLevel("adjacent.tmx", 1344, -925);
+        loadLevel("adjacent.tmx", 0, -928);
     }
 
     public void update() {
