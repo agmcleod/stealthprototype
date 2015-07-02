@@ -15,6 +15,7 @@ public class Game extends com.badlogic.gdx.Game {
     public static final float BOX_TO_WORLD = 100f;
     public static final short ENEMY_MASK = 0x0004;
     public static final short PLAYER_MASK = 0x0002;
+    public static final short TRIGGER_MASK = 0x0008;
     public static final short WORLD_MASK = 0x0001;
 
     private GameScreen gameScreen;

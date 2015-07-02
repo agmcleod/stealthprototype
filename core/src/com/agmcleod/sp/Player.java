@@ -50,7 +50,7 @@ public class Player extends GameObject {
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f;
         fixtureDef.filter.categoryBits = Game.PLAYER_MASK;
-        fixtureDef.filter.maskBits = Game.ENEMY_MASK | Game.WORLD_MASK;
+        fixtureDef.filter.maskBits = Game.ENEMY_MASK | Game.WORLD_MASK | Game.TRIGGER_MASK;
 
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
@@ -60,6 +60,10 @@ public class Player extends GameObject {
         dirtyVertices = true;
         boundsVertices = new float[8];
         crouching = false;
+    }
+
+    public void dispose(World world) {
+        world.destroyBody(body);
     }
 
     public Rectangle getBounds() {

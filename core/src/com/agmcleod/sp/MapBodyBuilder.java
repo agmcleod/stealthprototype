@@ -28,6 +28,48 @@ public class MapBodyBuilder {
         bodies = new Array<Body>();
     }
 
+    public Body buildSingleBody(World world, MapObject object, BodyDef.BodyType bodyType, float x, float y, short category, short mask, boolean sensor, GameObject userData) {
+        Shape shape = null;
+
+        if (object instanceof RectangleMapObject) {
+            shape = getRectangle((RectangleMapObject)object, x, y);
+        }
+        else if (object instanceof PolygonMapObject) {
+            shape = getPolygon((PolygonMapObject)object, x, y);
+        }
+        else if (object instanceof PolylineMapObject) {
+            shape = getPolyline((PolylineMapObject)object, x, y);
+        }
+        else if (object instanceof CircleMapObject) {
+            shape = getCircle((CircleMapObject)object, x, y);
+        }
+
+        if (shape != null) {
+            BodyDef bd = new BodyDef();
+            bd.type = bodyType;
+            Body body = world.createBody(bd);
+            FixtureDef def = new FixtureDef();
+            def.isSensor = sensor;
+            def.shape = shape;
+            def.density = 1f;
+            def.friction = 0f;
+            def.restitution = 0f;
+            def.filter.categoryBits = category;
+            def.filter.maskBits = mask;
+            Fixture f = body.createFixture(def);
+
+            f.setUserData(userData);
+
+            f.setRestitution(0f);
+            shape.dispose();
+            return body;
+        }
+        else {
+            return null;
+        }
+
+    }
+
     public Array<Body> buildShapes(CustomMapRenderer renderer, World world, float x, float y) {
         TiledMap map = renderer.getMap();
         MapObjects objects = map.getLayers().get("collision").getObjects();
@@ -39,44 +81,15 @@ public class MapBodyBuilder {
             if (object instanceof TextureMapObject) {
                 continue;
             }
-
-            Shape shape;
-
-            if (object instanceof RectangleMapObject) {
-                shape = getRectangle((RectangleMapObject)object, x, y);
-            }
-            else if (object instanceof PolygonMapObject) {
-                shape = getPolygon((PolygonMapObject)object, x, y);
-            }
-            else if (object instanceof PolylineMapObject) {
-                shape = getPolyline((PolylineMapObject)object, x, y);
-            }
-            else if (object instanceof CircleMapObject) {
-                shape = getCircle((CircleMapObject)object, x, y);
-            }
-            else {
-                continue;
-            }
-
-            BodyDef bd = new BodyDef();
-            bd.type = BodyDef.BodyType.StaticBody;
-            Body body = world.createBody(bd);
-            Fixture f = body.createFixture(shape, 1);
-
             String name = object.getName();
-            if (name != null && !name.equals("")) {
-                f.setUserData(new MapCollision(name));
+            MapCollision userData;
+            if (name != null && !name.equals("")){
+                userData = new MapCollision(name);
             }
             else {
-                f.setUserData(new MapCollision());
+                userData = new MapCollision();
             }
-
-
-            f.setRestitution(0f);
-
-            bodies.add(body);
-
-            shape.dispose();
+            bodies.add(buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x, y, Game.WORLD_MASK, (short) (Game.PLAYER_MASK | Game.ENEMY_MASK), false, userData));
         }
         return bodies;
     }

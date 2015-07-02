@@ -40,6 +40,10 @@ public class Bullet extends GameObject {
     }
 
     public void dispose() {
+        dispose(world);
+    }
+
+    public void dispose(World world) {
         if (body != null) {
             world.destroyBody(body);
         }

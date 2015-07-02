@@ -20,6 +20,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -58,6 +59,7 @@ public class GameScreen implements Screen {
         bodyBuilder = new MapBodyBuilder(game, world);
         classByName = new ObjectMap<String, String>();
         classByName.put("enemy", "com.agmcleod.sp.Enemy");
+        classByName.put("trigger", "com.agmcleod.sp.Trigger");
         gameObjects = new Array<GameObject>();
         restartNextFrame = false;
         transitioning = false;
@@ -133,7 +135,13 @@ public class GameScreen implements Screen {
                     }
 
                     gameObjects.add(enemy);
-                } else {
+                }
+                else if (className.equals("trigger")) {
+                    Trigger trigger = (Trigger) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
+                    trigger.setTypeByString(objectProperties.get("action", String.class));
+                    trigger.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, trigger));
+                }
+                else {
                     MapEntity entity = (MapEntity) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
                     entity.setBounds(objectProperties.get("x", Float.class) + x, objectProperties.get("y", Float.class) + y, objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
                     gameObjects.add(entity);
@@ -227,6 +235,11 @@ public class GameScreen implements Screen {
         loadLevel("adjacent.tmx", 0, -928);
     }
 
+    public void showHidden(boolean value) {
+        CustomMapRenderer mapRenderer = mapRenderers.get(0);
+        mapRenderer.setShowHidden(value);
+    }
+
     public void update() {
         if (!transitioning) {
             if (restartNextFrame) {
@@ -295,7 +308,13 @@ public class GameScreen implements Screen {
     public void dispose() {
         debugRenderer.dispose();
         bodyBuilder.disposeBodies();
+        for (GameObject object : gameObjects) {
+            object.dispose(world);
+        }
+        player.dispose(world);
+
         batch.dispose();
         shapeRenderer.dispose();
+        world.dispose();
     }
 }

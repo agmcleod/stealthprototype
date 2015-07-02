@@ -102,6 +102,10 @@ public class Enemy extends MapEntity {
         }
     }
 
+    public void dispose(World world) {
+        world.destroyBody(body);
+    }
+
     public Rectangle getBounds() {
         return this.bounds;
     }

@@ -51,11 +51,13 @@ public class CustomMapRenderer extends BatchTiledMapRenderer {
 
     private float x;
     private float y;
+    private boolean showHidden;
 
     public CustomMapRenderer(TiledMap map, float x, float y) {
         super(map);
         this.x = x;
         this.y = y;
+        showHidden = false;
     }
 
     @Override
@@ -95,7 +97,7 @@ public class CustomMapRenderer extends BatchTiledMapRenderer {
                     final int rotations = cell.getRotation();
 
                     MapProperties properties = tile.getProperties();
-                    if (!properties.containsKey("hidden") || !properties.get("hidden", String.class).equals("true")) {
+                    if (showHidden || !properties.containsKey("hidden") || !properties.get("hidden", String.class).equals("true")) {
                         TextureRegion region = tile.getTextureRegion();
 
                         float x1 = x + tile.getOffsetX() * unitScale;
@@ -202,5 +204,9 @@ public class CustomMapRenderer extends BatchTiledMapRenderer {
             }
             y -= layerTileHeight;
         }
+    }
+
+    public void setShowHidden(boolean hidden) {
+        showHidden = hidden;
     }
 }
