@@ -153,10 +153,8 @@ public class GameScreen implements Screen {
                     UITrigger uiTrigger = (UITrigger) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
                     uiTrigger.setMessage(objectProperties.get("type", String.class));
                     uiTrigger.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, uiTrigger));
-                    // Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                    float positionY = (mapheight * tileHeight - tileHeight - (objectProperties.get("y", Float.class)) + y);
-                    float positionX = objectProperties.get("x", Float.class) + x;
-                    uiTrigger.setPosition(positionX, positionY);
+                    Rectangle rect = ((RectangleMapObject) object).getRectangle();
+                    uiTrigger.setPosition(rect.x + x, rect.y + y + rect.height / 2);
                     gameObjects.add(uiTrigger);
                 }
                 else {

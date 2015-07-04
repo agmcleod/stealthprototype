@@ -69,7 +69,7 @@
     <property name="action" value="disablehidden"/>
    </properties>
   </object>
-  <object name="uitrigger" x="1545.99" y="1008.29" width="22.3651" height="108.098">
+  <object name="uitrigger" x="1544.99" y="1008.29" width="22.3651" height="108.098">
    <properties>
     <property name="type" value="hack"/>
    </properties>
