@@ -15,14 +15,18 @@ public class CollisionListener implements ContactListener {
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
 
-        if (!handlePlayerEnemyCollision(fixtureA, fixtureB)) {
-            if (!handlePlayerBulletCollision(fixtureA, fixtureB)) {
-                handleTriggerCollision(fixtureA, fixtureB);
-            }
-        }
+        handlePlayerEnemyCollision(fixtureA, fixtureB);
+        handlePlayerBulletCollision(fixtureA, fixtureB);
+        handleTriggerCollision(fixtureA, fixtureB);
+        handleUITriggerCollision(fixtureA, fixtureB);
     }
 
-    public boolean handlePlayerBulletCollision(Fixture fixtureA, Fixture fixtureB) {
+    @Override
+    public void endContact(Contact contact) {
+        handleUITriggerCollision(contact.getFixtureA(), contact.getFixtureB());
+    }
+
+    public void handlePlayerBulletCollision(Fixture fixtureA, Fixture fixtureB) {
         Player player = null;
         Bullet bullet = null;
         if (((GameObject) fixtureA.getUserData()).name.equals("player") && ((GameObject) fixtureB.getUserData()).name.equals("bullet")) {
@@ -37,14 +41,10 @@ public class CollisionListener implements ContactListener {
         if (player != null && bullet != null) {
             bullet.setActive(false);
             gs.restart();
-            return true;
-        }
-        else {
-            return false;
         }
     }
 
-    public boolean handlePlayerEnemyCollision(Fixture fixtureA, Fixture fixtureB) {
+    public void handlePlayerEnemyCollision(Fixture fixtureA, Fixture fixtureB) {
         Player player = null;
         Enemy enemy = null;
         if (((GameObject) fixtureA.getUserData()).name.equals("player") && ((GameObject) fixtureB.getUserData()).name.equals("enemy")) {
@@ -58,38 +58,31 @@ public class CollisionListener implements ContactListener {
 
         if (player != null && enemy != null) {
             gs.restart();
-            return true;
-        }
-        else {
-            return false;
         }
     }
 
-    public boolean handleTriggerCollision(Fixture fixtureA, Fixture fixtureB) {
+    public void handleTriggerCollision(Fixture fixtureA, Fixture fixtureB) {
         String aName = ((GameObject) fixtureA.getUserData()).name;
         String bName = ((GameObject) fixtureB.getUserData()).name;
 
-        Trigger trigger = null;
-
         if (aName.equals("trigger") && bName.equals("player")) {
-            trigger = (Trigger) fixtureA.getUserData();
+            ((Trigger) fixtureA.getUserData()).exec();
         }
         else if (bName.equals("trigger") && aName.equals("player")) {
-            trigger = (Trigger) fixtureB.getUserData();
-        }
-
-        if (trigger != null) {
-            trigger.exec();
-            return true;
-        }
-        else {
-            return false;
+            ((Trigger) fixtureB.getUserData()).exec();
         }
     }
 
-    @Override
-    public void endContact(Contact contact) {
+    public void handleUITriggerCollision(Fixture fixtureA, Fixture fixtureB) {
+        String aName = ((GameObject) fixtureA.getUserData()).name;
+        String bName = ((GameObject) fixtureB.getUserData()).name;
 
+        if (aName.equals("uitrigger") && bName.equals("player")) {
+            ((UITrigger) fixtureA.getUserData()).exec();
+        }
+        else if (bName.equals("uitrigger") && aName.equals("player")) {
+            ((UITrigger) fixtureB.getUserData()).exec();
+        }
     }
 
     @Override

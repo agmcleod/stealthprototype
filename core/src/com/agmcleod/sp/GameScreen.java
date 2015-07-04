@@ -16,6 +16,7 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -61,6 +62,7 @@ public class GameScreen implements Screen {
         classByName = new ObjectMap<String, String>();
         classByName.put("enemy", "com.agmcleod.sp.Enemy");
         classByName.put("trigger", "com.agmcleod.sp.Trigger");
+        classByName.put("uitrigger", "com.agmcleod.sp.UITrigger");
         gameObjects = new Array<GameObject>();
         restartNextFrame = false;
         transitioning = false;
@@ -145,6 +147,17 @@ public class GameScreen implements Screen {
                     Trigger trigger = (Trigger) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
                     trigger.setTypeByString(objectProperties.get("action", String.class));
                     trigger.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, trigger));
+                    gameObjects.add(trigger);
+                }
+                else if (className.equals("uitrigger")) {
+                    UITrigger uiTrigger = (UITrigger) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
+                    uiTrigger.setMessage(objectProperties.get("type", String.class));
+                    uiTrigger.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, uiTrigger));
+                    // Rectangle rect = ((RectangleMapObject) object).getRectangle();
+                    float positionY = (mapheight * tileHeight - tileHeight - (objectProperties.get("y", Float.class)) + y);
+                    float positionX = objectProperties.get("x", Float.class) + x;
+                    uiTrigger.setPosition(positionX, positionY);
+                    gameObjects.add(uiTrigger);
                 }
                 else {
                     MapEntity entity = (MapEntity) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
@@ -175,6 +188,7 @@ public class GameScreen implements Screen {
         for (GameObject gameObject : gameObjects) {
             gameObject.render(batch);
         }
+
         batch.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
