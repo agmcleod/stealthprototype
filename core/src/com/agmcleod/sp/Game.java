@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -18,6 +19,7 @@ public class Game extends com.badlogic.gdx.Game {
     public static final short TRIGGER_MASK = 0x0008;
     public static final short WORLD_MASK = 0x0001;
 
+    private BitmapFont uiFont;
     private GameScreen gameScreen;
     private World world;
 
@@ -28,6 +30,7 @@ public class Game extends com.badlogic.gdx.Game {
         atlas = new TextureAtlas("atlas.txt");
         world = new World(new Vector2(0, 0), true);
         gameScreen = new GameScreen(this, world);
+        uiFont = new BitmapFont(Gdx.files.internal("uifont28.fnt"), Gdx.files.internal("uifont28.png"), false);
         setScreen(gameScreen);
     }
 
@@ -53,10 +56,15 @@ public class Game extends com.badlogic.gdx.Game {
     }
 
     public void dispose() {
+        uiFont.dispose();
     }
 
     public TextureAtlas getAtlas() {
         return atlas;
+    }
+
+    public BitmapFont getUiFont() {
+        return uiFont;
     }
 
     public World getWorld() {
