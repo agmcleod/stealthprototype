@@ -1,6 +1,5 @@
 package com.agmcleod.sp;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -48,7 +47,6 @@ public class UITrigger extends GameObject {
     }
 
     public void setPosition(float x, float y) {
-        System.out.println(x + "," + y);
         position.set(x, y);
     }
 
