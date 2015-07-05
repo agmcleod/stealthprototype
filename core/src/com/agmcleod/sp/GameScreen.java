@@ -62,7 +62,6 @@ public class GameScreen implements Screen {
         classByName = new ObjectMap<String, String>();
         classByName.put("enemy", "com.agmcleod.sp.Enemy");
         classByName.put("trigger", "com.agmcleod.sp.Trigger");
-        classByName.put("uitrigger", "com.agmcleod.sp.UITrigger");
         gameObjects = new Array<GameObject>();
         restartNextFrame = false;
         transitioning = false;
@@ -82,6 +81,10 @@ public class GameScreen implements Screen {
         if (!allowPlayerMovement) {
             player.stop();
         }
+    }
+
+    public void enableHack(int id) {
+
     }
 
     public Game getGame() {
@@ -150,8 +153,8 @@ public class GameScreen implements Screen {
                     gameObjects.add(trigger);
                 }
                 else if (className.equals("uitrigger")) {
-                    UITrigger uiTrigger = (UITrigger) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
-                    uiTrigger.setMessage(objectProperties.get("type", String.class));
+                    UITrigger uiTrigger = new UITrigger(this, objectProperties.get("enableid", 0, Integer.class));
+                    uiTrigger.setType(objectProperties.get("type", String.class));
                     uiTrigger.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, uiTrigger));
                     Rectangle rect = ((RectangleMapObject) object).getRectangle();
                     uiTrigger.setPosition(rect.x + x, rect.y + y + rect.height / 2);

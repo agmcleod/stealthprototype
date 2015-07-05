@@ -71,6 +71,7 @@
   </object>
   <object name="uitrigger" x="1544.99" y="1008.29" width="22.3651" height="108.098">
    <properties>
+    <property name="enableid" value="1"/>
     <property name="type" value="hack"/>
    </properties>
   </object>
