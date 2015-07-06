@@ -13,17 +13,17 @@ public class UITrigger extends GameObject {
     private Body body;
     private boolean enabled;
     private Array<Hook> hooks;
-    private int id;
+    private int interactionId;
     private String message;
     private Vector2 position;
 
-    public UITrigger(GameScreen gs, int id) {
+    public UITrigger(GameScreen gs, int interactionId) {
         super("uitrigger");
         this.gs = gs;
         enabled = false;
         position = new Vector2();
         hooks = new Array<Hook>();
-        this.id = id;
+        this.interactionId = interactionId;
     }
 
     public void addHook(Hook hook) {
@@ -42,6 +42,14 @@ public class UITrigger extends GameObject {
             }
         }
         enabled = !enabled;
+    }
+
+    public final int getInteractionId() {
+        return interactionId;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
     @Override
@@ -63,7 +71,7 @@ public class UITrigger extends GameObject {
 
         if (type.equals("hack")) {
             setMessage("Press [E] to hack");
-            addHook(new StartHackHook(gs, id));
+            addHook(new StartHackHook(gs, interactionId));
         }
     }
 

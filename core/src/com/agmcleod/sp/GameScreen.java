@@ -41,6 +41,7 @@ public class GameScreen implements Screen {
     private Matrix4 cameraCpy;
     private ObjectMap<String, String> classByName;
     private Box2DDebugRenderer debugRenderer;
+    private int enabledHackId;
     private float fadeTimer;
     private FollowCamera followCamera;
     private Game game;
@@ -49,6 +50,7 @@ public class GameScreen implements Screen {
     private Rectangle mapBounds;
     private Array<CustomMapRenderer> mapRenderers;
     private Player player;
+    private Array<GameObject> objectsToRemove;
     private boolean restartNextFrame;
     private ShapeRenderer shapeRenderer;
     private TransitionCallback resetTransitionCallback;
@@ -74,6 +76,7 @@ public class GameScreen implements Screen {
         };
         allowPlayerMovement = true;
         isPaused = false;
+        objectsToRemove = new Array<GameObject>();
     }
 
     public void allowPlayerMovement(boolean allow) {
@@ -89,6 +92,20 @@ public class GameScreen implements Screen {
 
     public Game getGame() {
         return game;
+    }
+
+    public Hack getHackById(int id) {
+        Hack hack = null;
+        for (GameObject object : gameObjects) {
+            if (object instanceof Hack) {
+                Hack temp = (Hack) object;
+                if (temp.getId() == id) {
+                    hack = temp;
+                }
+            }
+        }
+
+        return hack;
     }
 
     public Player getPlayer() {
@@ -159,6 +176,9 @@ public class GameScreen implements Screen {
                     Rectangle rect = ((RectangleMapObject) object).getRectangle();
                     uiTrigger.setPosition(rect.x + x, rect.y + y + rect.height / 2);
                     gameObjects.add(uiTrigger);
+                    if (uiTrigger.getInteractionId() > 0) {
+                        gameObjects.add(new Hack(this, uiTrigger));
+                    }
                 }
                 else {
                     MapEntity entity = (MapEntity) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
@@ -216,6 +236,10 @@ public class GameScreen implements Screen {
         }
     }
 
+    public void removeObject(GameObject object) {
+        objectsToRemove.add(object);
+    }
+
     public void renderMap() {
         for (CustomMapRenderer renderer : mapRenderers) {
             renderer.getBatch().begin();
@@ -251,6 +275,7 @@ public class GameScreen implements Screen {
 
         mapBounds = new Rectangle();
         followCamera = new FollowCamera(camera, player.getBounds(), mapBounds);
+        enabledHackId = 0;
 
         loadLevel("adjacent.tmx", 0, -928);
     }
@@ -297,9 +322,35 @@ public class GameScreen implements Screen {
                             enemy.checkWithinDetectArea(player.getBounds());
                         }
                     }
+                    else if (enabledHackId > 0 && gameObject instanceof UITrigger) {
+                        UITrigger trigger = (UITrigger) gameObject;
+                        if (trigger.isEnabled() && enabledHackId == trigger.getInteractionId()) {
+                            Hack hack = getHackById(enabledHackId);
+                            hack.update();
+                        }
+                    }
                 }
 
                 world.step(1f / 60f, 6, 2);
+
+                if (objectsToRemove.size > 0) {
+                    for (GameObject object : objectsToRemove) {
+                        int idx = 0;
+                        int removeIndex = -1;
+                        for (GameObject gameObject : gameObjects) {
+                            if (object.equals(gameObject)) {
+                                removeIndex = idx;
+                                break;
+                            }
+                            idx++;
+                        }
+
+                        if (removeIndex >= 0) {
+                            object.dispose(world);
+                            gameObjects.removeIndex(removeIndex);
+                        }
+                    }
+                }
             }
         }
     }
