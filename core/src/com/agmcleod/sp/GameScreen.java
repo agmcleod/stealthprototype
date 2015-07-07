@@ -170,7 +170,7 @@ public class GameScreen implements Screen {
                     gameObjects.add(trigger);
                 }
                 else if (className.equals("uitrigger")) {
-                    UITrigger uiTrigger = new UITrigger(this, objectProperties.get("enableid", 0, Integer.class));
+                    UITrigger uiTrigger = new UITrigger(this, Integer.parseInt(objectProperties.get("enableid", "0", String.class)));
                     uiTrigger.setType(objectProperties.get("type", String.class));
                     uiTrigger.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, uiTrigger));
                     Rectangle rect = ((RectangleMapObject) object).getRectangle();
@@ -345,11 +345,14 @@ public class GameScreen implements Screen {
                             idx++;
                         }
 
+                        System.out.println("Remove index : " + idx);
+
                         if (removeIndex >= 0) {
                             object.dispose(world);
                             gameObjects.removeIndex(removeIndex);
                         }
                     }
+                    objectsToRemove.clear();
                 }
             }
         }
