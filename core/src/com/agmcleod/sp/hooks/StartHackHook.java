@@ -17,4 +17,9 @@ public class StartHackHook extends Hook {
     public void exec() {
         gs.enableHack(id);
     }
+
+    @Override
+    public void undo() {
+        gs.enableHack(0);
+    }
 }

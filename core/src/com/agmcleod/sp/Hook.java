@@ -11,4 +11,5 @@ public abstract class Hook {
 
 
     public abstract void exec();
+    public abstract void undo();
 }

@@ -41,6 +41,11 @@ public class UITrigger extends GameObject {
                 hook.exec();
             }
         }
+        else {
+            for (Hook hook : hooks) {
+                hook.undo();
+            }
+        }
         enabled = !enabled;
     }
 
