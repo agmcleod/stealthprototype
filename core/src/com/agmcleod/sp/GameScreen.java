@@ -116,6 +116,12 @@ public class GameScreen implements Screen {
         return game.getUiFont();
     }
 
+    public void handleInteractionInput() {
+        if (enabledHackId > 0 && Gdx.input.isKeyPressed(Input.Keys.E)) {
+
+        }
+    }
+
     public void loadLevel(String name, float x, float y) {
         TiledMap map = new TmxMapLoader().load(name);
         CustomMapRenderer mapRenderer = new CustomMapRenderer(map, x, y);
@@ -176,9 +182,6 @@ public class GameScreen implements Screen {
                     Rectangle rect = ((RectangleMapObject) object).getRectangle();
                     uiTrigger.setPosition(rect.x + x, rect.y + y + rect.height / 2);
                     gameObjects.add(uiTrigger);
-                    if (uiTrigger.getInteractionId() > 0) {
-                        gameObjects.add(new Hack(this, uiTrigger));
-                    }
                 }
                 else {
                     MapEntity entity = (MapEntity) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
@@ -330,6 +333,8 @@ public class GameScreen implements Screen {
                         }
                     }
                 }
+
+                handleInteractionInput();
 
                 world.step(1f / 60f, 6, 2);
 
