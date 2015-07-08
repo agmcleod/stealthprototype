@@ -46,7 +46,6 @@ public class HackableComponent extends GameObject {
     @Override
     public void render(SpriteBatch batch) {
         if (enabled) {
-            System.out.println("Draw at : " + position.x + "," + position.y);
             gs.getUiFont().draw(batch, message, position.x, position.y);
         }
     }

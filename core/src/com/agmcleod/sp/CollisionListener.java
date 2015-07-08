@@ -18,12 +18,12 @@ public class CollisionListener implements ContactListener {
         handlePlayerEnemyCollision(fixtureA, fixtureB);
         handlePlayerBulletCollision(fixtureA, fixtureB);
         handleTriggerCollision(fixtureA, fixtureB);
-        handleUITriggerCollision(fixtureA, fixtureB);
+        handleUITriggerCollision(fixtureA, fixtureB, true);
     }
 
     @Override
     public void endContact(Contact contact) {
-        handleUITriggerCollision(contact.getFixtureA(), contact.getFixtureB());
+        handleUITriggerCollision(contact.getFixtureA(), contact.getFixtureB(), false);
     }
 
     public void handlePlayerBulletCollision(Fixture fixtureA, Fixture fixtureB) {
@@ -73,15 +73,26 @@ public class CollisionListener implements ContactListener {
         }
     }
 
-    public void handleUITriggerCollision(Fixture fixtureA, Fixture fixtureB) {
+    public void handleUITriggerCollision(Fixture fixtureA, Fixture fixtureB, boolean enable) {
         String aName = ((GameObject) fixtureA.getUserData()).name;
         String bName = ((GameObject) fixtureB.getUserData()).name;
 
+        HackableComponent comp = null;
+
         if (aName.equals("hackablecomponent") && bName.equals("player")) {
-            ((HackableComponent) fixtureA.getUserData()).enable();
+            comp = (HackableComponent) fixtureA.getUserData();
         }
         else if (bName.equals("hackablecomponent") && aName.equals("player")) {
-            ((HackableComponent) fixtureB.getUserData()).disable();
+            comp = (HackableComponent) fixtureB.getUserData();
+        }
+
+        if (comp != null) {
+            if (enable) {
+                comp.enable();
+            }
+            else {
+                comp.disable();
+            }
         }
     }
 
