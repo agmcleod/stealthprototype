@@ -39,7 +39,6 @@ public class GameScreen implements Screen {
     private MapBodyBuilder bodyBuilder;
     private OrthographicCamera camera;
     private Matrix4 cameraCpy;
-    private ObjectMap<String, String> classByName;
     private Box2DDebugRenderer debugRenderer;
     private float fadeTimer;
     private FollowCamera followCamera;
@@ -60,9 +59,6 @@ public class GameScreen implements Screen {
         this.world.setContactListener(new CollisionListener(this));
         this.game = game;
         bodyBuilder = new MapBodyBuilder(game, world);
-        classByName = new ObjectMap<String, String>();
-        classByName.put("enemy", "com.agmcleod.sp.Enemy");
-        classByName.put("trigger", "com.agmcleod.sp.Trigger");
         gameObjects = new Array<GameObject>();
         restartNextFrame = false;
         transitioning = false;
@@ -83,10 +79,6 @@ public class GameScreen implements Screen {
         if (!allowPlayerMovement) {
             player.stop();
         }
-    }
-
-    public void enableHack(int id) {
-
     }
 
     public Game getGame() {
@@ -124,7 +116,7 @@ public class GameScreen implements Screen {
                 MapProperties objectProperties = object.getProperties();
 
                 if (className.equals("enemy")) {
-                    Enemy enemy = (Enemy) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
+                    Enemy enemy = new Enemy(this);
                     enemy.setInitialBounds(objectProperties.get("x", Float.class) + x, objectProperties.get("y", Float.class) + y, objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
                     float targetY = (mapheight * tileHeight - tileHeight - (Float.parseFloat(objectProperties.get("target_y", String.class))) + y);
                     float targetX = Float.parseFloat(objectProperties.get("target_x", String.class)) + x;
@@ -149,7 +141,7 @@ public class GameScreen implements Screen {
                     gameObjects.add(enemy);
                 }
                 else if (className.equals("trigger")) {
-                    Trigger trigger = (Trigger) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
+                    Trigger trigger = (Trigger) new Trigger(this);
                     trigger.setTypeByString(objectProperties.get("action", String.class));
                     trigger.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, trigger));
                     gameObjects.add(trigger);
@@ -163,7 +155,7 @@ public class GameScreen implements Screen {
                     gameObjects.add(hackComponent);
                 }
                 else {
-                    MapEntity entity = (MapEntity) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
+                    MapEntity entity = new MapEntity("map entity");
                     entity.setBounds(objectProperties.get("x", Float.class) + x, objectProperties.get("y", Float.class) + y, objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
                     gameObjects.add(entity);
                 }
