@@ -69,12 +69,7 @@
     <property name="action" value="disablehidden"/>
    </properties>
   </object>
-  <object name="uitrigger" x="1544.99" y="1008.29" width="22.3651" height="108.098">
-   <properties>
-    <property name="enableid" value="1"/>
-    <property name="type" value="hack"/>
-   </properties>
-  </object>
+  <object name="hackablecomponent" x="1544.99" y="1008.29" width="22.3651" height="108.098"/>
  </objectgroup>
  <objectgroup name="collision">
   <object x="1343.09" y="640.426" width="30.1775" height="990.486"/>

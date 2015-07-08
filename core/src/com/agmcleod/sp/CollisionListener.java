@@ -77,11 +77,11 @@ public class CollisionListener implements ContactListener {
         String aName = ((GameObject) fixtureA.getUserData()).name;
         String bName = ((GameObject) fixtureB.getUserData()).name;
 
-        if (aName.equals("uitrigger") && bName.equals("player")) {
-            ((UITrigger) fixtureA.getUserData()).exec();
+        if (aName.equals("hackablecomponent") && bName.equals("player")) {
+            ((HackableComponent) fixtureA.getUserData()).enable();
         }
-        else if (bName.equals("uitrigger") && aName.equals("player")) {
-            ((UITrigger) fixtureB.getUserData()).exec();
+        else if (bName.equals("hackablecomponent") && aName.equals("player")) {
+            ((HackableComponent) fixtureB.getUserData()).disable();
         }
     }
 

@@ -1,33 +1,29 @@
 package com.agmcleod.sp;
 
-import com.agmcleod.sp.hooks.StartHackHook;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
-public class UITrigger extends GameObject {
+public class HackableComponent extends GameObject {
 
     private GameScreen gs;
     private Body body;
     private boolean enabled;
-    private Array<Hook> hooks;
-    private int interactionId;
+    private HackAction hackAction;
     private String message;
     private Vector2 position;
 
-    public UITrigger(GameScreen gs, int interactionId) {
-        super("uitrigger");
+    public HackableComponent(GameScreen gs) {
+        super("hackablecomponent");
         this.gs = gs;
         enabled = false;
         position = new Vector2();
-        hooks = new Array<Hook>();
-        this.interactionId = interactionId;
+        hackAction = new HackAction(gs, this);
     }
 
-    public void addHook(Hook hook) {
-        hooks.add(hook);
+    public void disable() {
+        enabled = false;
     }
 
     @Override
@@ -35,22 +31,12 @@ public class UITrigger extends GameObject {
         world.destroyBody(body);
     }
 
-    public void exec() {
-        if (!enabled) {
-            for (Hook hook : hooks) {
-                hook.exec();
-            }
-        }
-        else {
-            for (Hook hook : hooks) {
-                hook.undo();
-            }
-        }
-        enabled = !enabled;
+    public void enable() {
+        enabled = true;
     }
 
-    public final int getInteractionId() {
-        return interactionId;
+    public HackAction getHack() {
+        return hackAction;
     }
 
     public boolean isEnabled() {
@@ -72,16 +58,12 @@ public class UITrigger extends GameObject {
         this.message = msg;
     }
 
-    public void setType(String type) {
-
-        if (type.equals("hack")) {
-            setMessage("Press [E] to hack");
-            addHook(new StartHackHook(gs, interactionId));
-        }
-    }
-
     public void setPosition(float x, float y) {
         position.set(x, y);
+    }
+
+    public void setType(String type) {
+        setMessage("Press [E] to hack");
     }
 
     @Override

@@ -41,7 +41,6 @@ public class GameScreen implements Screen {
     private Matrix4 cameraCpy;
     private ObjectMap<String, String> classByName;
     private Box2DDebugRenderer debugRenderer;
-    private int enabledHackId;
     private float fadeTimer;
     private FollowCamera followCamera;
     private Game game;
@@ -94,32 +93,12 @@ public class GameScreen implements Screen {
         return game;
     }
 
-    public Hack getHackById(int id) {
-        Hack hack = null;
-        for (GameObject object : gameObjects) {
-            if (object instanceof Hack) {
-                Hack temp = (Hack) object;
-                if (temp.getId() == id) {
-                    hack = temp;
-                }
-            }
-        }
-
-        return hack;
-    }
-
     public Player getPlayer() {
         return player;
     }
 
     public BitmapFont getUiFont() {
         return game.getUiFont();
-    }
-
-    public void handleInteractionInput() {
-        if (enabledHackId > 0 && Gdx.input.isKeyPressed(Input.Keys.E)) {
-
-        }
     }
 
     public void loadLevel(String name, float x, float y) {
@@ -175,13 +154,13 @@ public class GameScreen implements Screen {
                     trigger.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, trigger));
                     gameObjects.add(trigger);
                 }
-                else if (className.equals("uitrigger")) {
-                    UITrigger uiTrigger = new UITrigger(this, Integer.parseInt(objectProperties.get("enableid", "0", String.class)));
-                    uiTrigger.setType(objectProperties.get("type", String.class));
-                    uiTrigger.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, uiTrigger));
+                else if (className.equals("hackablecomponent")) {
+                    HackableComponent hackComponent = new HackableComponent(this);
+                    hackComponent.setType(objectProperties.get("type", null, String.class));
+                    hackComponent.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, hackComponent));
                     Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                    uiTrigger.setPosition(rect.x + x, rect.y + y + rect.height / 2);
-                    gameObjects.add(uiTrigger);
+                    hackComponent.setPosition(rect.x + x, rect.y + y + rect.height / 2);
+                    gameObjects.add(hackComponent);
                 }
                 else {
                     MapEntity entity = (MapEntity) ObjectMapToClass.getInstanceOfObject(classByName, className, this);
@@ -215,6 +194,7 @@ public class GameScreen implements Screen {
 
         batch.end();
 
+        // draw enemy sight information
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (GameObject gameObject : gameObjects) {
             if (gameObject instanceof Enemy) {
@@ -223,6 +203,7 @@ public class GameScreen implements Screen {
         }
         shapeRenderer.end();
 
+        // draw enemy bullets if applicable
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (GameObject gameObject : gameObjects) {
             if (gameObject instanceof Enemy) {
@@ -278,7 +259,6 @@ public class GameScreen implements Screen {
 
         mapBounds = new Rectangle();
         followCamera = new FollowCamera(camera, player.getBounds(), mapBounds);
-        enabledHackId = 0;
 
         loadLevel("adjacent.tmx", 0, -928);
     }
@@ -316,6 +296,7 @@ public class GameScreen implements Screen {
                     renderer.setView(camera);
                 }
 
+
                 for (GameObject gameObject : gameObjects) {
                     gameObject.update();
                     if (gameObject instanceof Enemy) {
@@ -325,16 +306,14 @@ public class GameScreen implements Screen {
                             enemy.checkWithinDetectArea(player.getBounds());
                         }
                     }
-                    else if (enabledHackId > 0 && gameObject instanceof UITrigger) {
-                        UITrigger trigger = (UITrigger) gameObject;
-                        if (trigger.isEnabled() && enabledHackId == trigger.getInteractionId()) {
-                            Hack hack = getHackById(enabledHackId);
+                    else if (gameObject instanceof HackableComponent) {
+                        HackableComponent component = (HackableComponent) gameObject;
+                        if (component.isEnabled()) {
+                            HackAction hack = component.getHack();
                             hack.update();
                         }
                     }
                 }
-
-                handleInteractionInput();
 
                 world.step(1f / 60f, 6, 2);
 
