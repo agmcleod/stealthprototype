@@ -141,17 +141,16 @@ public class GameScreen implements Screen {
                     gameObjects.add(enemy);
                 }
                 else if (className.equals("trigger")) {
-                    Trigger trigger = (Trigger) new Trigger(this);
+                    Trigger trigger = new Trigger(this);
                     trigger.setTypeByString(objectProperties.get("action", String.class));
                     trigger.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, trigger));
                     gameObjects.add(trigger);
                 }
                 else if (className.equals("hackablecomponent")) {
-                    HackableComponent hackComponent = new HackableComponent(this);
+                    Rectangle rect = ((RectangleMapObject) object).getRectangle();
+                    HackableComponent hackComponent = new HackableComponent(this, rect.x + x, rect.y + y + rect.height / 2);
                     hackComponent.setType(objectProperties.get("type", null, String.class));
                     hackComponent.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, true, hackComponent));
-                    Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                    hackComponent.setPosition(rect.x + x, rect.y + y + rect.height / 2);
                     gameObjects.add(hackComponent);
                 }
                 else {
@@ -195,11 +194,14 @@ public class GameScreen implements Screen {
         }
         shapeRenderer.end();
 
-        // draw enemy bullets if applicable
+        // render objects that use shapes instead of images
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (GameObject gameObject : gameObjects) {
             if (gameObject instanceof Enemy) {
                 ((Enemy) gameObject).renderBullet(shapeRenderer);
+            }
+            else if (gameObject instanceof HackableComponent) {
+                ((HackableComponent) gameObject).getHackAction().renderShape(shapeRenderer);
             }
         }
         shapeRenderer.end();
@@ -300,10 +302,7 @@ public class GameScreen implements Screen {
                     }
                     else if (gameObject instanceof HackableComponent) {
                         HackableComponent component = (HackableComponent) gameObject;
-                        if (component.isEnabled()) {
-                            HackAction hack = component.getHack();
-                            hack.update();
-                        }
+                        component.update();
                     }
                 }
 

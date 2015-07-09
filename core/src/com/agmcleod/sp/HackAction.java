@@ -1,21 +1,28 @@
 package com.agmcleod.sp;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
  * Created by aaronmcleod on 15-07-05.
  */
 public class HackAction extends GameObject {
+    private final float TIME_TO_HACK = 3.0f;
     private GameScreen gs;
-    private float timeout;
     private HackableComponent hackableComponent;
+    private Vector2 position;
+    private float timeout;
+
     public HackAction(GameScreen gs, HackableComponent hackableComponent) {
         super("hack");
         this.hackableComponent = hackableComponent;
-        timeout = 3.0f; // temp for now
+        timeout = TIME_TO_HACK; // temp for now
         this.gs = gs;
+        position = new Vector2(hackableComponent.getPosition());
     }
 
     @Override
@@ -24,6 +31,11 @@ public class HackAction extends GameObject {
     @Override
     public void render(SpriteBatch batch) {
 
+    }
+
+    public void renderShape(ShapeRenderer renderer) {
+        renderer.setColor(Color.GREEN);
+        renderer.rect(position.x, position.y, 100 * (timeout / TIME_TO_HACK), 10);
     }
 
     @Override
