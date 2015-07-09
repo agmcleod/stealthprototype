@@ -21,7 +21,7 @@ public class HackableComponent extends GameObject {
         super("hackablecomponent");
         this.gs = gs;
         enabled = false;
-        position = new Vector2();
+        position = new Vector2(x, y);
         hackAction = new HackAction(gs, this);
         hacking = false;
     }
@@ -47,8 +47,8 @@ public class HackableComponent extends GameObject {
         return position;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isHacking() {
+        return hacking;
     }
 
     @Override

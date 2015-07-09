@@ -35,7 +35,7 @@ public class HackAction extends GameObject {
 
     public void renderShape(ShapeRenderer renderer) {
         renderer.setColor(Color.GREEN);
-        renderer.rect(position.x, position.y, 100 * (timeout / TIME_TO_HACK), 10);
+        renderer.rect(position.x, position.y, 60 * ((TIME_TO_HACK - timeout) / TIME_TO_HACK), 4);
     }
 
     @Override

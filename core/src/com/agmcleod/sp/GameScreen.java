@@ -201,7 +201,10 @@ public class GameScreen implements Screen {
                 ((Enemy) gameObject).renderBullet(shapeRenderer);
             }
             else if (gameObject instanceof HackableComponent) {
-                ((HackableComponent) gameObject).getHackAction().renderShape(shapeRenderer);
+                HackableComponent hc = (HackableComponent) gameObject;
+                if (hc.isHacking()) {
+                    hc.getHackAction().renderShape(shapeRenderer);
+                }
             }
         }
         shapeRenderer.end();
