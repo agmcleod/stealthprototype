@@ -323,8 +323,6 @@ public class GameScreen implements Screen {
                             idx++;
                         }
 
-                        System.out.println("Remove index : " + idx);
-
                         if (removeIndex >= 0) {
                             object.dispose(world);
                             gameObjects.removeIndex(removeIndex);
