@@ -20,7 +20,7 @@ public class HackAction extends GameObject {
     public HackAction(GameScreen gs, HackableComponent hackableComponent) {
         super("hack");
         this.hackableComponent = hackableComponent;
-        timeout = TIME_TO_HACK; // temp for now
+        timeout = TIME_TO_HACK;
         this.gs = gs;
         position = new Vector2(hackableComponent.getPosition());
     }
