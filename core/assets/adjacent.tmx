@@ -59,17 +59,17 @@
    </properties>
    <polygon points="0,0 -64.9549,63.0445 0,62.6624"/>
   </object>
-  <object name="trigger" x="1592.92" y="1023.23" width="19.8686" height="65.337">
+  <object name="trigger" x="1600.63" y="1022.75" width="19.8686" height="65.337">
    <properties>
     <property name="action" value="enablehidden"/>
    </properties>
   </object>
-  <object name="trigger" x="1569.21" y="1018.65" width="8.02384" height="86.7339">
+  <object name="trigger" x="1588.48" y="1021.06" width="8.02384" height="86.7339">
    <properties>
     <property name="action" value="disablehidden"/>
    </properties>
   </object>
-  <object name="hackablecomponent" x="1544.99" y="1008.29" width="22.3651" height="108.098"/>
+  <object name="hackablecomponent" x="1568.12" y="1009.74" width="13.2102" height="107.616"/>
  </objectgroup>
  <objectgroup name="collision">
   <object x="1343.09" y="640.426" width="30.1775" height="990.486"/>
