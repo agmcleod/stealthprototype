@@ -64,12 +64,12 @@
     <property name="action" value="enablehidden"/>
    </properties>
   </object>
-  <object name="trigger" x="1588.48" y="1021.06" width="8.02384" height="86.7339">
+  <object name="trigger" x="1587.04" y="1021.06" width="11.3967" height="66.9787">
    <properties>
     <property name="action" value="disablehidden"/>
    </properties>
   </object>
-  <object name="hackablecomponent" x="1568.12" y="1009.74" width="13.2102" height="107.616"/>
+  <object name="hackablecomponent" x="1567.63" y="1019.86" width="12.2466" height="72.9241"/>
  </objectgroup>
  <objectgroup name="collision">
   <object x="1343.09" y="640.426" width="30.1775" height="990.486"/>
@@ -125,7 +125,7 @@
   <object x="2286.46" y="1280.1" width="109.041" height="28.3962"/>
   <object x="2304.63" y="1003.71" width="31.8037" height="178.328"/>
   <object x="2368.55" y="1157.81" width="126.934" height="57.9282"/>
-  <object x="1569.82" y="1104.59" width="29.532" height="237.392"/>
+  <object x="1569.34" y="1088.69" width="30.9775" height="254.738"/>
   <object x="2496.59" y="1217.63">
    <polygon points="0.382088,-2.29253 260.109,-261.245 255.566,-291.913 -6.81508,-35.2113"/>
   </object>
