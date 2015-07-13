@@ -33,6 +33,7 @@ public class HackableComponent extends GameObject {
     @Override
     public void dispose(World world) {
         world.destroyBody(body);
+        hackAction.dispose(world);
     }
 
     public void enable() {
