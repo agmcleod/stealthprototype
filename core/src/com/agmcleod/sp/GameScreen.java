@@ -32,13 +32,25 @@ import com.badlogic.gdx.utils.ObjectMap;
  * Created by aaronmcleod on 15-04-27.
  */
 public class GameScreen implements Screen {
-    private World world;
 
+    private class Level {
+        public String name;
+        public float x;
+        public float y;
+        public Level(String name, float x, float y) {
+            this.name = name;
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    private World world;
     private boolean allowPlayerMovement;
     private SpriteBatch batch;
     private MapBodyBuilder bodyBuilder;
     private OrthographicCamera camera;
     private Matrix4 cameraCpy;
+    private Level currentLevel;
     private Box2DDebugRenderer debugRenderer;
     private float fadeTimer;
     private FollowCamera followCamera;
@@ -94,6 +106,7 @@ public class GameScreen implements Screen {
     }
 
     public void loadLevel(String name, float x, float y) {
+        currentLevel = new Level(name, x, y);
         TiledMap map = new TmxMapLoader().load(name);
         CustomMapRenderer mapRenderer = new CustomMapRenderer(map, x, y);
         mapRenderers.add(mapRenderer);
@@ -268,12 +281,13 @@ public class GameScreen implements Screen {
     public void update() {
         if (!transitioning) {
             if (restartNextFrame) {
-                player.reset();
-                for (GameObject gameObject : gameObjects) {
-                    if (gameObject instanceof Enemy) {
-                        ((Enemy) gameObject).reset();
-                    }
+                for (GameObject object : gameObjects) {
+                    object.dispose(world);
                 }
+                gameObjects.clear();
+                player.update();
+                followCamera.update();
+                loadLevel(currentLevel.name, currentLevel.x, currentLevel.y);
                 restartNextFrame = false;
                 allowPlayerMovement = true;
                 world.step(1f / 60f, 6, 2);
