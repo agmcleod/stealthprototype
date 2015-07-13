@@ -77,7 +77,6 @@ public class GameScreen implements Screen {
         resetTransitionCallback = new TransitionCallback() {
             @Override
             public void callback() {
-                transitioning = false;
                 restartNextFrame = true;
             }
         };
@@ -180,7 +179,7 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSLASH)) {
             isPaused = !isPaused;
         }
-        if (!transitioning && !isPaused) {
+        if (!isPaused) {
             update();
         }
 
@@ -279,71 +278,71 @@ public class GameScreen implements Screen {
     }
 
     public void update() {
-        if (!transitioning) {
-            if (restartNextFrame) {
-                for (GameObject object : gameObjects) {
-                    object.dispose(world);
-                }
-                gameObjects.clear();
-                player.update();
-                followCamera.update();
-                loadLevel(currentLevel.name, currentLevel.x, currentLevel.y);
-                restartNextFrame = false;
-                allowPlayerMovement = true;
-                world.step(1f / 60f, 6, 2);
+        if (restartNextFrame) {
+            for (GameObject object : gameObjects) {
+                object.dispose(world);
             }
-            else {
-                if (allowPlayerMovement) {
-                    player.update();
-                }
+            gameObjects.clear();
+            player.reset();
+            followCamera.update();
+            camera.update();
+            loadLevel(currentLevel.name, currentLevel.x, currentLevel.y);
+            world.step(1f / 60f, 6, 2);
+            transitioning = false;
+            restartNextFrame = false;
+            allowPlayerMovement = true;
+        }
+        else if (!transitioning) {
+            if (allowPlayerMovement) {
+                player.update();
+            }
 
-                followCamera.update();
-                camera.update();
-                cameraCpy.set(camera.combined);
-                batch.setProjectionMatrix(camera.combined);
-                shapeRenderer.setProjectionMatrix(camera.combined);
+            followCamera.update();
+            camera.update();
+            cameraCpy.set(camera.combined);
+            batch.setProjectionMatrix(camera.combined);
+            shapeRenderer.setProjectionMatrix(camera.combined);
 
-                for (CustomMapRenderer renderer : mapRenderers) {
-                    renderer.setView(camera);
-                }
+            for (CustomMapRenderer renderer : mapRenderers) {
+                renderer.setView(camera);
+            }
 
 
-                for (GameObject gameObject : gameObjects) {
-                    gameObject.update();
-                    if (gameObject instanceof Enemy) {
-                        Enemy enemy = (Enemy) gameObject;
-                        enemy.checkSightline(player);
-                        if (!player.isCrouching()) {
-                            enemy.checkWithinDetectArea(player.getBounds());
-                        }
+            for (GameObject gameObject : gameObjects) {
+                gameObject.update();
+                if (gameObject instanceof Enemy) {
+                    Enemy enemy = (Enemy) gameObject;
+                    enemy.checkSightline(player);
+                    if (!player.isCrouching()) {
+                        enemy.checkWithinDetectArea(player.getBounds());
                     }
-                    else if (gameObject instanceof HackableComponent) {
-                        HackableComponent component = (HackableComponent) gameObject;
-                        component.update();
+                }
+                else if (gameObject instanceof HackableComponent) {
+                    HackableComponent component = (HackableComponent) gameObject;
+                    component.update();
+                }
+            }
+
+            world.step(1f / 60f, 6, 2);
+
+            if (objectsToRemove.size > 0) {
+                for (GameObject object : objectsToRemove) {
+                    int idx = 0;
+                    int removeIndex = -1;
+                    for (GameObject gameObject : gameObjects) {
+                        if (object.equals(gameObject)) {
+                            removeIndex = idx;
+                            break;
+                        }
+                        idx++;
+                    }
+
+                    if (removeIndex >= 0) {
+                        object.dispose(world);
+                        gameObjects.removeIndex(removeIndex);
                     }
                 }
-
-                world.step(1f / 60f, 6, 2);
-
-                if (objectsToRemove.size > 0) {
-                    for (GameObject object : objectsToRemove) {
-                        int idx = 0;
-                        int removeIndex = -1;
-                        for (GameObject gameObject : gameObjects) {
-                            if (object.equals(gameObject)) {
-                                removeIndex = idx;
-                                break;
-                            }
-                            idx++;
-                        }
-
-                        if (removeIndex >= 0) {
-                            object.dispose(world);
-                            gameObjects.removeIndex(removeIndex);
-                        }
-                    }
-                    objectsToRemove.clear();
-                }
+                objectsToRemove.clear();
             }
         }
     }
