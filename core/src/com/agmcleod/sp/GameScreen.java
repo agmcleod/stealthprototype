@@ -18,6 +18,7 @@ import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Matrix4;
@@ -58,7 +59,7 @@ public class GameScreen implements Screen {
     private Array<GameObject> gameObjects;
     private boolean isPaused;
     private Rectangle mapBounds;
-    private Array<CustomMapRenderer> mapRenderers;
+    private CustomMapRenderer mapRenderer;
     private Player player;
     private Array<GameObject> objectsToRemove;
     private boolean restartNextFrame;
@@ -107,8 +108,7 @@ public class GameScreen implements Screen {
     public void loadLevel(String name, float x, float y) {
         currentLevel = new Level(name, x, y);
         TiledMap map = new TmxMapLoader().load(name);
-        CustomMapRenderer mapRenderer = new CustomMapRenderer(map, x, y);
-        mapRenderers.add(mapRenderer);
+        mapRenderer = new CustomMapRenderer(map, x, y);
         bodyBuilder.buildShapes(mapRenderer, world, x, y);
 
         MapProperties properties = map.getProperties();
@@ -175,7 +175,16 @@ public class GameScreen implements Screen {
     }
 
     public void removeTileTypeFromBounds(String type, Rectangle bounds) {
-        
+        for (MapLayer layer : mapRenderer.getMap().getLayers()) {
+            if (layer.isVisible() && !layer.getName().equals("collision") && layer instanceof TiledMapTileLayer) {
+                TiledMapTileLayer tileLayer = (TiledMapTileLayer) layer;
+                Array<TiledMapTileLayer.Cell> cells = mapRenderer.getTilesWithinBounds(tileLayer, type, bounds);
+                for (TiledMapTileLayer.Cell cell : cells) {
+                    TiledMapTile tile = cell.getTile();
+                    tile.getTextureRegion();
+                }
+            }
+        }
     }
 
     @Override
@@ -238,19 +247,17 @@ public class GameScreen implements Screen {
     }
 
     public void renderMap() {
-        for (CustomMapRenderer renderer : mapRenderers) {
-            renderer.getBatch().begin();
-            TiledMap map = renderer.getMap();
-            renderer.setMap(map);
-            for (MapLayer layer : map.getLayers()) {
-                if (layer.isVisible() && !layer.getName().equals("collision")) {
-                    if (layer instanceof TiledMapTileLayer) {
-                        renderer.renderTileLayer((TiledMapTileLayer) layer);
-                    }
+        mapRenderer.getBatch().begin();
+        TiledMap map = mapRenderer.getMap();
+        mapRenderer.setMap(map);
+        for (MapLayer layer : map.getLayers()) {
+            if (layer.isVisible() && !layer.getName().equals("collision")) {
+                if (layer instanceof TiledMapTileLayer) {
+                    mapRenderer.renderTileLayer((TiledMapTileLayer) layer);
                 }
             }
-            renderer.getBatch().end();
         }
+        mapRenderer.getBatch().end();
     }
 
     public void restart() {
@@ -264,7 +271,6 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cameraCpy = camera.combined.cpy();
-        mapRenderers = new Array<CustomMapRenderer>();
         shapeRenderer = new ShapeRenderer();
 
         player = new Player(this);
@@ -277,7 +283,6 @@ public class GameScreen implements Screen {
     }
 
     public void showHidden(boolean value) {
-        CustomMapRenderer mapRenderer = mapRenderers.get(0);
         mapRenderer.setShowHidden(value);
     }
 
@@ -307,10 +312,7 @@ public class GameScreen implements Screen {
             batch.setProjectionMatrix(camera.combined);
             shapeRenderer.setProjectionMatrix(camera.combined);
 
-            for (CustomMapRenderer renderer : mapRenderers) {
-                renderer.setView(camera);
-            }
-
+            mapRenderer.setView(camera);
 
             for (GameObject gameObject : gameObjects) {
                 gameObject.update();

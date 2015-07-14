@@ -24,9 +24,9 @@ public class HackableComponent extends GameObject {
         super("hackablecomponent");
         this.gs = gs;
         enabled = false;
+        bounds = new Rectangle(x, y, width, height);
         hackAction = new HackAction(gs, this);
         hacking = false;
-        bounds = new Rectangle(x, y, width, height);
     }
 
     public void disable() {

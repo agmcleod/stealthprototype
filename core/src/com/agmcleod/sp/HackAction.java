@@ -22,7 +22,7 @@ public class HackAction extends GameObject {
         this.hackableComponent = hackableComponent;
         timeout = TIME_TO_HACK;
         this.gs = gs;
-        position = new Vector2(hackableComponent.getPosition());
+        position = new Vector2(hackableComponent.getBounds().x, hackableComponent.getBounds().y);
     }
 
     @Override
