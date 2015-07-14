@@ -160,7 +160,7 @@ public class GameScreen implements Screen {
                 }
                 else if (className.equals("hackablecomponent")) {
                     Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                    HackableComponent hackComponent = new HackableComponent(this, rect.x + x, rect.y + y + rect.height / 2);
+                    HackableComponent hackComponent = new HackableComponent(this, rect.x + x, rect.y + y + rect.height / 2, rect.width, rect.height);
                     hackComponent.setType(objectProperties.get("type", null, String.class));
                     hackComponent.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, false, hackComponent));
                     gameObjects.add(hackComponent);
@@ -172,6 +172,10 @@ public class GameScreen implements Screen {
                 }
             }
         }
+    }
+
+    public void removeTileTypeFromBounds(String type, Rectangle bounds) {
+        
     }
 
     @Override

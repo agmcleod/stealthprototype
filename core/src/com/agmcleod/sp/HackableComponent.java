@@ -3,9 +3,12 @@ package com.agmcleod.sp;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 public class HackableComponent extends GameObject {
 
@@ -15,15 +18,15 @@ public class HackableComponent extends GameObject {
     private HackAction hackAction;
     private boolean hacking;
     private String message;
-    private Vector2 position;
+    private Rectangle bounds;
 
-    public HackableComponent(GameScreen gs, float x, float y) {
+    public HackableComponent(GameScreen gs, float x, float y, float width, float height) {
         super("hackablecomponent");
         this.gs = gs;
         enabled = false;
-        position = new Vector2(x, y);
         hackAction = new HackAction(gs, this);
         hacking = false;
+        bounds = new Rectangle(x, y, width, height);
     }
 
     public void disable() {
@@ -44,8 +47,8 @@ public class HackableComponent extends GameObject {
         return hackAction;
     }
 
-    public Vector2 getPosition() {
-        return position;
+    public Rectangle getBounds() {
+        return bounds;
     }
 
     public boolean isHacking() {
@@ -56,7 +59,7 @@ public class HackableComponent extends GameObject {
     public void render(SpriteBatch batch) {
         if (enabled) {
             if (!hacking) {
-                gs.getUiFont().draw(batch, message, position.x, position.y);
+                gs.getUiFont().draw(batch, message, bounds.x, bounds.y);
             }
         }
     }
