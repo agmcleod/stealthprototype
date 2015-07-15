@@ -44,7 +44,6 @@ public class HackAction extends GameObject {
         if (timeout <= 0) {
             gs.removeObject(hackableComponent);
             gs.removeObject(this);
-            gs.removeTileTypeFromBounds("hackable", hackableComponent.getBounds());
         }
     }
 }

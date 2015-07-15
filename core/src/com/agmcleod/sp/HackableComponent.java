@@ -2,6 +2,7 @@ package com.agmcleod.sp;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -18,15 +19,18 @@ public class HackableComponent extends GameObject {
     private HackAction hackAction;
     private boolean hacking;
     private String message;
+    private Texture texture;
     private Rectangle bounds;
 
-    public HackableComponent(GameScreen gs, float x, float y, float width, float height) {
+    public HackableComponent(GameScreen gs, float x, float y, float width, float height, String imageName) {
         super("hackablecomponent");
         this.gs = gs;
         enabled = false;
         bounds = new Rectangle(x, y, width, height);
         hackAction = new HackAction(gs, this);
         hacking = false;
+        texture = new Texture(imageName + ".png");
+        texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
     }
 
     public void disable() {
@@ -37,6 +41,7 @@ public class HackableComponent extends GameObject {
     public void dispose(World world) {
         world.destroyBody(body);
         hackAction.dispose(world);
+        texture.dispose();
     }
 
     public void enable() {
@@ -57,10 +62,9 @@ public class HackableComponent extends GameObject {
 
     @Override
     public void render(SpriteBatch batch) {
-        if (enabled) {
-            if (!hacking) {
-                gs.getUiFont().draw(batch, message, bounds.x, bounds.y);
-            }
+        batch.draw(texture, bounds.x, bounds.y, bounds.width, bounds.height);
+        if (enabled && !hacking) {
+            gs.getUiFont().draw(batch, message, bounds.x, bounds.y + bounds.height / 2);
         }
     }
 

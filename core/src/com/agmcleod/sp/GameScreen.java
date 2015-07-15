@@ -160,7 +160,7 @@ public class GameScreen implements Screen {
                 }
                 else if (className.equals("hackablecomponent")) {
                     Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                    HackableComponent hackComponent = new HackableComponent(this, rect.x + x, rect.y + y + rect.height / 2, rect.width, rect.height);
+                    HackableComponent hackComponent = new HackableComponent(this, rect.x + x, rect.y + y, rect.width, rect.height, objectProperties.get("image", String.class));
                     hackComponent.setType(objectProperties.get("type", null, String.class));
                     hackComponent.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, false, hackComponent));
                     gameObjects.add(hackComponent);
@@ -169,19 +169,6 @@ public class GameScreen implements Screen {
                     MapEntity entity = new MapEntity("map entity");
                     entity.setBounds(objectProperties.get("x", Float.class) + x, objectProperties.get("y", Float.class) + y, objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
                     gameObjects.add(entity);
-                }
-            }
-        }
-    }
-
-    public void removeTileTypeFromBounds(String type, Rectangle bounds) {
-        for (MapLayer layer : mapRenderer.getMap().getLayers()) {
-            if (layer.isVisible() && !layer.getName().equals("collision") && layer instanceof TiledMapTileLayer) {
-                TiledMapTileLayer tileLayer = (TiledMapTileLayer) layer;
-                Array<TiledMapTileLayer.Cell> cells = mapRenderer.getTilesWithinBounds(tileLayer, type, bounds);
-                for (TiledMapTileLayer.Cell cell : cells) {
-                    TiledMapTile tile = cell.getTile();
-                    tile.getTextureRegion();
                 }
             }
         }

@@ -73,54 +73,6 @@ public class CustomMapRenderer extends BatchTiledMapRenderer {
         tileHeight = properties.get("tileheight", Integer.class);
     }
 
-    public Array<TiledMapTileLayer.Cell> getTilesWithinBounds(TiledMapTileLayer layer, String type, Rectangle bounds) {
-        Array<Cell> tiles = new Array<TiledMapTileLayer.Cell>();
-
-        final int layerWidth = layer.getWidth();
-        final int layerHeight = layer.getHeight();
-
-        final float layerTileWidth = layer.getTileWidth() * unitScale;
-        final float layerTileHeight = layer.getTileHeight() * unitScale;
-
-        final int col1 = Math.max(0, (int)((viewBounds.x - this.x) / layerTileWidth));
-        final int col2 = Math.min(layerWidth, (int)(((viewBounds.x - this.x) + viewBounds.width + layerTileWidth) / layerTileWidth));
-
-        final int row1 = Math.max(0, (int)((viewBounds.y - this.y) / layerTileHeight));
-        final int row2 = Math.min(layerHeight, (int)(((viewBounds.y - this.y) + viewBounds.height + layerTileHeight) / layerTileHeight));
-
-        float y = row2 * layerTileHeight + this.y;
-        float xStart = col1 * layerTileWidth + this.x;
-
-        for (int row = row2; row >= row1; row--) {
-            float x = xStart;
-            for (int col = col1; col < col2; col++) {
-                final TiledMapTileLayer.Cell cell = layer.getCell(col, row);
-                if (cell == null) {
-                    x += layerTileWidth;
-                    continue;
-                }
-                final TiledMapTile tile = cell.getTile();
-                if (tile != null) {
-                    MapProperties properties = tile.getProperties();
-                    if (properties.get("type", String.class) != null && properties.get("type", String.class).equals(type)) {
-                        TextureRegion region = tile.getTextureRegion();
-                        float x1 = x + tile.getOffsetX() * unitScale;
-                        float y1 = y + tile.getOffsetY() * unitScale;
-
-                        float x2 = x1 + region.getRegionWidth() * unitScale;
-                        float y2 = y1 + region.getRegionHeight() * unitScale;
-
-                        if (bounds.contains(x1, y1) || bounds.contains(x1, y2) || bounds.contains(x2, y1) || bounds.contains(x2, y2)) {
-                            tiles.add(cell);
-                        }
-                    }
-                }
-            }
-        }
-
-        return tiles;
-    }
-
     @Override
     public void renderTileLayer(TiledMapTileLayer layer) {
         final Color batchColor = batch.getColor();
