@@ -7,6 +7,7 @@ import com.agmcleod.sp.aibehaviours.ShootBehaviour;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -91,6 +92,10 @@ public class GameScreen implements Screen {
         if (!allowPlayerMovement) {
             player.stop();
         }
+    }
+
+    public OrthographicCamera getCamera() {
+        return camera;
     }
 
     public Game getGame() {

@@ -15,6 +15,7 @@ public class Player extends GameObject {
     private Body body;
     private Rectangle bounds;
     private float[] boundsVertices;
+    private CrackTool crackTool;
     private boolean crouching;
     private boolean dirtyVertices;
     final float WIDTH = 32;
@@ -22,6 +23,7 @@ public class Player extends GameObject {
     private final int VEL = 3;
     private TextureRegion region;
     private float rotation;
+    private boolean showCrackTool;
     private Vector2 originalPos;
     public Player(GameScreen gs) {
         super("player");
@@ -60,10 +62,13 @@ public class Player extends GameObject {
         dirtyVertices = true;
         boundsVertices = new float[8];
         crouching = false;
+        crackTool = new CrackTool(gs);
+        showCrackTool = false;
     }
 
     public void dispose(World world) {
         world.destroyBody(body);
+        crackTool.dispose();
     }
 
     public Rectangle getBounds() {
@@ -114,6 +119,10 @@ public class Player extends GameObject {
         batch.draw(region, x, y, 0, 0, WIDTH, HEIGHT, 1.0f, 1.0f, rotation);
         if (isCrouching()) {
             batch.setColor(1f, 1f, 1f, 1f);
+        }
+
+        if (showCrackTool) {
+            crackTool.render(batch);
         }
     }
 
