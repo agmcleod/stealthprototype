@@ -4,14 +4,21 @@ filter: Linear,Linear
 repeat: none
 enemy
   rotate: false
-  xy: 2, 36
+  xy: 141, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-player
+highlight
   rotate: false
   xy: 2, 2
+  size: 103, 102
+  orig: 103, 102
+  offset: 0, 0
+  index: -1
+player
+  rotate: false
+  xy: 107, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

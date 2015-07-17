@@ -94,8 +94,16 @@ public class Player extends GameObject {
         return boundsVertices;
     }
 
+    public CrackTool getCrackTool() {
+        return crackTool;
+    }
+
     public boolean isCrouching() {
         return crouching;
+    }
+
+    public boolean isShowingCrackTool() {
+        return showCrackTool;
     }
 
     public void render(SpriteBatch batch) {

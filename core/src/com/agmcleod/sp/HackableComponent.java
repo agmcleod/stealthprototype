@@ -71,7 +71,7 @@ public class HackableComponent extends GameObject {
             batch.draw(texture, bounds.x, bounds.y, bounds.width, bounds.height);
         }
         if (enabled && !hacking) {
-            gs.getUiFont().draw(batch, message, bounds.x - bounds.width / 2, bounds.y + bounds.height / 2);
+            gs.getUiFont().draw(batch, message, bounds.x - 150, bounds.y + bounds.height);
         }
     }
 

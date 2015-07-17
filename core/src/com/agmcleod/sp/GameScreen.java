@@ -6,6 +6,7 @@ import com.agmcleod.sp.aibehaviours.SearchBehaviour;
 import com.agmcleod.sp.aibehaviours.ShootBehaviour;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -33,7 +35,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 /**
  * Created by aaronmcleod on 15-04-27.
  */
-public class GameScreen implements Screen {
+public class GameScreen implements InputProcessor, Screen {
 
     private class Level {
         public String name;
@@ -61,6 +63,7 @@ public class GameScreen implements Screen {
     private boolean isPaused;
     private Rectangle mapBounds;
     private CustomMapRenderer mapRenderer;
+    private Vector3 mouseCoords;
     private Player player;
     private Array<GameObject> objectsToRemove;
     private boolean restartNextFrame;
@@ -85,6 +88,7 @@ public class GameScreen implements Screen {
         allowPlayerMovement = true;
         isPaused = false;
         objectsToRemove = new Array<GameObject>();
+        mouseCoords = new Vector3();
     }
 
     public void allowPlayerMovement(boolean allow) {
@@ -92,6 +96,20 @@ public class GameScreen implements Screen {
         if (!allowPlayerMovement) {
             player.stop();
         }
+    }
+
+    @Override
+    public void dispose() {
+        debugRenderer.dispose();
+        bodyBuilder.disposeBodies();
+        for (GameObject object : gameObjects) {
+            object.dispose(world);
+        }
+        player.dispose(world);
+
+        batch.dispose();
+        shapeRenderer.dispose();
+        world.dispose();
     }
 
     public OrthographicCamera getCamera() {
@@ -276,6 +294,7 @@ public class GameScreen implements Screen {
         followCamera = new FollowCamera(camera, player.getBounds(), mapBounds);
 
         loadLevel("adjacent.tmx", 0, -928);
+        Gdx.input.setInputProcessor(this);
     }
 
     public void showHidden(boolean value) {
@@ -370,16 +389,47 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void dispose() {
-        debugRenderer.dispose();
-        bodyBuilder.disposeBodies();
-        for (GameObject object : gameObjects) {
-            object.dispose(world);
-        }
-        player.dispose(world);
+    public boolean keyDown(int keycode) {
+        return false;
+    }
 
-        batch.dispose();
-        shapeRenderer.dispose();
-        world.dispose();
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        if (player.isShowingCrackTool()) {
+            mouseCoords.set(screenX, screenY, 0);
+            camera.unproject(mouseCoords);
+            player.getCrackTool().highlightKey(mouseCoords.x, mouseCoords.y);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }
