@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="106" height="56" tilewidth="32" tileheight="32" nextobjectid="47">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="106" height="56" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="temptiles" tilewidth="32" tileheight="32" spacing="2" margin="1">
   <image source="temptiles.png" width="170" height="170"/>
   <tile id="17">
@@ -24,127 +24,133 @@
   </data>
  </layer>
  <objectgroup name="entities">
-  <object id="1" name="enemy" x="1500" y="1440" width="32" height="32">
+  <object name="enemy" x="1500" y="1440" width="32" height="32">
    <properties>
     <property name="aitype" value="chase"/>
     <property name="target_x" value="1500"/>
     <property name="target_y" value="1290"/>
    </properties>
   </object>
-  <object id="2" name="enemy" x="2910" y="1024" width="32" height="32">
+  <object name="enemy" x="2910" y="1024" width="32" height="32">
    <properties>
     <property name="aitype" value="shoot"/>
     <property name="target_x" value="2910"/>
     <property name="target_y" value="1600"/>
    </properties>
   </object>
-  <object id="3" name="enemy" x="1888" y="1440" width="32" height="32">
+  <object name="enemy" x="1888" y="1440" width="32" height="32">
    <properties>
     <property name="aitype" value="shoot"/>
     <property name="target_x" value="1600"/>
     <property name="target_y" value="1440"/>
    </properties>
   </object>
-  <object id="4" name="enemy" x="3041" y="1695" width="32" height="32">
+  <object name="enemy" x="3041" y="1695" width="32" height="32">
    <properties>
     <property name="aitype" value="shoot"/>
     <property name="target_x" value="3041"/>
     <property name="target_y" value="1024"/>
    </properties>
   </object>
-  <object id="5" name="trigger" x="2431.61" y="1216.19">
+  <object name="trigger" x="2431.61" y="1216.19">
    <properties>
     <property name="action" value="enablehidden"/>
    </properties>
    <polygon points="0,0 -44.7043,41.2655 -45.0864,63.0445 -31.7133,63.4266 33.2416,-0.764175"/>
   </object>
-  <object id="6" name="trigger" x="2498.09" y="1216.19">
+  <object name="trigger" x="2498.09" y="1216.19">
    <properties>
     <property name="action" value="disablehidden"/>
    </properties>
    <polygon points="0,0 -64.9549,63.0445 0,62.6624"/>
   </object>
-  <object id="7" name="trigger" x="1600.63" y="1022.75" width="19.8686" height="65.337">
+  <object name="trigger" x="1600.63" y="1022.75" width="19.8686" height="65.337">
    <properties>
     <property name="action" value="enablehidden"/>
    </properties>
   </object>
-  <object id="8" name="trigger" x="1587.04" y="1024.38" width="12.71" height="63.6637">
+  <object name="trigger" x="1587.04" y="1024.38" width="12.71" height="63.6637">
    <properties>
     <property name="action" value="disablehidden"/>
    </properties>
   </object>
-  <object id="9" name="hackablecomponent" x="1568" y="1024" width="32" height="64">
+  <object name="hackablecomponent" x="1568" y="1024" width="32" height="64">
    <properties>
     <property name="image" value="vent"/>
+    <property name="type" value="hack"/>
    </properties>
   </object>
-  <object id="46" name="enemy" x="1470" y="325" width="32" height="32">
+  <object name="enemy" x="1470" y="325" width="32" height="32">
    <properties>
     <property name="aitype" value="chase"/>
     <property name="target_x" value="1470"/>
     <property name="target_y" value="1200"/>
    </properties>
   </object>
+  <object name="hackablecomponent" x="3352.7" y="1279.67" width="24.8963" height="220.747">
+   <properties>
+    <property name="type" value="crack"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="collision">
-  <object id="10" x="1343.09" y="640.426" width="30.1775" height="990.486"/>
-  <object id="11" x="1567.7" y="222.915" width="32.425" height="800.96"/>
-  <object id="12" x="1599.14" y="1307.15" width="765.404" height="35.3017"/>
-  <object id="13" x="1372.88" y="1600.8" width="996.47" height="30.4878"/>
-  <object id="14" name="block" x="1502.86" y="1214.09" width="70.6033" height="67.3941"/>
-  <object id="15" x="2370.78" y="1604.52">
+  <object x="1343.09" y="640.426" width="30.1775" height="990.486"/>
+  <object x="1567.7" y="222.915" width="32.425" height="800.96"/>
+  <object x="1599.14" y="1307.15" width="765.404" height="35.3017"/>
+  <object x="1372.88" y="1600.8" width="996.47" height="30.4878"/>
+  <object name="block" x="1502.86" y="1214.09" width="70.6033" height="67.3941"/>
+  <object x="2370.78" y="1604.52">
    <polygon points="-2.06804,-3.10206 158.205,157.171 156.206,187.985 -5.1701,24.8165"/>
   </object>
-  <object id="16" x="2526" y="1760" width="674" height="32"/>
-  <object id="17" x="3359.35" y="1600.49">
+  <object x="2526" y="1760" width="674" height="32"/>
+  <object x="3359.35" y="1600.49">
    <polygon points="0,0 -161.189,159.741 -162.637,187.732 31.8517,0.482602"/>
   </object>
-  <object id="18" x="3360" y="1154" width="32" height="447.601"/>
-  <object id="19" x="2753.81" y="960.978">
+  <object x="3360" y="1154" width="32" height="447.601"/>
+  <object x="2753.81" y="960.978">
    <polygon points="-320.237,317.65 -390.423,385.062 -388.636,352.006 -359.821,319.056"/>
   </object>
-  <object id="20" x="2750.24" y="925.241" width="417.225" height="33.9498"/>
-  <object id="21" x="3170.14" y="929.708">
+  <object x="2750.24" y="925.241" width="417.225" height="33.9498"/>
+  <object x="3170.14" y="929.708">
    <polygon points="-3.57366,-5.36049 224.247,225.141 193.871,226.928 -4.33117,28.2105"/>
   </object>
-  <object id="22" name="block" x="2304" y="1536" width="64" height="64"/>
-  <object id="23" x="28.8007" y="290.064">
+  <object name="block" x="2304" y="1536" width="64" height="64"/>
+  <object x="28.8007" y="290.064">
    <polygon points="0,0 255,-255 -2,-257"/>
   </object>
-  <object id="24" x="30.8578" y="578.07">
+  <object x="30.8578" y="578.07">
    <polygon points="0,0 253,254 -2,254"/>
   </object>
-  <object id="25" x="545.155" y="32.915">
+  <object x="545.155" y="32.915">
    <polygon points="0,0 253,-1 255,251"/>
   </object>
-  <object id="26" x="576.013" y="831.105">
+  <object x="576.013" y="831.105">
    <polygon points="-35,0 222,-257 224,-3"/>
   </object>
-  <object id="27" x="253.495" y="0.457519" width="320" height="32"/>
-  <object id="28" x="-5.65686" y="268.895" width="36" height="318"/>
-  <object id="29" x="275.082" y="835.119" width="280.941" height="29"/>
-  <object id="30" x="798.217" y="257.383" width="514.27" height="28.8007"/>
-  <object id="31" x="1375.98" y="193.184">
+  <object x="253.495" y="0.457519" width="320" height="32"/>
+  <object x="-5.65686" y="268.895" width="36" height="318"/>
+  <object x="275.082" y="835.119" width="280.941" height="29"/>
+  <object x="798.217" y="257.383" width="514.27" height="28.8007"/>
+  <object x="1375.98" y="193.184">
    <polygon points="0,0 -68.3434,68.3434 -71.0771,96.5919 0.911245,29.1598"/>
   </object>
-  <object id="32" x="1375.98" y="193.184" width="223.255" height="30.9823"/>
-  <object id="33" x="796.428" y="575.907" width="512.12" height="31.8936"/>
-  <object id="34" x="1312.19" y="577.729">
+  <object x="1375.98" y="193.184" width="223.255" height="30.9823"/>
+  <object x="796.428" y="575.907" width="512.12" height="31.8936"/>
+  <object x="1312.19" y="577.729">
    <polygon points="-2.73373,-1.82249 64.6984,62.8759 31.8936,63.7871 -2.73373,28.2486"/>
   </object>
-  <object id="35" x="1601.53" y="1000.62" width="717.878" height="19.8141"/>
-  <object id="36" x="1603.82" y="1089.28" width="634.939" height="26.1245"/>
-  <object id="37" x="2217.17" y="1121.08" width="21.5811" height="114.721"/>
-  <object id="38" x="2238.37" y="1216.89" width="31.8037" height="56.7924"/>
-  <object id="39" x="2268.3" y="1249.07" width="34.0754" height="32.9396"/>
-  <object id="40" x="2286.46" y="1280.1" width="109.041" height="28.3962"/>
-  <object id="41" x="2304.63" y="1003.71" width="31.8037" height="178.328"/>
-  <object id="42" x="2368.55" y="1157.81" width="126.934" height="57.9282"/>
-  <object id="43" x="1569.34" y="1088.69" width="30.9775" height="254.738"/>
-  <object id="44" x="2496.59" y="1217.63">
+  <object x="1601.53" y="1000.62" width="717.878" height="19.8141"/>
+  <object x="1603.82" y="1089.28" width="634.939" height="26.1245"/>
+  <object x="2217.17" y="1121.08" width="21.5811" height="114.721"/>
+  <object x="2238.37" y="1216.89" width="31.8037" height="56.7924"/>
+  <object x="2268.3" y="1249.07" width="34.0754" height="32.9396"/>
+  <object x="2286.46" y="1280.1" width="109.041" height="28.3962"/>
+  <object x="2304.63" y="1003.71" width="31.8037" height="178.328"/>
+  <object x="2368.55" y="1157.81" width="126.934" height="57.9282"/>
+  <object x="1569.34" y="1088.69" width="30.9775" height="254.738"/>
+  <object x="2496.59" y="1217.63">
    <polygon points="0.382088,-2.29253 260.109,-261.245 255.566,-291.913 -6.81508,-35.2113"/>
   </object>
-  <object id="45" x="2337.23" y="1121.05" width="31.7133" height="63.0445"/>
+  <object x="2337.23" y="1121.05" width="31.7133" height="63.0445"/>
  </objectgroup>
 </map>

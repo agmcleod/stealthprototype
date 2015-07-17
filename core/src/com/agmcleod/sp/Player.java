@@ -138,6 +138,10 @@ public class Player extends GameObject {
         bounds.set(WIDTH, Gdx.graphics.getHeight() / 2, WIDTH, HEIGHT);
     }
 
+    public void setShowCrackTool(boolean show) {
+        showCrackTool = show;
+    }
+
     public void stop() {
         body.setLinearVelocity(0, 0);
     }

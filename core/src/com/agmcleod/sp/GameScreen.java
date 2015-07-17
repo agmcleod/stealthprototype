@@ -165,7 +165,7 @@ public class GameScreen implements Screen {
                 }
                 else if (className.equals("hackablecomponent")) {
                     Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                    HackableComponent hackComponent = new HackableComponent(this, rect.x + x, rect.y + y, rect.width, rect.height, objectProperties.get("image", String.class));
+                    HackableComponent hackComponent = new HackableComponent(this, rect.x + x, rect.y + y, rect.width, rect.height, objectProperties.get("image", null, String.class));
                     hackComponent.setType(objectProperties.get("type", null, String.class));
                     hackComponent.setBody(bodyBuilder.buildSingleBody(world, object, BodyDef.BodyType.StaticBody, x * Game.WORLD_TO_BOX, y * Game.WORLD_TO_BOX, Game.TRIGGER_MASK, Game.PLAYER_MASK, false, hackComponent));
                     gameObjects.add(hackComponent);
@@ -255,6 +255,10 @@ public class GameScreen implements Screen {
     public void restart() {
         fadeTimer = 0;
         transitioning = true;
+    }
+
+    public void setPlayerShowCrackTool(boolean show) {
+        player.setShowCrackTool(show);
     }
 
     @Override

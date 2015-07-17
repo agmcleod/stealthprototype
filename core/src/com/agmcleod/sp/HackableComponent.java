@@ -29,8 +29,11 @@ public class HackableComponent extends GameObject {
         bounds = new Rectangle(x, y, width, height);
         hackAction = new HackAction(gs, this);
         hacking = false;
-        texture = new Texture(imageName + ".png");
-        texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        if (imageName != null) {
+            texture = new Texture(imageName + ".png");
+            texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        }
+        message = "Press [E] to hack";
     }
 
     public void disable() {
@@ -41,7 +44,9 @@ public class HackableComponent extends GameObject {
     public void dispose(World world) {
         world.destroyBody(body);
         hackAction.dispose(world);
-        texture.dispose();
+        if (texture != null) {
+            texture.dispose();
+        }
     }
 
     public void enable() {
@@ -62,9 +67,11 @@ public class HackableComponent extends GameObject {
 
     @Override
     public void render(SpriteBatch batch) {
-        batch.draw(texture, bounds.x, bounds.y, bounds.width, bounds.height);
+        if (texture != null) {
+            batch.draw(texture, bounds.x, bounds.y, bounds.width, bounds.height);
+        }
         if (enabled && !hacking) {
-            gs.getUiFont().draw(batch, message, bounds.x, bounds.y + bounds.height / 2);
+            gs.getUiFont().draw(batch, message, bounds.x - bounds.width / 2, bounds.y + bounds.height / 2);
         }
     }
 
@@ -72,18 +79,18 @@ public class HackableComponent extends GameObject {
         this.body = body;
     }
 
-    public void setMessage(String msg) {
-        this.message = msg;
-    }
-
     public void setType(String type) {
-        setMessage("Press [E] to hack");
+        hackAction.setType(type);
     }
 
     @Override
     public void update() {
         if (enabled && Gdx.input.isKeyJustPressed(Input.Keys.E) && !hacking) {
             hacking = true;
+            gs.allowPlayerMovement(false);
+            if (hackAction.requiresACrack()) {
+                gs.setPlayerShowCrackTool(true);
+            }
         }
 
         if (hacking) {

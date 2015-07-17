@@ -16,6 +16,7 @@ public class HackAction extends GameObject {
     private HackableComponent hackableComponent;
     private Vector2 position;
     private float timeout;
+    private String type;
 
     public HackAction(GameScreen gs, HackableComponent hackableComponent) {
         super("hack");
@@ -38,12 +39,23 @@ public class HackAction extends GameObject {
         renderer.rect(position.x, position.y, 60 * ((TIME_TO_HACK - timeout) / TIME_TO_HACK), 4);
     }
 
+    public boolean requiresACrack() {
+        return type.equals("crack");
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public void update() {
-        timeout -= Gdx.graphics.getDeltaTime();
-        if (timeout <= 0) {
-            gs.removeObject(hackableComponent);
-            gs.removeObject(this);
+        if (type.equals("hack")) {
+            timeout -= Gdx.graphics.getDeltaTime();
+            if (timeout <= 0) {
+                gs.allowPlayerMovement(true);
+                gs.removeObject(hackableComponent);
+                gs.removeObject(this);
+            }
         }
     }
 }
