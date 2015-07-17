@@ -52,10 +52,6 @@ import org.w3c.dom.css.Rect;
 
 public class CustomMapRenderer extends BatchTiledMapRenderer {
 
-    private float mapheight;
-    private float mapwidth;
-    private float tileWidth;
-    private float tileHeight;
     private float x;
     private float y;
     private boolean showHidden;
@@ -66,11 +62,6 @@ public class CustomMapRenderer extends BatchTiledMapRenderer {
         this.y = y;
         showHidden = false;
         MapProperties properties = map.getProperties();
-        mapwidth = properties.get("width", Integer.class);
-        mapheight = properties.get("height", Integer.class);
-
-        tileWidth = properties.get("tilewidth", Integer.class);
-        tileHeight = properties.get("tileheight", Integer.class);
     }
 
     @Override
