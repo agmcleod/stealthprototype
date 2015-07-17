@@ -3,7 +3,6 @@ package com.agmcleod.sp;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
 /**
  * Created by aaronmcleod on 15-03-05.
  */

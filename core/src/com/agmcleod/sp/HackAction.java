@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -14,7 +15,7 @@ public class HackAction extends GameObject {
     private final float TIME_TO_HACK = 3.0f;
     private GameScreen gs;
     private HackableComponent hackableComponent;
-    private Vector2 position;
+    private Rectangle bounds;
     private float timeout;
     private String type;
 
@@ -23,7 +24,7 @@ public class HackAction extends GameObject {
         this.hackableComponent = hackableComponent;
         timeout = TIME_TO_HACK;
         this.gs = gs;
-        position = new Vector2(hackableComponent.getBounds().x, hackableComponent.getBounds().y);
+        bounds = new Rectangle(hackableComponent.getBounds());
     }
 
     @Override
@@ -36,7 +37,7 @@ public class HackAction extends GameObject {
 
     public void renderShape(ShapeRenderer renderer) {
         renderer.setColor(Color.GREEN);
-        renderer.rect(position.x, position.y, 60 * ((TIME_TO_HACK - timeout) / TIME_TO_HACK), 4);
+        renderer.rect(bounds.x - 100, bounds.y + bounds.height / 2, 60 * ((TIME_TO_HACK - timeout) / TIME_TO_HACK), 4);
     }
 
     public boolean requiresACrack() {
