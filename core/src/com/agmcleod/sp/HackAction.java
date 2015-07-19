@@ -52,9 +52,7 @@ public class HackAction extends GameObject {
         if (type.equals("hack")) {
             timeout -= Gdx.graphics.getDeltaTime();
             if (timeout <= 0) {
-                gs.allowPlayerMovement(true);
-                gs.removeObject(hackableComponent);
-                gs.removeObject(this);
+                hackableComponent.removeFromGame();
             }
         }
     }

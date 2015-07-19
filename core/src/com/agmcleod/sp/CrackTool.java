@@ -57,6 +57,7 @@ public class CrackTool {
     private int[] scanNumber;
     private Array<Integer> selectedNumbers;
     private boolean showCode;
+    private HackableComponent target;
     private Texture texture;
     public CrackTool(GameScreen gs) {
         this.gs = gs;
@@ -86,8 +87,19 @@ public class CrackTool {
         }
         if (number > 0) {
             selectedNumbers.add(number);
-            if (selectedNumbers.size > CODE_LENGTH) {
+            if (selectedNumbers.size >= CODE_LENGTH) {
+                boolean numberIsEqual = true;
+                for (int i = 0; i < CODE_LENGTH; i++) {
+                    numberIsEqual &= selectedNumbers.get(i) == passcode.get(i);
+                }
 
+                if (numberIsEqual) {
+                    target.removeFromGame();
+                    setTarget(null);
+                }
+                else {
+                    // alarm or something
+                }
             }
         }
     }
@@ -136,6 +148,10 @@ public class CrackTool {
                 crackFont.draw(batch, "" + scanNumber[i], x + 673 + (30 * i), y + 330);
             }
         }
+    }
+
+    public void setTarget(HackableComponent component) {
+        target = component;
     }
 
     public void setup() {

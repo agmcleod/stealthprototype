@@ -275,10 +275,6 @@ public class GameScreen implements InputProcessor, Screen {
         transitioning = true;
     }
 
-    public void setPlayerShowCrackTool(boolean show) {
-        player.setShowCrackTool(show);
-    }
-
     @Override
     public void show() {
         debugRenderer = new Box2DDebugRenderer();

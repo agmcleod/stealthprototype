@@ -65,6 +65,12 @@ public class HackableComponent extends GameObject {
         return hacking;
     }
 
+    public void removeFromGame() {
+        gs.removeObject(hackAction);
+        gs.removeObject(this);
+        gs.allowPlayerMovement(true);
+    }
+
     @Override
     public void render(SpriteBatch batch) {
         if (texture != null) {
@@ -89,7 +95,9 @@ public class HackableComponent extends GameObject {
             hacking = true;
             gs.allowPlayerMovement(false);
             if (hackAction.requiresACrack()) {
-                gs.setPlayerShowCrackTool(true);
+                gs.getPlayer().setShowCrackTool(true);
+                CrackTool ct = gs.getPlayer().getCrackTool();
+                ct.setTarget(this);
             }
         }
 
