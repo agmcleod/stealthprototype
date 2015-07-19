@@ -53,6 +53,8 @@ public class CrackTool {
     private TextureRegion highlightTexture;
     private Array<Integer> passcode;
     private Vector2 position;
+    private float scanNumberCountdown;
+    private int[] scanNumber;
     private Array<Integer> selectedNumbers;
     private boolean showCode;
     private Texture texture;
@@ -72,6 +74,7 @@ public class CrackTool {
         selectedNumbers = new Array<Integer>();
         passcode = new Array<Integer>();
         crackFont = new BitmapFont(Gdx.files.internal("cracktoolfont.fnt"), Gdx.files.internal("cracktoolfont.png"), false);
+        scanNumber = new int[CODE_LENGTH];
     }
 
     public void clickActiveKey() {
@@ -129,8 +132,8 @@ public class CrackTool {
             }
         }
         else {
-            for (int i = 0; i < CODE_LENGTH; i++) {
-                crackFont.draw(batch, "" + MathUtils.random(1, 9), x + 673 + (30 * i), y + 330);
+            for (int i = 0; i < scanNumber.length; i++) {
+                crackFont.draw(batch, "" + scanNumber[i], x + 673 + (30 * i), y + 330);
             }
         }
     }
@@ -143,10 +146,18 @@ public class CrackTool {
         }
         decoding = CODE_TIMEOUT;
         showCode = false;
+        scanNumberCountdown = 0.1f;
     }
 
     public void update() {
         if (!showCode) {
+            scanNumberCountdown -= Gdx.graphics.getDeltaTime();
+            if (scanNumberCountdown <= 0) {
+                scanNumberCountdown = 0.1f;
+                for (int i = 0; i < scanNumber.length; i++) {
+                    scanNumber[i] = MathUtils.random(1, 9);
+                }
+            }
             decoding -= Gdx.graphics.getDeltaTime();
             if (decoding <= 0) {
                 showCode = true;
