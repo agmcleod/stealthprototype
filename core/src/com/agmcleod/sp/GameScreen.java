@@ -405,14 +405,14 @@ public class GameScreen implements InputProcessor, Screen {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (player.isShowingCrackTool()) {
-            player.getCrackTool().clickActiveKey();
-        }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (player.isShowingCrackTool()) {
+            player.getCrackTool().clickActiveKey();
+        }
         return false;
     }
 
