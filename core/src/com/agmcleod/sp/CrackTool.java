@@ -1,7 +1,9 @@
 package com.agmcleod.sp;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -42,13 +44,17 @@ public class CrackTool {
     }
 
     private final int CODE_LENGTH = 8;
+    private final float CODE_TIMEOUT = 1.5f;
 
+    private float decoding;
+    private BitmapFont crackFont;
     private GameScreen gs;
     private HighlightRect[] highlightAreas;
     private TextureRegion highlightTexture;
     private Array<Integer> passcode;
     private Vector2 position;
     private Array<Integer> selectedNumbers;
+    private boolean showCode;
     private Texture texture;
     public CrackTool(GameScreen gs) {
         this.gs = gs;
@@ -65,6 +71,7 @@ public class CrackTool {
         highlightTexture = gs.getGame().getAtlas().findRegion("highlight");
         selectedNumbers = new Array<Integer>();
         passcode = new Array<Integer>();
+        crackFont = new BitmapFont(Gdx.files.internal("cracktoolfont.fnt"), Gdx.files.internal("cracktoolfont.png"), false);
     }
 
     public void clickActiveKey() {
@@ -84,6 +91,7 @@ public class CrackTool {
 
     public void dispose() {
         texture.dispose();
+        crackFont.dispose();
     }
 
     public void highlightKey(float x, float y) {
@@ -114,6 +122,17 @@ public class CrackTool {
                 batch.draw(highlightTexture, bounds.x + xOffset, bounds.y + yOffset);
             }
         }
+
+        if (showCode) {
+            for (int i = 0; i < passcode.size; i++) {
+                crackFont.draw(batch, "" + passcode.get(i), x + 673 + (30 * i), y + 330);
+            }
+        }
+        else {
+            for (int i = 0; i < CODE_LENGTH; i++) {
+                crackFont.draw(batch, "" + MathUtils.random(1, 9), x + 673 + (30 * i), y + 330);
+            }
+        }
     }
 
     public void setup() {
@@ -121,6 +140,17 @@ public class CrackTool {
         passcode.clear();
         for (int i = 0; i < CODE_LENGTH; i++) {
             passcode.add(MathUtils.random(1, 9));
+        }
+        decoding = CODE_TIMEOUT;
+        showCode = false;
+    }
+
+    public void update() {
+        if (!showCode) {
+            decoding -= Gdx.graphics.getDeltaTime();
+            if (decoding <= 0) {
+                showCode = true;
+            }
         }
     }
 }

@@ -147,10 +147,10 @@ public class Player extends GameObject {
     }
 
     public void setShowCrackTool(boolean show) {
-        showCrackTool = show;
-        if (show) {
+        if (!showCrackTool && show) {
             crackTool.setup();
         }
+        showCrackTool = show;
     }
 
     public void stop() {

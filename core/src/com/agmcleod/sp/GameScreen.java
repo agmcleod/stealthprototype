@@ -321,6 +321,10 @@ public class GameScreen implements InputProcessor, Screen {
                 player.update();
             }
 
+            if (player.isShowingCrackTool()) {
+                player.getCrackTool().update();
+            }
+
             followCamera.update();
             camera.update();
             cameraCpy.set(camera.combined);
