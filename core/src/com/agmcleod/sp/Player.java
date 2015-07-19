@@ -148,6 +148,9 @@ public class Player extends GameObject {
 
     public void setShowCrackTool(boolean show) {
         showCrackTool = show;
+        if (show) {
+            crackTool.setup();
+        }
     }
 
     public void stop() {

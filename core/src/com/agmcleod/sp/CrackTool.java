@@ -4,8 +4,10 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by Aaron on 7/15/2015.
@@ -20,7 +22,10 @@ public class CrackTool {
             rect = new Rectangle(x, y, w, h);
             enabled = false;
             this.number = number;
+        }
 
+        public int getNumber() {
+            return number;
         }
 
         public Rectangle getRect() {
@@ -36,10 +41,14 @@ public class CrackTool {
         }
     }
 
+    private final int CODE_LENGTH = 8;
+
     private GameScreen gs;
     private HighlightRect[] highlightAreas;
     private TextureRegion highlightTexture;
+    private Array<Integer> passcode;
     private Vector2 position;
+    private Array<Integer> selectedNumbers;
     private Texture texture;
     public CrackTool(GameScreen gs) {
         this.gs = gs;
@@ -54,6 +63,23 @@ public class CrackTool {
                 new HighlightRect(64, 330, w, h, 7), new HighlightRect(202, 330, w, h, 8), new HighlightRect(336, 330, w, h, 9)
         };
         highlightTexture = gs.getGame().getAtlas().findRegion("highlight");
+        selectedNumbers = new Array<Integer>();
+        passcode = new Array<Integer>();
+    }
+
+    public void clickActiveKey() {
+        int number = 0;
+        for (HighlightRect rect : highlightAreas) {
+            if (rect.isEnabled()) {
+                number = rect.getNumber();
+            }
+        }
+        if (number > 0) {
+            selectedNumbers.add(number);
+            if (selectedNumbers.size > CODE_LENGTH) {
+
+            }
+        }
     }
 
     public void dispose() {
@@ -87,6 +113,14 @@ public class CrackTool {
                 Rectangle bounds = rect.getRect();
                 batch.draw(highlightTexture, bounds.x + xOffset, bounds.y + yOffset);
             }
+        }
+    }
+
+    public void setup() {
+        selectedNumbers.clear();
+        passcode.clear();
+        for (int i = 0; i < CODE_LENGTH; i++) {
+            passcode.add(MathUtils.random(1, 9));
         }
     }
 }
