@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class HackAction extends GameObject {
     private final float TIME_TO_HACK = 3.0f;
+    private final float WIDTH = 60;
     private GameScreen gs;
     private HackableComponent hackableComponent;
     private Rectangle bounds;
@@ -36,7 +37,7 @@ public class HackAction extends GameObject {
 
     public void renderShape(ShapeRenderer renderer) {
         renderer.setColor(Color.GREEN);
-        renderer.rect(bounds.x - 100, bounds.y + bounds.height / 2, 60 * ((TIME_TO_HACK - timeout) / TIME_TO_HACK), 4);
+        renderer.rect(bounds.x - (WIDTH / 2), bounds.y + bounds.height / 2, WIDTH * ((TIME_TO_HACK - timeout) / TIME_TO_HACK), 4);
     }
 
     public boolean requiresACrack() {

@@ -96,6 +96,7 @@ public class CrackTool {
                 if (numberIsEqual) {
                     target.removeFromGame();
                     setTarget(null);
+                    gs.getPlayer().setShowCrackTool(false);
                 }
                 else {
                     // alarm or something
@@ -141,6 +142,10 @@ public class CrackTool {
         if (showCode) {
             for (int i = 0; i < passcode.size; i++) {
                 crackFont.draw(batch, "" + passcode.get(i), x + 673 + (30 * i), y + 330);
+            }
+
+            for (int i = 0; i < selectedNumbers.size; i++) {
+                crackFont.draw(batch, "" + selectedNumbers.get(i), x + 673 + (30 * i), y + 600);
             }
         }
         else {
