@@ -20,6 +20,7 @@ public class Game extends com.badlogic.gdx.Game {
     public static final short WORLD_MASK = 0x0001;
 
     private BitmapFont uiFont;
+    private EndScreen endScreen;
     private GameScreen gameScreen;
     private World world;
 
@@ -31,6 +32,7 @@ public class Game extends com.badlogic.gdx.Game {
         world = new World(new Vector2(0, 0), true);
         gameScreen = new GameScreen(this, world);
         uiFont = new BitmapFont(Gdx.files.internal("uifont28.fnt"), Gdx.files.internal("uifont28.png"), false);
+        endScreen = new EndScreen(this);
         setScreen(gameScreen);
     }
 
@@ -69,5 +71,9 @@ public class Game extends com.badlogic.gdx.Game {
 
     public World getWorld() {
         return world;
+    }
+
+    public void loadEndScreen() {
+        setScreen(endScreen);
     }
 }

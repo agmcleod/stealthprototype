@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class Trigger extends GameObject {
     public enum TriggerType {
-        DISABLE_HIDDEN, ENABLE_HIDDEN
+        DISABLE_HIDDEN, ENABLE_HIDDEN, END_SCREEN
     }
 
     private Body body;
@@ -32,6 +32,9 @@ public class Trigger extends GameObject {
         else if (type == TriggerType.DISABLE_HIDDEN) {
             gs.showHidden(false);
         }
+        else if (type == TriggerType.END_SCREEN) {
+            gs.gotoEndScreen();
+        }
     }
 
     public void render(SpriteBatch batch) {
@@ -48,6 +51,9 @@ public class Trigger extends GameObject {
         }
         else if (typeString.equals("enablehidden")) {
             type = TriggerType.ENABLE_HIDDEN;
+        }
+        else if (typeString.equals("gotoendscreen")) {
+            type = TriggerType.END_SCREEN;
         }
     }
 

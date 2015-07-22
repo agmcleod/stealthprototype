@@ -128,6 +128,17 @@ public class GameScreen implements InputProcessor, Screen {
         return game.getUiFont();
     }
 
+    public void gotoEndScreen() {
+        transitioning = true;
+        fadeTimer = 0;
+        resetTransitionCallback = new TransitionCallback() {
+            @Override
+            public void callback() {
+                game.loadEndScreen();
+            }
+        };
+    }
+
     public void loadLevel(String name, float x, float y) {
         currentLevel = new Level(name, x, y);
         TiledMap map = new TmxMapLoader().load(name);

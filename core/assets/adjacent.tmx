@@ -87,9 +87,14 @@
     <property name="target_y" value="1200"/>
    </properties>
   </object>
-  <object name="hackablecomponent" x="3352.7" y="1279.67" width="24.8963" height="220.747">
+  <object name="hackablecomponent" x="3352.7" y="1279.67" width="18.2875" height="226.412">
    <properties>
     <property name="type" value="crack"/>
+   </properties>
+  </object>
+  <object name="trigger" x="3385.57" y="1283.04" width="12.2734" height="216.201">
+   <properties>
+    <property name="action" value="gotoendscreen"/>
    </properties>
   </object>
  </objectgroup>
