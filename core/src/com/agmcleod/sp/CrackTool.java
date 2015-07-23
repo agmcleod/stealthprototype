@@ -1,6 +1,7 @@
 package com.agmcleod.sp;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -86,28 +87,18 @@ public class CrackTool {
             }
         }
         if (number > 0) {
-            selectedNumbers.add(number);
-            if (selectedNumbers.size >= CODE_LENGTH) {
-                boolean numberIsEqual = true;
-                for (int i = 0; i < CODE_LENGTH; i++) {
-                    numberIsEqual &= selectedNumbers.get(i) == passcode.get(i);
-                }
-
-                if (numberIsEqual) {
-                    target.removeFromGame();
-                    setTarget(null);
-                    gs.getPlayer().setShowCrackTool(false);
-                }
-                else {
-                    // alarm or something
-                }
-            }
+            inputNumber(number);
         }
     }
 
     public void dispose() {
         texture.dispose();
         crackFont.dispose();
+    }
+
+    public void hideAndEndCrackSession() {
+        setTarget(null);
+        gs.getPlayer().setShowCrackTool(false);
     }
 
     public void highlightKey(float x, float y) {
@@ -120,6 +111,25 @@ public class CrackTool {
             }
             else {
                 rect.setEnabled(false);
+            }
+        }
+    }
+
+    public void inputNumber(int number) {
+        selectedNumbers.add(number);
+        if (selectedNumbers.size >= CODE_LENGTH) {
+            boolean numberIsEqual = true;
+            for (int i = 0; i < CODE_LENGTH; i++) {
+                numberIsEqual &= selectedNumbers.get(i) == passcode.get(i);
+            }
+
+            if (numberIsEqual) {
+                hideAndEndCrackSession();
+                target.removeFromGame();
+            }
+            else {
+                target.allowPlayerToMove();
+                hideAndEndCrackSession();
             }
         }
     }
@@ -171,17 +181,50 @@ public class CrackTool {
     }
 
     public void update() {
-        if (!showCode) {
-            scanNumberCountdown -= Gdx.graphics.getDeltaTime();
-            if (scanNumberCountdown <= 0) {
-                scanNumberCountdown = 0.1f;
-                for (int i = 0; i < scanNumber.length; i++) {
-                    scanNumber[i] = MathUtils.random(1, 9);
-                }
+        if (showCode) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+                inputNumber(1);
             }
+            else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+                inputNumber(2);
+            }
+            else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+                inputNumber(3);
+            }
+            else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+                inputNumber(4);
+            }
+            else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+                inputNumber(5);
+            }
+            else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
+                inputNumber(6);
+            }
+            else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
+                inputNumber(7);
+            }
+            else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
+                inputNumber(8);
+            }
+            else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
+                inputNumber(9);
+            }
+        }
+        else {
+            updateRandomScanNumberOnInterval();
             decoding -= Gdx.graphics.getDeltaTime();
             if (decoding <= 0) {
                 showCode = true;
+            }
+        }
+    }
+
+    public void updateRandomScanNumberOnInterval() {
+        scanNumberCountdown -= Gdx.graphics.getDeltaTime();
+        if (scanNumberCountdown <= 0) {
+            scanNumberCountdown = 0.1f;
+            for (int i = 0; i < scanNumber.length; i++) {
+                scanNumber[i] = MathUtils.random(1, 9);
             }
         }
     }

@@ -36,6 +36,10 @@ public class HackableComponent extends GameObject {
         message = "Press [E] to hack";
     }
 
+    public void allowPlayerToMove() {
+        gs.allowPlayerMovement(true);
+    }
+
     public void disable() {
         enabled = false;
     }
