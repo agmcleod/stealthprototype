@@ -69,7 +69,7 @@
     <property name="action" value="enablehidden"/>
    </properties>
   </object>
-  <object name="trigger" x="1587.04" y="1024.38" width="12.71" height="63.6637">
+  <object name="trigger" x="1554.93" y="1023.96" width="12.71" height="63.6637">
    <properties>
     <property name="action" value="disablehidden"/>
    </properties>
