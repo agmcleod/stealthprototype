@@ -286,6 +286,10 @@ public class GameScreen implements InputProcessor, Screen {
         transitioning = true;
     }
 
+    public void ringAlarm() {
+        gameObjects.add(new Alarm(this));
+    }
+
     @Override
     public void show() {
         debugRenderer = new Box2DDebugRenderer();

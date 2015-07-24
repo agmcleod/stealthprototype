@@ -130,6 +130,7 @@ public class CrackTool {
             else {
                 target.allowPlayerToMove();
                 hideAndEndCrackSession();
+                gs.ringAlarm();
             }
         }
     }

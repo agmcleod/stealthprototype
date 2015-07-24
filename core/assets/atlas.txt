@@ -2,6 +2,13 @@ atlas.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+alarm
+  rotate: false
+  xy: 2, 772
+  size: 1024, 768
+  orig: 1024, 768
+  offset: 0, 0
+  index: -1
 endscreen
   rotate: false
   xy: 2, 2
@@ -11,28 +18,28 @@ endscreen
   index: -1
 enemy
   rotate: false
-  xy: 1469, 2
+  xy: 2, 1982
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 highlight
   rotate: false
-  xy: 1330, 2
+  xy: 2, 1844
   size: 103, 102
   orig: 103, 102
   offset: 0, 0
   index: -1
 player
   rotate: false
-  xy: 1435, 2
+  xy: 2, 1948
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 shipselect
-  rotate: true
-  xy: 1028, 2
+  rotate: false
+  xy: 2, 1542
   size: 200, 300
   orig: 200, 300
   offset: 0, 0
