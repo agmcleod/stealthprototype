@@ -169,13 +169,12 @@ public class GameScreen implements InputProcessor, Screen {
                     enemy.setTarget(targetX, targetY);
 
                     enemy.addBehaviour(new PatrolBehaviour(enemy));
+                    enemy.addBehaviour(new SearchBehaviour(enemy));
 
                     if (objectProperties.get("aitype", String.class).equals("chase")) {
                         ChaseBehaviour behaviour = new ChaseBehaviour(enemy);
                         behaviour.setTarget(player.getBounds());
                         enemy.addBehaviour(behaviour);
-                        SearchBehaviour sb = new SearchBehaviour(enemy);
-                        enemy.addBehaviour(sb);
                         enemy.setType("chase");
                     }
                     else if (objectProperties.get("aitype", String.class).equals("shoot")) {
@@ -288,6 +287,11 @@ public class GameScreen implements InputProcessor, Screen {
 
     public void ringAlarm() {
         gameObjects.add(new Alarm(this));
+        for (GameObject object : gameObjects) {
+            if (object instanceof Enemy) {
+                ((Enemy) object).huntDownPlayer();
+            }
+        }
     }
 
     @Override

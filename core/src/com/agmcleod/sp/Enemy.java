@@ -187,14 +187,20 @@ public class Enemy extends MapEntity {
         return patrolVelY;
     }
 
+    public void huntDownPlayer() {
+        setRadiusDetectionOn(true);
+        updateLastKnownPlayerPosition();
+        SearchBehaviour sb = getSearchBehaviour();
+        sb.start();
+        currentBehaviour = sb;
+    }
+
     public void moveWithVelocity(float x, float y) {
         body.setLinearVelocity(x, y);
     }
 
     public void playerIsInSight() {
-        Rectangle playerBounds = gs.getPlayer().getBounds();
-        lastKnownPlayerPosition.set(playerBounds.x, playerBounds.y);
-
+        updateLastKnownPlayerPosition();
         if (type.equals("chase")) {
             if (currentBehaviour != getChaseBehaviour()) {
                 currentBehaviour = getChaseBehaviour();
@@ -258,19 +264,6 @@ public class Enemy extends MapEntity {
             renderer.setColor(1.0f, 0.0f, 0.0f, 1.0f);
             renderer.circle(lastKnownPlayerPosition.x, lastKnownPlayerPosition.y, 30);
         }
-    }
-
-    public void reset() {
-        playerInSight = false;
-        rotation = 0;
-        bounds.setPosition(original.x, original.y);
-        sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-        body.setTransform((bounds.x + WIDTH / 2) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX, 0);
-        radiusDetectionOn = false;
-        for(Behaviour behaviour : behaviours) {
-            behaviour.reset();
-        }
-        currentBehaviour = getPatrolBehaviour();
     }
 
     public void setInitialBounds(float x, float y, float width, float height) {
@@ -370,7 +363,7 @@ public class Enemy extends MapEntity {
                 sb.start();
                 currentBehaviour = sb;
             }
-            else if (radiusDetectionOn && type.equals("chase")) {
+            else if (radiusDetectionOn) {
                 currentBehaviour.update();
             }
             else {
@@ -390,5 +383,10 @@ public class Enemy extends MapEntity {
         }
 
         sight.setRotation(rotation);
+    }
+
+    private void updateLastKnownPlayerPosition() {
+        Rectangle playerBounds = gs.getPlayer().getBounds();
+        lastKnownPlayerPosition.set(playerBounds.x, playerBounds.y);
     }
 }

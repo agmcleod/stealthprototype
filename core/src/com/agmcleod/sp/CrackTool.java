@@ -124,8 +124,8 @@ public class CrackTool {
             }
 
             if (numberIsEqual) {
-                hideAndEndCrackSession();
                 target.removeFromGame();
+                hideAndEndCrackSession();
             }
             else {
                 target.allowPlayerToMove();
