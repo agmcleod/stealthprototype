@@ -107,6 +107,8 @@ public class Player extends GameObject {
     }
 
     public void render(SpriteBatch batch) {
+        bounds.x = (int) ((body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2);
+        bounds.y = (int) ((body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2);
         float x = bounds.x;
         float y = bounds.y;
 
@@ -158,9 +160,6 @@ public class Player extends GameObject {
     }
 
     public void update() {
-        bounds.x = (int) ((body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2);
-        bounds.y = (int) ((body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2);
-
         float vel = VEL;
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {

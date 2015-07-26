@@ -225,6 +225,11 @@ public class Enemy extends MapEntity {
 
     @Override
     public void render(SpriteBatch batch) {
+        bounds.x = (int) (body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2;
+        bounds.y = (int) (body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2;
+
+        sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        detectArea.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         float x = bounds.x;
         float y = bounds.y;
 
@@ -371,12 +376,6 @@ public class Enemy extends MapEntity {
                 currentBehaviour.update();
             }
         }
-
-        bounds.x = (int) (body.getPosition().x * Game.BOX_TO_WORLD) - WIDTH / 2;
-        bounds.y = (int) (body.getPosition().y * Game.BOX_TO_WORLD) - HEIGHT / 2;
-
-        sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-        detectArea.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 
         if (currentBehaviour == getPatrolBehaviour() && !getPatrolBehaviour().isReturnToPatrol()) {
             getPatrolBehaviour().changePatrolDirectionIfAtEnd();

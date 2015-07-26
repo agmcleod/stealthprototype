@@ -254,7 +254,7 @@ public class GameScreen implements InputProcessor, Screen {
         }
         shapeRenderer.end();
 
-        //debugRenderer.render(world, cameraCpy.scl(game.BOX_TO_WORLD));
+        debugRenderer.render(world, cameraCpy.scl(game.BOX_TO_WORLD));
 
         if (transitioning) {
             game.drawBlackTransparentSquare(camera, shapeRenderer, fadeTimer / 0.5f, resetTransitionCallback);
