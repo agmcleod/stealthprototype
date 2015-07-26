@@ -5,7 +5,6 @@ import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.Body;
  *
  * @author davebaol */
 public class Box2dSteeringEntity implements Steerable<Vector2> {
-    TextureRegion region;
     Body body;
 
     float boundingRadius;
@@ -31,22 +29,13 @@ public class Box2dSteeringEntity implements Steerable<Vector2> {
 
     private static final SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
 
-    public Box2dSteeringEntity (TextureRegion region, Body body, boolean independentFacing, float boundingRadius) {
-        this.region = region;
+    public Box2dSteeringEntity (Body body, boolean independentFacing, float boundingRadius) {
         this.body = body;
         this.independentFacing = independentFacing;
         this.boundingRadius = boundingRadius;
         this.tagged = false;
 
         body.setUserData(this);
-    }
-
-    public TextureRegion getRegion () {
-        return region;
-    }
-
-    public void setRegion (TextureRegion region) {
-        this.region = region;
     }
 
     public Body getBody () {
@@ -215,7 +204,7 @@ public class Box2dSteeringEntity implements Steerable<Vector2> {
 
     // wont use, but keep for reference
     public void draw (Batch batch) {
-        Vector2 pos = body.getPosition();
+        /* Vector2 pos = body.getPosition();
         float w = region.getRegionWidth();
         float h = region.getRegionHeight();
         float ox = w / 2f;
@@ -226,7 +215,7 @@ public class Box2dSteeringEntity implements Steerable<Vector2> {
                 ox, oy, //
                 w, h, //
                 1, 1, //
-                body.getAngle() * MathUtils.radiansToDegrees); //
+                body.getAngle() * MathUtils.radiansToDegrees); */
     }
 
     //
