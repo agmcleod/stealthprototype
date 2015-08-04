@@ -3,7 +3,6 @@ package com.agmcleod.sp;
 import com.agmcleod.sp.aibehaviours.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.steer.behaviors.FollowPath;
-import com.badlogic.gdx.ai.steer.utils.Path;
 import com.badlogic.gdx.ai.steer.utils.paths.LinePath;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -407,6 +406,10 @@ public class Enemy extends MapEntity {
             .setDecelerationRadius(80);
 
         steeringEntity.setSteeringBehavior(followPathBehaviour);
+        steeringEntity.setMaxLinearSpeed(MOVE_SPEED);
+        steeringEntity.setMaxLinearAcceleration(MOVE_SPEED * 50);
+        steeringEntity.setMaxAngularAcceleration(40);
+        steeringEntity.setMaxAngularSpeed(15);
 
         setTarget(objectProperties.get("target_x", Float.class), objectProperties.get("target_y", Float.class));
 
