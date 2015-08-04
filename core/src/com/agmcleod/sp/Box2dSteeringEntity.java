@@ -48,10 +48,6 @@ public class Box2dSteeringEntity implements Steerable<Vector2> {
         return independentFacing;
     }
 
-    public void setIndependentFacing (boolean independentFacing) {
-        this.independentFacing = independentFacing;
-    }
-
     @Override
     public Vector2 getPosition () {
         return body.getPosition();

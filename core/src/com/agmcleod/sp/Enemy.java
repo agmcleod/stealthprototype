@@ -2,6 +2,9 @@ package com.agmcleod.sp;
 
 import com.agmcleod.sp.aibehaviours.*;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.steer.behaviors.FollowPath;
+import com.badlogic.gdx.ai.steer.utils.Path;
+import com.badlogic.gdx.ai.steer.utils.paths.LinePath;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -275,49 +278,6 @@ public class Enemy extends MapEntity {
         }
     }
 
-    public void setInitialBounds(float x, float y, float width, float height) {
-        super.setBounds(x, y, width, height);
-        sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-        sight.setVertices(new float[]{
-                0, 0,
-                180, -100,
-                180, 100
-        });
-
-        detectArea.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-        detectArea.setRadius(150);
-
-        original = new Vector2(x, y);
-
-        World world = gs.getGame().getWorld();
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(WIDTH / 2 * Game.WORLD_TO_BOX, HEIGHT / 2 * Game.WORLD_TO_BOX);
-
-        BodyDef def = new BodyDef();
-        def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set((bounds.x + WIDTH / 2) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX);
-
-        body = world.createBody(def);
-        body.setFixedRotation(true);
-
-
-        steeringEntity = new Box2dSteeringEntity(body, true, ((bounds.width + bounds.height) / 4f) * Game.WORLD_TO_BOX);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0f;
-        fixtureDef.restitution = 0f;
-        fixtureDef.filter.categoryBits = Game.ENEMY_MASK;
-        fixtureDef.filter.maskBits = Game.PLAYER_MASK | Game.WORLD_MASK;
-
-        Fixture fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
-
-        shape.dispose();
-    }
-
     public void setRadiusDetectionOn(boolean radiusDetectionOn) {
         this.radiusDetectionOn = radiusDetectionOn;
     }
@@ -365,8 +325,8 @@ public class Enemy extends MapEntity {
 
     @Override
     public void update() {
-        //steeringEntity.update(Gdx.graphics.getDeltaTime());
-        if (playerInSight) {
+        steeringEntity.update(Gdx.graphics.getDeltaTime());
+        /* if (playerInSight) {
             playerIsInSight();
         }
         else {
@@ -389,13 +349,64 @@ public class Enemy extends MapEntity {
             getPatrolBehaviour().changePatrolDirectionIfAtEnd();
         }
 
-        sight.setRotation(rotation);
+        sight.setRotation(rotation); */
+    }
+
+    private void setInitialBounds(float x, float y, float width, float height) {
+        super.setBounds(x, y, width, height);
+        sight.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        sight.setVertices(new float[]{
+                0, 0,
+                180, -100,
+                180, 100
+        });
+
+        detectArea.setPosition(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        detectArea.setRadius(150);
+
+        original = new Vector2(x, y);
+
+        World world = gs.getGame().getWorld();
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(WIDTH / 2 * Game.WORLD_TO_BOX, HEIGHT / 2 * Game.WORLD_TO_BOX);
+
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.DynamicBody;
+        def.position.set((bounds.x + WIDTH / 2) * Game.WORLD_TO_BOX, (bounds.y + HEIGHT / 2) * Game.WORLD_TO_BOX);
+
+        body = world.createBody(def);
+        body.setFixedRotation(true);
+
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0f;
+        fixtureDef.restitution = 0f;
+        fixtureDef.filter.categoryBits = Game.ENEMY_MASK;
+        fixtureDef.filter.maskBits = Game.PLAYER_MASK | Game.WORLD_MASK;
+
+        Fixture fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(this);
+
+        shape.dispose();
     }
 
     private void setupBasedOnType(MapProperties objectProperties) {
         this.type = objectProperties.get("aitype", String.class);
         setInitialBounds(objectProperties.get("x", Float.class), objectProperties.get("y", Float.class), objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
+        steeringEntity = new Box2dSteeringEntity(body, true, ((bounds.width + bounds.height) / 4f) * Game.WORLD_TO_BOX);
+        Array<Vector2> wayPoints = new Array<Vector2>();
+        wayPoints.add(new Vector2(objectProperties.get("target_x", Float.class), objectProperties.get("target_y", Float.class)).scl(Game.WORLD_TO_BOX));
+        wayPoints.add(new Vector2(bounds.x, bounds.y).scl(Game.WORLD_TO_BOX));
 
+        FollowPath followPathBehaviour = new FollowPath<Vector2, LinePath.LinePathParam>(steeringEntity, new LinePath<Vector2>(wayPoints))
+            .setTimeToTarget(5f) //
+            .setArrivalTolerance(0.001f) //
+            .setDecelerationRadius(80);
+
+        steeringEntity.setSteeringBehavior(followPathBehaviour);
 
         setTarget(objectProperties.get("target_x", Float.class), objectProperties.get("target_y", Float.class));
 
