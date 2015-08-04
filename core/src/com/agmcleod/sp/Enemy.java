@@ -1,9 +1,11 @@
 package com.agmcleod.sp;
 
 import com.agmcleod.sp.aibehaviours.*;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
@@ -31,6 +33,7 @@ public class Enemy extends MapEntity {
     TextureRegion region;
     private float rotation = 0;
     private Polygon sight;
+    private Box2dSteeringEntity steeringEntity;
     private Vector2 target;
     private String type;
     public final float MOVE_SPEED = 1.5f;
@@ -41,7 +44,7 @@ public class Enemy extends MapEntity {
     private Vector2 raycastTarget;
 
 
-    public Enemy(GameScreen gs) {
+    public Enemy(GameScreen gs, MapProperties properties) {
         super("enemy");
         this.gs = gs;
         region = gs.getGame().getAtlas().findRegion("enemy");
@@ -54,6 +57,7 @@ public class Enemy extends MapEntity {
         detectArea = new Circle();
         lastKnownPlayerPosition = new Vector2();
         radiusDetectionOn = false;
+        setupBasedOnType(properties);
     }
 
     public void addBehaviour(Behaviour b) {
@@ -297,6 +301,9 @@ public class Enemy extends MapEntity {
         body = world.createBody(def);
         body.setFixedRotation(true);
 
+
+        steeringEntity = new Box2dSteeringEntity(body, true, ((bounds.width + bounds.height) / 4f) * Game.WORLD_TO_BOX);
+
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 0.5f;
@@ -358,6 +365,7 @@ public class Enemy extends MapEntity {
 
     @Override
     public void update() {
+        //steeringEntity.update(Gdx.graphics.getDeltaTime());
         if (playerInSight) {
             playerIsInSight();
         }
@@ -382,6 +390,27 @@ public class Enemy extends MapEntity {
         }
 
         sight.setRotation(rotation);
+    }
+
+    private void setupBasedOnType(MapProperties objectProperties) {
+        this.type = objectProperties.get("aitype", String.class);
+        setInitialBounds(objectProperties.get("x", Float.class), objectProperties.get("y", Float.class), objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
+
+
+        setTarget(objectProperties.get("target_x", Float.class), objectProperties.get("target_y", Float.class));
+
+        addBehaviour(new PatrolBehaviour(this));
+        addBehaviour(new SearchBehaviour(this));
+
+        if (type.equals("chase")) {
+            ChaseBehaviour behaviour = new ChaseBehaviour(this);
+            behaviour.setTarget(gs.getPlayer().getBounds());
+            addBehaviour(behaviour);
+        }
+        else if (type.equals("shoot")) {
+            ShootBehaviour sb = new ShootBehaviour(gs.getGame(), this);
+            addBehaviour(sb);
+        }
     }
 
     private void updateLastKnownPlayerPosition() {

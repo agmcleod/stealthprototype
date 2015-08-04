@@ -34,8 +34,6 @@ public class Box2dSteeringEntity implements Steerable<Vector2> {
         this.independentFacing = independentFacing;
         this.boundingRadius = boundingRadius;
         this.tagged = false;
-
-        body.setUserData(this);
     }
 
     public Body getBody () {

@@ -8,7 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -162,27 +161,15 @@ public class GameScreen implements InputProcessor, Screen {
                 MapProperties objectProperties = object.getProperties();
 
                 if (className.equals("enemy")) {
-                    Enemy enemy = new Enemy(this);
-                    enemy.setInitialBounds(objectProperties.get("x", Float.class) + x, objectProperties.get("y", Float.class) + y, objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
                     float targetY = (mapheight * tileHeight - tileHeight - (Float.parseFloat(objectProperties.get("target_y", String.class))) + y);
+                    objectProperties.put("target_y", targetY);
                     float targetX = Float.parseFloat(objectProperties.get("target_x", String.class)) + x;
-                    enemy.setTarget(targetX, targetY);
+                    objectProperties.put("target_x", targetX);
 
-                    enemy.addBehaviour(new PatrolBehaviour(enemy));
-                    enemy.addBehaviour(new SearchBehaviour(enemy));
+                    objectProperties.put("x", objectProperties.get("x", Float.class) + x);
+                    objectProperties.put("y", objectProperties.get("y", Float.class) + y);
 
-                    if (objectProperties.get("aitype", String.class).equals("chase")) {
-                        ChaseBehaviour behaviour = new ChaseBehaviour(enemy);
-                        behaviour.setTarget(player.getBounds());
-                        enemy.addBehaviour(behaviour);
-                        enemy.setType("chase");
-                    }
-                    else if (objectProperties.get("aitype", String.class).equals("shoot")) {
-                        ShootBehaviour sb = new ShootBehaviour(game, enemy);
-                        enemy.addBehaviour(sb);
-                        enemy.setType("shoot");
-                    }
-
+                    Enemy enemy = new Enemy(this, objectProperties);
                     gameObjects.add(enemy);
                 }
                 else if (className.equals("trigger")) {
