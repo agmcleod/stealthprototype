@@ -121,13 +121,11 @@ public class Box2dSteeringEntity implements Steerable<Vector2> {
              */
 
             // Apply steering acceleration
-            applySteering(steeringOutput, deltaTime);
+            applySteering(deltaTime);
         }
-
-        wrapAround(Game.WORLD_TO_BOX * Gdx.graphics.getWidth(), Game.WORLD_TO_BOX * Gdx.graphics.getHeight());
     }
 
-    protected void applySteering (SteeringAcceleration<Vector2> steering, float deltaTime) {
+    protected void applySteering (float deltaTime) {
         boolean anyAccelerations = false;
 
         // Update position and linear velocity.
@@ -176,24 +174,6 @@ public class Box2dSteeringEntity implements Steerable<Vector2> {
                 body.setAngularVelocity(maxAngVelocity);
             }
         }
-    }
-
-    // the display area is considered to wrap around from top to bottom
-    // and from left to right
-    protected void wrapAround (float maxX, float maxY) {
-        float k = Float.POSITIVE_INFINITY;
-        Vector2 pos = body.getPosition();
-
-        if (pos.x > maxX) k = pos.x = 0.0f;
-
-        if (pos.x < 0) k = pos.x = maxX;
-
-        if (pos.y < 0) k = pos.y = maxY;
-
-        if (pos.y > maxY) k = pos.y = 0.0f;
-
-        if (k != Float.POSITIVE_INFINITY)
-            body.setTransform(pos, body.getAngle());
     }
 
     // wont use, but keep for reference
