@@ -173,6 +173,7 @@ public class Box2dSteeringEntity implements Steerable<Vector2> {
             if (body.getAngularVelocity() > maxAngVelocity) {
                 body.setAngularVelocity(maxAngVelocity);
             }
+
         }
     }
 

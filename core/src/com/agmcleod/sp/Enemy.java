@@ -395,7 +395,7 @@ public class Enemy extends MapEntity {
     private void setupBasedOnType(MapProperties objectProperties) {
         this.type = objectProperties.get("aitype", String.class);
         setInitialBounds(objectProperties.get("x", Float.class), objectProperties.get("y", Float.class), objectProperties.get("width", Float.class), objectProperties.get("height", Float.class));
-        steeringEntity = new Box2dSteeringEntity(body, true, ((bounds.width + bounds.height) / 4f) * Game.WORLD_TO_BOX);
+        steeringEntity = new Box2dSteeringEntity(body, false, ((bounds.width + bounds.height) / 4f) * Game.WORLD_TO_BOX);
         Array<Vector2> wayPoints = new Array<Vector2>();
         wayPoints.add(new Vector2(objectProperties.get("target_x", Float.class), objectProperties.get("target_y", Float.class)).scl(Game.WORLD_TO_BOX));
         wayPoints.add(new Vector2(bounds.x, bounds.y).scl(Game.WORLD_TO_BOX));
